@@ -2,17 +2,6 @@
 
 Dla każdego miesiąca model otrzymuje opad i temperaturę (oraz cechy opóźnione z historii), wylicza prognozowaną zmianę poziomu Jezioro Powidzkie i jest ona porównana z faktyczną zmianą.
 
-## Cel analizy
-
-Do pewnego momentu Jezioro Powidzkie reaguje zgodnie z modelem (opad + temperatura + sezon → zmiana poziomu). Szukamy **momentu, od którego ta zależność została przerwana** – gdy poziom rzeczywisty trwale rozjechał się z prognozą modelu.
-
-## Moment rozjazdu z modelem
-
-**Od miesiąca 2000-11** poziom rzeczywisty trwale odbiega od scenariusza modelowego.
-- Rozbieżność w tym miesiącu: **+0.119 m** (rzeczywistość powyżej modelu).
-
-Interpretacja: do tego momentu reakcja Jezioro Powidzkie na opad i temperaturę była zgodna z modelem; od tego miesiąca coś zmieniło zachowanie poziomu (np. zmiana odpływu, użytkowanie, regulacja).
-
 ## Metryki
 
 - **MAE (średni błąd bezwzględny):** 0.0084 m

@@ -69,7 +69,7 @@ def _build_md(rows, mae, rmse, n, lake_name="Jezioro"):
         "",
         "| Data | Opad (mm) | Temperatura (°C) | Zmiana faktyczna (m) | Zmiana prognoza (m) | Błąd (m) | Wysokość rzeczywista (m) | Wysokość scenariusz modelowy (m) | Rozbieżność (m) |",
         "|------|-----------|------------------|----------------------|---------------------|----------|---------------------------|-----------------------------------|-----------------|",
-    ])
+    ]
     for r in rows:
         lines.append(f"| {r['data']} | {r['opad']} | {r['temperatura']} | {r['zmiana_fakt']} | {r['zmiana_prognoza']} | {r['błąd']} | {r['wysokosc_rzeczywista']} | {r['wysokosc_model']} | {r['rozbieznosc']} |")
     return "\n".join(lines)

@@ -178,7 +178,7 @@ def _write_report(rows, mae, rmse, n, lake_id, lake_name):
         "",
         "Szczegóły techniczne: [model.md](model.md), [podsumowanie_ewaluacji_{}.md](podsumowanie_ewaluacji_{}.md).".format(lake_id, lake_id),
         "",
-    ])
+    ]
     report_path = _report_path(lake_id)
     report_path.parent.mkdir(parents=True, exist_ok=True)
     report_path.write_text("\n".join(sections), encoding="utf-8")

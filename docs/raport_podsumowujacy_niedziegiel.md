@@ -4,10 +4,7 @@
 
 Projekt ma na celu:
 - zbudowanie **modelu uczenia maszynowego**, który na podstawie opadu i temperatury (oraz sezonowości i historii) prognozuje **miesięczną zmianę poziomu** Jezioro Niedzięgiel;
-- **ewaluację** prognoz względem rzeczywistych pomiarów;
-- **wykrycie momentu**, od którego jezioro przestało reagować zgodnie z modelem (poziom rzeczywisty trwale odbiega od scenariusza opartego na prognozach).
-
-Teza: do pewnego momentu zachowanie poziomu jeziora da się wyjaśnić opadem i temperaturą; od pewnego momentu ta zależność została przerwana (np. zmiana odpływu, regulacja, użytkowanie).
+- **ewaluację** prognoz względem rzeczywistych pomiarów.
 
 ---
 
@@ -66,20 +63,9 @@ Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.
 
 ---
 
-## 5. Moment rozjazdu z modelem
-
-**Wykryty moment:** od miesiąca **2008-07** poziom rzeczywisty trwale odbiega od scenariusza modelowego.
-
-- Rozbieżność w tym miesiącu: **-0.119 m** (rzeczywistość poniżej modelu).
-
-**Interpretacja:** do tego momentu reakcja Jezioro Niedzięgiel na opad i temperaturę była zgodna z modelem; od miesiąca 2008-07 coś zmieniło zachowanie poziomu (np. zmiana odpływu, użytkowanie, regulacja).
-
----
-
-## 6. Podsumowanie
+## 5. Podsumowanie
 
 - Model prognozuje miesięczną zmianę poziomu Jezioro Niedzięgiel z MAE ~1.11 cm.
-- Scenariusz „gdyby tylko opad i temperatura” (model) początkowo dobrze opisuje rzeczywistość; od pewnego momentu następuje **trwały rozjazd**.
-- Zidentyfikowany moment rozjazdu pozwala zawęzić w czasie poszukiwania przyczyn zmiany zachowania jeziora (dane hydrologiczne, zmiany w zagospodarowaniu, regulacje).
+- Scenariusz kumulatywny (wysokość z prognozowanej zmiany) jest porównywany z rzeczywistą wysokością; rozbieżność i błąd miesięczny opisują jakość prognoz.
 
 Szczegóły techniczne: [model.md](model.md), [podsumowanie_ewaluacji_niedziegiel.md](podsumowanie_ewaluacji_niedziegiel.md).

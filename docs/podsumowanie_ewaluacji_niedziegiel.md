@@ -2,17 +2,6 @@
 
 Dla każdego miesiąca model otrzymuje opad i temperaturę (oraz cechy opóźnione z historii), wylicza prognozowaną zmianę poziomu Jezioro Niedzięgiel i jest ona porównana z faktyczną zmianą.
 
-## Cel analizy
-
-Do pewnego momentu Jezioro Niedzięgiel reaguje zgodnie z modelem (opad + temperatura + sezon → zmiana poziomu). Szukamy **momentu, od którego ta zależność została przerwana** – gdy poziom rzeczywisty trwale rozjechał się z prognozą modelu.
-
-## Moment rozjazdu z modelem
-
-**Od miesiąca 2008-07** poziom rzeczywisty trwale odbiega od scenariusza modelowego.
-- Rozbieżność w tym miesiącu: **-0.119 m** (rzeczywistość poniżej modelu).
-
-Interpretacja: do tego momentu reakcja Jezioro Niedzięgiel na opad i temperaturę była zgodna z modelem; od tego miesiąca coś zmieniło zachowanie poziomu (np. zmiana odpływu, użytkowanie, regulacja).
-
 ## Metryki
 
 - **MAE (średni błąd bezwzględny):** 0.0111 m
