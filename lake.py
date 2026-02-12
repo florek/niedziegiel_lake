@@ -1,4 +1,5 @@
 import pickle
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -6,8 +7,16 @@ import pandas as pd
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 
-DATA_PATH = Path(__file__).resolve().parent / "data" / "data.csv"
-MODEL_PATH = Path(__file__).resolve().parent / "data" / "model.pkl"
+DATA_DIR = Path(__file__).resolve().parent / "data"
+LAKES = {"niedziegiel": "Jezioro Niedzięgiel", "powidzkie": "Jezioro Powidzkie"}
+
+
+def get_data_path(lake_id: str) -> Path:
+    return DATA_DIR / f"{lake_id}_data.csv"
+
+
+def get_model_path(lake_id: str) -> Path:
+    return DATA_DIR / f"{lake_id}_model.pkl"
 
 COL_DATA = "Data"
 COL_OPAD = "Opad"
@@ -18,7 +27,9 @@ COL_ZMIANA = "Zmiana"
 LAG_MONTHS = 3
 
 
-def load_data(path=DATA_PATH):
+def load_data(path=None):
+    if path is None:
+        path = get_data_path("niedziegiel")
     df = pd.read_csv(path, sep=",", decimal=",")
     df[COL_DATA] = pd.to_datetime(df[COL_DATA], format="%d.%m.%Y", dayfirst=True)
     for col in (COL_POZIOM, COL_ZMIANA, COL_OPAD, COL_TEMPERATURA):
@@ -57,7 +68,9 @@ def train_test_split_temporal(df, test_months=70):
     return df.iloc[:split_idx], df.iloc[split_idx:] if split_idx < len(df) else df.iloc[:0]
 
 
-def train_model(df=None, path=DATA_PATH):
+def train_model(df=None, path=None):
+    if path is None:
+        path = get_data_path("niedziegiel")
     if df is None:
         df = load_data(path)
     df = build_features(df)
@@ -112,26 +125,42 @@ def predict_change(model, feature_cols, poziom, opad, temperatura, month, last_c
     return float(model.predict(X)[0])
 
 
-def save_model(model, feature_cols, path=MODEL_PATH):
+def save_model(model, feature_cols, path=None):
+    if path is None:
+        path = get_model_path("niedziegiel")
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "wb") as f:
         pickle.dump({"model": model, "feature_cols": feature_cols}, f)
 
 
-def load_model(path=MODEL_PATH):
+def load_model(path=None):
+    if path is None:
+        path = get_model_path("niedziegiel")
+    path = Path(path)
+    if not path.exists():
+        raise FileNotFoundError(f"Brak pliku modelu: {path}")
     with open(path, "rb") as f:
         data = pickle.load(f)
     return data["model"], data["feature_cols"]
 
 
-def run_training_and_save():
-    df = load_data()
-    model, feature_cols, metrics = train_model(df=df)
-    save_model(model, feature_cols)
-    print(f"Model wytrenowany. Test MAE: {metrics.get('test_mae', 'N/A'):.4f}, RMSE: {metrics.get('test_rmse', 'N/A'):.4f}")
+def run_training_and_save(lake_id: str = "niedziegiel"):
+    data_path = get_data_path(lake_id)
+    model_path = get_model_path(lake_id)
+    if not data_path.exists():
+        raise FileNotFoundError(f"Brak pliku danych: {data_path}")
+    df = load_data(data_path)
+    model, feature_cols, metrics = train_model(df=df, path=data_path)
+    save_model(model, feature_cols, path=model_path)
+    name = LAKES.get(lake_id, lake_id)
+    print(f"Model wytrenowany ({name}). Test MAE: {metrics.get('test_mae', 'N/A'):.4f}, RMSE: {metrics.get('test_rmse', 'N/A'):.4f}")
     return model, feature_cols
 
 
 if __name__ == "__main__":
-    run_training_and_save()
+    lake_id = sys.argv[1] if len(sys.argv) > 1 else "niedziegiel"
+    if lake_id not in LAKES:
+        print(f"Dostępne jeziora: {', '.join(LAKES)}")
+        sys.exit(1)
+    run_training_and_save(lake_id)

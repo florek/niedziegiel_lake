@@ -1,40 +1,57 @@
-# Prognoza zmiany poziomu Jeziora Niedzięgiel
+# Prognoza zmiany poziomu jezior (Niedzięgiel, Powidzkie)
 
-Projekt zawiera model uczenia maszynowego do **prognozowania miesięcznej zmiany poziomu Jeziora Niedzięgiel** na podstawie danych z pliku `data/data.csv` (daty, poziom, opad, temperatura).
+Projekt zawiera modele uczenia maszynowego do **prognozowania miesięcznej zmiany poziomu** wybranego jeziora na podstawie danych z pliku CSV (daty, poziom, opad, temperatura). Obsługiwane jeziora: **Jezioro Niedzięgiel**, **Jezioro Powidzkie**.
 
 ## Wymagania
 
 - Python 3.10+
 - Zależności: `pip install -r requirements.txt` (m.in. pandas, scikit-learn, numpy, matplotlib do raportu z wykresami).
 
+## Dane i modele per jezioro
+
+Nazwy plików są spójne: `data/{id}_data.csv`, `data/{id}_model.pkl`.
+
+- **Niedzięgiel:** `data/niedziegiel_data.csv`, `data/niedziegiel_model.pkl`
+- **Powidzkie:** `data/powidzkie_data.csv`, `data/powidzkie_model.pkl`
+
+Format CSV: nagłówki Data, Poziom, Zmiana, Opad, Temperatura; dziesiętne z przecinkiem. Jeśli masz jeszcze pliki `data.csv` lub `model.pkl`, przemianuj je na `niedziegiel_data.csv` i `niedziegiel_model.pkl`.
+
 ## Szybki start
 
-1. Umieść dane w `data/data.csv` (nagłówki: Data, Poziom, Zmiana, Opad, Temperatura; dziesiętne z przecinkiem).
-2. Wytrenuj i zapisz model:
+1. Umieść dane w `data/{jezioro}_data.csv` (np. `niedziegiel_data.csv`, `powidzkie_data.csv`).
+2. Wytrenuj i zapisz model dla wybranego jeziora:
    ```bash
-   python lake.py
+   python lake.py niedziegiel
+   python lake.py powidzkie
    ```
-3. Model zapisuje się w `data/model.pkl`. Do prognoz w kodzie użyj `lake.load_model()` i `lake.predict_change(...)`.
-4. Ewaluacja: dla każdego miesiąca model dostaje opad i temperaturę, wylicza prognozę zmiany i porównuje z faktyczną. Podsumowanie w MD:
+   Bez argumentu domyślnie: `niedziegiel`. Modele zapisują się w `data/niedziegiel_model.pkl` i `data/powidzkie_model.pkl`.
+3. Ewaluacja (jedno jezioro lub oba):
    ```bash
    python evaluate_predictions.py
+   python evaluate_predictions.py powidzkie
    ```
-   Wynik: `docs/podsumowanie_ewaluacji.md` (metryki MAE/RMSE oraz tabela miesięczna).
-5. **Pełny raport z wykresami** – cel analizy, dane, model, wyniki, moment rozjazdu z modelem, wykresy (wysokość rzeczywista vs model, rozbieżność w czasie, zmiana fakt vs prognoza, błąd miesięczny):
+   Wynik: `docs/podsumowanie_ewaluacji_niedziegiel.md`, `docs/podsumowanie_ewaluacji_powidzkie.md`.
+4. **Pełny raport z wykresami** (jedno jezioro lub oba):
    ```bash
    python generate_report.py
+   python generate_report.py powidzkie
    ```
-   Wynik: `docs/raport_podsumowujacy.md` oraz wykresy w `docs/figures/`.
+   Wynik: `docs/raport_podsumowujacy_{jezioro}.md` oraz wykresy w `docs/figures_{jezioro}/`.
+5. **Eksport raportów do PDF:**
+   ```bash
+   python md_to_pdf.py
+   ```
+   Konwertuje wszystkie `.md` z `docs/` na PDF (obrazy z odpowiednich `figures_*`).
 
-Szczegóły modelu i API: [docs/model.md](docs/model.md). **Raport podsumowujący (z wykresami):** [docs/raport_podsumowujacy.md](docs/raport_podsumowujacy.md).
+Szczegóły modelu i API: [docs/model.md](docs/model.md).
 
 ## Struktura
 
-- `lake.py` – wczytywanie danych, budowa cech, trening (GradientBoostingRegressor), ewaluacja, zapis/odczyt modelu i funkcja `predict_change`.
-- `evaluate_predictions.py` – ewaluacja: prognozy vs faktyczna zmiana poziomu Jeziora Niedzięgiel, podsumowanie w `docs/podsumowanie_ewaluacji.md`.
-- `generate_report.py` – generowanie pełnego raportu z wykresami: `docs/raport_podsumowujacy.md`, `docs/figures/*.png`.
-- `data/data.csv` – dane miesięczne (Data, Poziom, Zmiana, Opad, Temperatura).
-- `data/model.pkl` – wytrenowany model (po uruchomieniu `python lake.py`).
+- `lake.py` – konfiguracja jezior (`LAKES`), ścieżki `get_data_path(lake_id)`, `get_model_path(lake_id)`, wczytywanie danych, budowa cech, trening, zapis/odczyt modelu, `predict_change(...)`.
+- `evaluate_predictions.py` – ewaluacja per jezioro, podsumowania w `docs/podsumowanie_ewaluacji_{jezioro}.md`.
+- `generate_report.py` – raporty z wykresami: `docs/raport_podsumowujacy_{jezioro}.md`, `docs/figures_{jezioro}/*.png`.
+- `md_to_pdf.py` – konwersja Markdown → PDF (fpdf2, markdown).
+- `data/{jezioro}_data.csv` – dane miesięczne.
+- `data/{jezioro}_model.pkl` – wytrenowany model.
 - `docs/model.md` – opis modelu i użycia.
-- `docs/raport_podsumowujacy.md` – raport podsumowujący z wykresami (cel, dane, model, wyniki, moment rozjazdu).
-- `docs/figures/` – wykresy PNG do raportu.
+- `docs/raport_podsumowujacy_*.md`, `docs/podsumowanie_ewaluacji_*.md`, `docs/figures_*/` – raporty i wykresy per jezioro.

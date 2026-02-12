@@ -1,13 +1,18 @@
+import sys
 from pathlib import Path
 
 import lake
 
-SUMMARY_PATH = Path(__file__).resolve().parent / "docs" / "podsumowanie_ewaluacji.md"
+DOCS_DIR = Path(__file__).resolve().parent / "docs"
 
 
-def run_evaluation(data_path=None, model_path=None, output_path=SUMMARY_PATH):
-    model, feature_cols = lake.load_model(model_path or lake.MODEL_PATH)
-    df = lake.load_data(data_path or lake.DATA_PATH)
+def run_evaluation(lake_id="niedziegiel", data_path=None, model_path=None, output_path=None):
+    if output_path is None:
+        output_path = DOCS_DIR / f"podsumowanie_ewaluacji_{lake_id}.md"
+    data_path = data_path or lake.get_data_path(lake_id)
+    model_path = model_path or lake.get_model_path(lake_id)
+    model, feature_cols = lake.load_model(model_path)
+    df = lake.load_data(data_path)
     df = lake.build_features(df)
     df = df.dropna()
     if len(df) == 0:
@@ -39,8 +44,8 @@ def run_evaluation(data_path=None, model_path=None, output_path=SUMMARY_PATH):
         })
     for i in range(len(rows)):
         rows[i]["rozbieznosc"] = round(rows[i]["wysokosc_rzeczywista"] - rows[i]["wysokosc_model"], 3)
-    break_month, break_info = _find_break_month(rows)
-    content = _build_md(rows, mae, rmse, len(rows), break_month, break_info)
+    lake_name = lake.LAKES.get(lake_id, lake_id)
+    content = _build_md(rows, mae, rmse, len(rows), lake_name)
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(content, encoding="utf-8")
@@ -48,51 +53,11 @@ def run_evaluation(data_path=None, model_path=None, output_path=SUMMARY_PATH):
     return mae, rmse, rows
 
 
-def _find_break_month(rows, threshold_drift=0.1, threshold_stay=0.05, min_months_stay=6):
-    n = len(rows)
-    for i in range(n):
-        if abs(rows[i]["rozbieznosc"]) <= threshold_drift:
-            continue
-        stay_ok = True
-        for j in range(i + 1, min(i + min_months_stay + 1, n)):
-            if abs(rows[j]["rozbieznosc"]) < threshold_stay:
-                stay_ok = False
-                break
-        if stay_ok and (i + min_months_stay < n or n - i >= 2):
-            return rows[i]["data"], {
-                "rozbieznosc_w_momentcie": rows[i]["rozbieznosc"],
-                "kierunek": "rzeczywistość powyżej modelu" if rows[i]["rozbieznosc"] > 0 else "rzeczywistość poniżej modelu",
-            }
-    for i in range(n):
-        if abs(rows[i]["rozbieznosc"]) > threshold_stay:
-            return rows[i]["data"], {
-                "rozbieznosc_w_momentcie": rows[i]["rozbieznosc"],
-                "kierunek": "rzeczywistość powyżej modelu" if rows[i]["rozbieznosc"] > 0 else "rzeczywistość poniżej modelu",
-            }
-    return None, {}
-
-
-def _build_md(rows, mae, rmse, n, break_month=None, break_info=None):
+def _build_md(rows, mae, rmse, n, lake_name="Jezioro"):
     lines = [
-        "# Podsumowanie ewaluacji prognozy zmiany poziomu Jeziora Niedzięgiel",
+        f"# Podsumowanie ewaluacji prognozy zmiany poziomu {lake_name}",
         "",
-        "Dla każdego miesiąca model otrzymuje opad i temperaturę (oraz cechy opóźnione z historii), wylicza prognozowaną zmianę poziomu Jeziora Niedzięgiel i jest ona porównana z faktyczną zmianą.",
-        "",
-        "## Cel analizy",
-        "",
-        "Do pewnego momentu Jezioro Niedzięgiel reaguje zgodnie z modelem (opad + temperatura + sezon → zmiana poziomu). Szukamy **momentu, od którego ta zależność została przerwana** – gdy poziom rzeczywisty trwale rozjechał się z prognozą modelu.",
-        "",
-        "## Moment rozjazdu z modelem",
-        "",
-    ]
-    if break_month and break_info:
-        lines.append(f"**Od miesiąca {break_month}** poziom rzeczywisty trwale odbiega od scenariusza modelowego.")
-        lines.append(f"- Rozbieżność w tym miesiącu: **{break_info['rozbieznosc_w_momentcie']:+.3f} m** ({break_info['kierunek']}).")
-        lines.append("")
-        lines.append("Interpretacja: do tego momentu reakcja Jeziora Niedzięgiel na opad i temperaturę była zgodna z modelem; od tego miesiąca coś zmieniło zachowanie poziomu (np. zmiana odpływu, użytkowanie, regulacja).")
-    else:
-        lines.append("Nie wykryto wyraźnego, trwałego momentu rozjazdu (rozbieżność nie przekracza przyjętych progów lub często wraca do wartości bliskich modelowi).")
-    lines.extend([
+        f"Dla każdego miesiąca model otrzymuje opad i temperaturę (oraz cechy opóźnione z historii), wylicza prognozowaną zmianę poziomu {lake_name} i jest ona porównana z faktyczną zmianą.",
         "",
         "## Metryki",
         "",
@@ -111,4 +76,9 @@ def _build_md(rows, mae, rmse, n, break_month=None, break_info=None):
 
 
 if __name__ == "__main__":
-    run_evaluation()
+    lake_id = sys.argv[1] if len(sys.argv) > 1 else None
+    if lake_id and lake_id not in lake.LAKES:
+        print(f"Dostępne jeziora: {', '.join(lake.LAKES)}")
+        sys.exit(1)
+    for lid in (lake.LAKES if lake_id is None else [lake_id]):
+        run_evaluation(lake_id=lid)

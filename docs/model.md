@@ -1,48 +1,48 @@
-# Model prognozy zmiany poziomu Jeziora Niedzięgiel
+# Model prognozy zmiany poziomu jezior (Niedzięgiel, Powidzkie)
 
 ## Cel
 
-Model uczenia maszynowego służy do **prognozowania zmiany poziomu Jeziora Niedzięgiel w danym miesiącu** (Zmiana) na podstawie:
+Model uczenia maszynowego służy do **prognozowania zmiany poziomu wybranego jeziora w danym miesiącu** (Zmiana) na podstawie:
 - daty (sezonowość: miesiąc),
 - opadu (Opad),
 - temperatury (Temperatura),
-- opcjonalnie: ostatnich zmian poziomu Jeziora Niedzięgiel i poziomów (cechy opóźnione).
+- ostatnich zmian poziomu i poziomów (cechy opóźnione).
+
+Obsługiwane jeziora: **Jezioro Niedzięgiel** (`niedziegiel`), **Jezioro Powidzkie** (`powidzkie`). Dla każdego jeziora osobny plik danych i osobny wytrenowany model.
 
 ## Dane wejściowe
 
-Plik `data/data.csv`:
-- **Data** – pierwszy dzień miesiąca (dd.mm.yyyy),
-- **Poziom** – poziom Jeziora Niedzięgiel [m],
-- **Zmiana** – zmiana poziomu Jeziora Niedzięgiel w danym miesiącu [m] (target),
-- **Opad** – opad [mm],
-- **Temperatura** – temperatura [°C].
+Pliki CSV w `data/`: `data/niedziegiel_data.csv`, `data/powidzkie_data.csv`. Modele: `data/niedziegiel_model.pkl`, `data/powidzkie_model.pkl`.
 
-Wartości dziesiętne w pliku używają przecinka. Wiersze z błędami (#ERROR!) lub pustymi wartościami są pomijane.
+Kolumny: **Data** (pierwszy dzień miesiąca, dd.mm.yyyy), **Poziom** [m], **Zmiana** [m] (target), **Opad** [mm], **Temperatura** [°C]. Wartości dziesiętne z przecinkiem. Wiersze z #ERROR! lub brakami są pomijane.
 
 ## Algorytm
 
 - **Model:** `GradientBoostingRegressor` (scikit-learn).
 - **Cechy:** month_sin, month_cos (cykliczny miesiąc), Opad, Temperatura oraz 3 opóźnienia (lag 1–3) dla Zmiana i Poziom (bez bieżącego poziomu).
-- **Podział:** temporalny – ostatnie 70 miesięcy jako zbiór testowy, reszta jako treningowy.
+- **Podział:** temporalny – ostatnie 70 miesięcy = zbiór testowy, reszta = trening.
 - **Ewaluacja:** MAE i RMSE na zbiorze testowym (metryki w metrach).
 
 ## Użycie
 
-Trening i zapis modelu:
+Trening i zapis modelu (per jezioro):
 ```bash
-python lake.py
+python lake.py niedziegiel
+python lake.py powidzkie
 ```
 
 W kodzie:
-- `load_data()` – wczytanie i czyszczenie CSV,
-- `train_model(df)` – trening, zwraca model, listę cech i słownik z `test_mae`, `test_rmse`,
-- `predict_change(model, feature_cols, poziom, opad, temperatura, month, last_changes=..., last_poziomy=...)` – prognoza zmiany na jeden miesiąc,
-- `save_model()` / `load_model()` – zapis/odczyt modelu do/z `data/model.pkl`.
+- `lake.LAKES` – słownik id → nazwa jeziora.
+- `lake.get_data_path(lake_id)`, `lake.get_model_path(lake_id)` – ścieżki do pliku CSV i modelu.
+- `load_data(path=...)` – wczytanie i czyszczenie CSV.
+- `train_model(df=..., path=...)` – trening, zwraca model, listę cech i metryki.
+- `predict_change(model, feature_cols, poziom, opad, temperatura, month, last_changes=..., last_poziomy=...)` – prognoza zmiany na jeden miesiąc.
+- `save_model(model, feature_cols, path=...)` / `load_model(path=...)` – zapis/odczyt modelu (`data/{lake_id}_model.pkl`).
 
 ## Wyniki (przykładowe)
 
-Na zbiorze testowym (70 ostatnich miesięcy) typowe wartości:
-- **Test MAE:** ~0,023 m,
-- **Test RMSE:** ~0,028 m.
+Na zbiorze testowym (70 ostatnich miesięcy) typowe wartości to rzędu kilku centymetrów MAE (średni błąd bezwzględny prognozy zmiany poziomu).
 
-Interpretacja: średni błąd prognozy zmiany poziomu Jeziora Niedzięgiel to ok. 2,3 cm w wartości bezwzględnej.
+## Eksport do PDF
+
+Raporty z `docs/` (np. `raport_podsumowujacy_niedziegiel.md`, `podsumowanie_ewaluacji_powidzkie.md`) można wyeksportować do PDF: `python md_to_pdf.py` (wszystkie `.md` z `docs/`) lub z podaniem konkretnych plików. Obrazy z katalogów `figures_{jezioro}/` są osadzane w PDF.
