@@ -1,6 +1,6 @@
-# Prognoza zmiany poziomu jezior (Niedzięgiel, Powidzkie)
+# Prognoza zmiany poziomu jezior (Budzisławskie, Niedzięgiel, Ostrowskie, Powidzkie, Suszewskie, Wilczyńskie)
 
-Projekt zawiera modele uczenia maszynowego do **prognozowania miesięcznej zmiany poziomu** wybranego jeziora na podstawie danych z pliku CSV (daty, poziom, opad, temperatura). Obsługiwane jeziora: **Jezioro Niedzięgiel**, **Jezioro Powidzkie**.
+Projekt zawiera modele uczenia maszynowego do **prognozowania miesięcznej zmiany poziomu** wybranego jeziora na podstawie danych z pliku CSV (daty, poziom, opad, temperatura). Obsługiwane jeziora: **Jezioro Budzisławskie**, **Jezioro Niedzięgiel**, **Jezioro Ostrowskie**, **Jezioro Powidzkie**, **Jezioro Suszewskie**, **Jezioro Wilczyńskie**.
 
 ## Wymagania
 
@@ -11,8 +11,12 @@ Projekt zawiera modele uczenia maszynowego do **prognozowania miesięcznej zmian
 
 Nazwy plików są spójne: `data/{id}_data.csv`, `data/{id}_model.pkl`.
 
+- **Budzisławskie:** `data/budzislawskie_data.csv`, `data/budzislawskie_model.pkl` (trening do lutego 2003)
 - **Niedzięgiel:** `data/niedziegiel_data.csv`, `data/niedziegiel_model.pkl`
+- **Ostrowskie:** `data/ostrowskie_data.csv`, `data/ostrowskie_model.pkl` (trening do lutego 2003, lej depresji)
 - **Powidzkie:** `data/powidzkie_data.csv`, `data/powidzkie_model.pkl`
+- **Suszewskie:** `data/suszewskie_data.csv`, `data/suszewskie_model.pkl` (trening do lutego 2003, lej depresji)
+- **Wilczyńskie:** `data/wilczynskie_data.csv`, `data/wilczynskie_model.pkl` (trening do lutego 2003, lej depresji)
 
 Format CSV: nagłówki Data, Poziom, Zmiana, Opad, Temperatura; dziesiętne z przecinkiem. Jeśli masz jeszcze pliki `data.csv` lub `model.pkl`, przemianuj je na `niedziegiel_data.csv` i `niedziegiel_model.pkl`.
 
@@ -21,10 +25,14 @@ Format CSV: nagłówki Data, Poziom, Zmiana, Opad, Temperatura; dziesiętne z pr
 1. Umieść dane w `data/{jezioro}_data.csv` (np. `niedziegiel_data.csv`, `powidzkie_data.csv`).
 2. Wytrenuj i zapisz model dla wybranego jeziora (automatyczny wybór najlepszego modelu spośród kilku kandydatów):
    ```bash
+   python lake.py budzislawskie
    python lake.py niedziegiel
    python lake.py powidzkie
+   python lake.py ostrowskie
+   python lake.py suszewskie
+   python lake.py wilczynskie
    ```
-   Bez argumentu domyślnie: `niedziegiel`. Modele zapisują się w `data/niedziegiel_model.pkl` i `data/powidzkie_model.pkl`.
+   Bez argumentu domyślnie: `niedziegiel`. Modele zapisują się w `data/{jezioro}_model.pkl`. Dla Budzisławskiego trening kończy się w lutym 2003 (anomalie w danych później).
 3. Ewaluacja (jedno jezioro lub oba):
    ```bash
    python evaluate_predictions.py
@@ -49,11 +57,15 @@ Szczegóły modelu i API: [docs/model.md](docs/model.md).
 
 - `lake.py` – konfiguracja jezior (`LAKES`), ścieżki `get_data_path(lake_id)`, `get_model_path(lake_id)`, wczytywanie danych, budowa cech, trening, zapis/odczyt modelu, `predict_change(...)`.
 - `merge_niedziegiel_data.py` – łączy `data/meteo.csv` (opad, temperatura) z `data/niedziel_realny_pomiar.csv` (poziom), dodaje kolumnę Zmiana i zapisuje `data/niedziegiel_data.csv`.
+- `merge_budzislawskie_data.py` – łączy `data/meteo.csv` z `data/budzislawskie_realny_pomiar.csv`, zapisuje `data/budzislawskie_data.csv`.
+- `merge_suszewskie_data.py` – łączy `data/meteo.csv` z `data/suszewskie_realny_pomiar.csv`, zapisuje `data/suszewskie_data.csv`.
+- `merge_ostrowskie_data.py` – łączy `data/meteo.csv` z `data/ostrowskie_realny_pomiar.csv`, zapisuje `data/ostrowskie_data.csv`.
+- `merge_wilczynskie_data.py` – łączy `data/meteo.csv` z `data/wilczynskie_realny_pomiar.csv`, zapisuje `data/wilczynskie_data.csv`.
 - `merge_powidzkie_data.py` – łączy `data/meteo.csv` z `data/powidzkie_realny_pomiar.csv` (poziom), dodaje kolumnę Zmiana i zapisuje `data/powidzkie_data.csv`.
 - `evaluate_predictions.py` – ewaluacja per jezioro, podsumowania w `docs/podsumowanie_ewaluacji_{jezioro}.md`.
 - `generate_report.py` – raporty z wykresami: `docs/raport_podsumowujacy_{jezioro}.md`, `docs/figures_{jezioro}/*.png`.
 - `md_to_pdf.py` – konwersja Markdown → PDF (fpdf2, markdown).
-- `data/{jezioro}_data.csv` – dane miesięczne (Data, Poziom, Zmiana, Opad, Temperatura). Niedzięgiel: `python merge_niedziegiel_data.py` (źródła: `meteo.csv`, `niedziel_realny_pomiar.csv`). Powidzkie: `python merge_powidzkie_data.py` (źródła: `meteo.csv`, `powidzkie_realny_pomiar.csv`).
+- `data/{jezioro}_data.csv` – dane miesięczne (Data, Poziom, Zmiana, Opad, Temperatura). Budzisławskie: `python merge_budzislawskie_data.py`. Niedzięgiel: `python merge_niedziegiel_data.py`. Powidzkie: `python merge_powidzkie_data.py`. Ostrowskie: `python merge_ostrowskie_data.py`. Suszewskie: `python merge_suszewskie_data.py`. Wilczyńskie: `python merge_wilczynskie_data.py` (wszystkie łączą `meteo.csv` z odpowiednim plikiem pomiaru).
 - `data/{jezioro}_model.pkl` – wytrenowany model.
 - `docs/model.md` – opis modelu i użycia.
 - `docs/raport_podsumowujacy_*.md`, `docs/podsumowanie_ewaluacji_*.md`, `docs/figures_*/` – raporty i wykresy per jezioro.

@@ -14,7 +14,7 @@ Projekt ma na celu:
 - **Zakres:** dane miesięczne (pierwszy dzień miesiąca).
 - **Kolumny:** Data, Poziom (m), Zmiana (m), Opad (mm), Temperatura (°C).
 - **Target:** Zmiana – miesięczna zmiana poziomu.
-- Wiersze z błędami (#ERROR!) lub brakami są pomijane. Po usunięciu lagów (12 mies.) do analizy wchodzi **563** miesięcy.
+- Wiersze z błędami (#ERROR!) lub brakami są pomijane. Po usunięciu lagów (5 mies.) do analizy wchodzi **570** miesięcy.
 
 ---
 
@@ -23,8 +23,8 @@ Projekt ma na celu:
 | Element | Opis |
 |--------|------|
 | Algorytm | Gradient Boosting (regresja), scikit-learn |
-| Cechy wejściowe | Miesiąc (sin/cos), Opad, Temperatura, opad i temperatura z opóźnieniem 1–12 mies., 5 opóźnienia zmiany poziomu, 5 opóźnienia poziomu |
-| Trening | Podział czasowy: trening do roku 2013, test 2014-2023 |
+| Cechy wejściowe | Miesiąc (sin/cos), Opad, Temperatura, opad i temperatura z opóźnieniem 1–3 mies., 5 opóźnienia zmiany poziomu, 5 opóźnienia poziomu |
+| Trening | Podział czasowy: trening do roku 2013, test od 2014 do 2023 |
 | Wynik | Prognoza zmiany poziomu na dany miesiąc (m) |
 
 Model **nie** używa bieżącego poziomu – tylko opad, temperatura, sezon i historia.
@@ -33,9 +33,9 @@ Model **nie** używa bieżącego poziomu – tylko opad, temperatura, sezon i hi
 
 ## 4. Wyniki ewaluacji
 
-- **MAE (średni błąd bezwzględny):** 0.0071 m (~0.71 cm)
-- **RMSE:** 0.0116 m
-- **Liczba miesięcy:** 563
+- **MAE (średni błąd bezwzględny):** 0.0083 m (~0.83 cm)
+- **RMSE:** 0.0122 m
+- **Liczba miesięcy:** 570
 
 ### 4.1. Wysokość wody: rzeczywista vs scenariusz modelowy
 
@@ -65,7 +65,7 @@ Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.
 
 ## 5. Podsumowanie
 
-- Model prognozuje miesięczną zmianę poziomu Jezioro Powidzkie z MAE ~0.71 cm.
+- Model prognozuje miesięczną zmianę poziomu Jezioro Powidzkie z MAE ~0.83 cm.
 - Scenariusz kumulatywny (wysokość z prognozowanej zmiany) jest porównywany z rzeczywistą wysokością; rozbieżność i błąd miesięczny opisują jakość prognoz.
 
 Szczegóły techniczne: [model.md](model.md), [podsumowanie_ewaluacji_powidzkie.md](podsumowanie_ewaluacji_powidzkie.md).

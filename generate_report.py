@@ -21,6 +21,20 @@ def _report_path(lake_id):
     return DOCS_DIR / f"raport_podsumowujacy_{lake_id}.md"
 
 
+def _train_end_label(lake_id):
+    y = lake.TRAIN_END_YEAR_BY_LAKE.get(lake_id, 2013)
+    m = lake.TRAIN_END_MONTH_BY_LAKE.get(lake_id)
+    return f"{y}-{m:02d}" if m is not None else f"roku {y}"
+
+
+def _test_start_label(lake_id):
+    y = lake.TRAIN_END_YEAR_BY_LAKE.get(lake_id, 2013)
+    m = lake.TRAIN_END_MONTH_BY_LAKE.get(lake_id)
+    if m is not None and m < 12:
+        return f"{y}-{m + 1:02d}"
+    return str(y + 1)
+
+
 def _plot_wysokosci(rows, figs_dir, lake_name):
     dates = [np.datetime64(r["data"] + "-01") for r in rows]
     rzeczywista = [r["wysokosc_rzeczywista"] for r in rows]
@@ -147,9 +161,9 @@ def _write_report(rows, mae, rmse, n, lake_id, lake_name):
         "|--------|------|",
         "| Algorytm | Gradient Boosting (regresja), scikit-learn |",
         "| Cechy wejściowe | {} |".format(cechy_text),
-        "| Trening | Podział czasowy: trening do roku {}, test {}-{} |".format(
-            lake.TRAIN_END_YEAR_BY_LAKE.get(lake_id, 2013),
-            lake.TRAIN_END_YEAR_BY_LAKE.get(lake_id, 2013) + 1,
+        "| Trening | Podział czasowy: trening do {}, test od {} do {} |".format(
+            _train_end_label(lake_id),
+            _test_start_label(lake_id),
             lake.TEST_END_YEAR_BY_LAKE.get(lake_id, 2023),
         ),
         "| Wynik | Prognoza zmiany poziomu na dany miesiąc (m) |",

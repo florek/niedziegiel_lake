@@ -12,7 +12,14 @@ from sklearn.ensemble import (
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 
 DATA_DIR = Path(__file__).resolve().parent / "data"
-LAKES = {"niedziegiel": "Jezioro Niedzięgiel", "powidzkie": "Jezioro Powidzkie"}
+LAKES = {
+    "budzislawskie": "Jezioro Budzisławskie",
+    "niedziegiel": "Jezioro Niedzięgiel",
+    "ostrowskie": "Jezioro Ostrowskie",
+    "powidzkie": "Jezioro Powidzkie",
+    "suszewskie": "Jezioro Suszewskie",
+    "wilczynskie": "Jezioro Wilczyńskie",
+}
 
 
 def get_data_path(lake_id: str) -> Path:
@@ -29,8 +36,16 @@ COL_TEMPERATURA = "Temperatura"
 COL_ZMIANA = "Zmiana"
 
 LAG_MONTHS = 3
-LAG_MONTHS_BY_LAKE = {"niedziegiel": 3, "powidzkie": 5}
-METEO_LAG_CANDIDATES_BY_LAKE = {"niedziegiel": [0], "powidzkie": [0, 6, 12]}
+LAG_MONTHS_BY_LAKE = {"budzislawskie": 3, "niedziegiel": 3, "ostrowskie": 3, "powidzkie": 5, "suszewskie": 3, "wilczynskie": 3}
+METEO_LAG_FIBONACCI = [0, 1, 2, 3, 5, 8, 13]
+METEO_LAG_CANDIDATES_BY_LAKE = {
+    "budzislawskie": METEO_LAG_FIBONACCI,
+    "niedziegiel": METEO_LAG_FIBONACCI,
+    "ostrowskie": METEO_LAG_FIBONACCI,
+    "powidzkie": METEO_LAG_FIBONACCI,
+    "suszewskie": METEO_LAG_FIBONACCI,
+    "wilczynskie": METEO_LAG_FIBONACCI,
+}
 
 
 def load_data(path=None):
@@ -84,10 +99,22 @@ def get_feature_columns(lag_months=None, meteo_lag_months=None):
     return base
 
 
-def train_test_split_temporal(df, test_months=70, train_end_year=None, test_end_year=None):
+def train_test_split_temporal(
+    df,
+    test_months=70,
+    train_end_year=None,
+    train_end_month=None,
+    test_end_year=None,
+):
     if train_end_year is not None:
-        train_df = df[df[COL_DATA].dt.year <= train_end_year]
-        test_df = df[df[COL_DATA].dt.year > train_end_year]
+        yr = df[COL_DATA].dt.year
+        mo = df[COL_DATA].dt.month
+        if train_end_month is not None:
+            train_mask = (yr < train_end_year) | ((yr == train_end_year) & (mo <= train_end_month))
+        else:
+            train_mask = yr <= train_end_year
+        train_df = df[train_mask]
+        test_df = df[~train_mask]
         if test_end_year is not None:
             test_df = test_df[test_df[COL_DATA].dt.year <= test_end_year]
         return train_df, test_df
@@ -95,8 +122,9 @@ def train_test_split_temporal(df, test_months=70, train_end_year=None, test_end_
     return df.iloc[:split_idx], df.iloc[split_idx:] if split_idx < len(df) else df.iloc[:0]
 
 
-TRAIN_END_YEAR_BY_LAKE = {"niedziegiel": 2013, "powidzkie": 2013}
-TEST_END_YEAR_BY_LAKE = {"niedziegiel": 2023, "powidzkie": 2023}
+TRAIN_END_YEAR_BY_LAKE = {"budzislawskie": 2003, "niedziegiel": 2013, "ostrowskie": 2003, "powidzkie": 2013, "suszewskie": 2003, "wilczynskie": 2003}
+TRAIN_END_MONTH_BY_LAKE = {"budzislawskie": 2, "niedziegiel": None, "ostrowskie": 2, "powidzkie": None, "suszewskie": 2, "wilczynskie": 2}
+TEST_END_YEAR_BY_LAKE = {"budzislawskie": 2023, "niedziegiel": 2023, "ostrowskie": 2023, "powidzkie": 2023, "suszewskie": 2023, "wilczynskie": 2023}
 
 
 def _get_candidate_models():
@@ -187,6 +215,7 @@ def train_model(df=None, path=None, lake_id=None):
         df = load_data(path)
     lag_months = LAG_MONTHS_BY_LAKE.get(lake_id, LAG_MONTHS)
     train_end_year = TRAIN_END_YEAR_BY_LAKE.get(lake_id)
+    train_end_month = TRAIN_END_MONTH_BY_LAKE.get(lake_id)
     test_end_year = TEST_END_YEAR_BY_LAKE.get(lake_id)
     meteo_candidates = METEO_LAG_CANDIDATES_BY_LAKE.get(lake_id, [0])
     best_mae_global = np.inf
@@ -201,6 +230,7 @@ def train_model(df=None, path=None, lake_id=None):
         train_df, test_df = train_test_split_temporal(
             df_f,
             train_end_year=train_end_year,
+            train_end_month=train_end_month,
             test_end_year=test_end_year,
         )
         if len(train_df) < 10:
@@ -242,6 +272,7 @@ def train_model(df=None, path=None, lake_id=None):
         train_df, test_df = train_test_split_temporal(
             df_f,
             train_end_year=train_end_year,
+            train_end_month=train_end_month,
             test_end_year=test_end_year,
         )
         if len(train_df) < 10:
@@ -255,6 +286,7 @@ def train_model(df=None, path=None, lake_id=None):
     train_df, test_df = train_test_split_temporal(
         df_final,
         train_end_year=train_end_year,
+        train_end_month=train_end_month,
         test_end_year=test_end_year,
     )
     X_test = test_df[best_feature_cols] if len(test_df) > 0 else None
