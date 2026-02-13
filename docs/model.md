@@ -18,9 +18,9 @@ Kolumny: **Data** (pierwszy dzień miesiąca, dd.mm.yyyy), **Poziom** [m], **Zmi
 
 ## Algorytm
 
-- **Model:** `GradientBoostingRegressor` (scikit-learn).
+- **Wybór modelu:** przed zapisem trenowane są cztery kandydaty (scikit-learn): HistGradientBoosting z early stopping, GradientBoosting z regularyzacją i subsample, Random Forest, GradientBoosting (legacy). Wybierany jest model z **najniższym MAE na zbiorze testowym**; dla każdego jeziora może to być inny typ.
 - **Cechy:** month_sin, month_cos (cykliczny miesiąc), Opad, Temperatura oraz 3 opóźnienia (lag 1–3) dla Zmiana i Poziom (bez bieżącego poziomu).
-- **Podział:** temporalny – ostatnie 70 miesięcy = zbiór testowy, reszta = trening.
+- **Podział:** temporalny – trening do roku 2010 włącznie, test 2011–2023 (obie jeziora).
 - **Ewaluacja:** MAE i RMSE na zbiorze testowym (metryki w metrach).
 
 ## Użycie

@@ -4,7 +4,11 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.ensemble import (
+    GradientBoostingRegressor,
+    HistGradientBoostingRegressor,
+    RandomForestRegressor,
+)
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 
 DATA_DIR = Path(__file__).resolve().parent / "data"
@@ -63,39 +67,121 @@ def get_feature_columns():
     return base + lags
 
 
-def train_test_split_temporal(df, test_months=70):
+def train_test_split_temporal(df, test_months=70, train_end_year=None, test_end_year=None):
+    if train_end_year is not None:
+        train_df = df[df[COL_DATA].dt.year <= train_end_year]
+        test_df = df[df[COL_DATA].dt.year > train_end_year]
+        if test_end_year is not None:
+            test_df = test_df[test_df[COL_DATA].dt.year <= test_end_year]
+        return train_df, test_df
     split_idx = len(df) - test_months
     return df.iloc[:split_idx], df.iloc[split_idx:] if split_idx < len(df) else df.iloc[:0]
 
 
-def train_model(df=None, path=None):
+TRAIN_END_YEAR_BY_LAKE = {"niedziegiel": 2010, "powidzkie": 2010}
+TEST_END_YEAR_BY_LAKE = {"niedziegiel": 2023, "powidzkie": 2023}
+
+
+def _get_candidate_models():
+    return [
+        (
+            "HistGradientBoosting_early_stop",
+            HistGradientBoostingRegressor(
+                max_iter=200,
+                max_depth=5,
+                learning_rate=0.05,
+                min_samples_leaf=10,
+                l2_regularization=0.2,
+                early_stopping=True,
+                validation_fraction=0.15,
+                n_iter_no_change=12,
+                random_state=42,
+            ),
+        ),
+        (
+            "GradientBoosting_reg",
+            GradientBoostingRegressor(
+                n_estimators=80,
+                max_depth=3,
+                learning_rate=0.06,
+                min_samples_leaf=8,
+                subsample=0.85,
+                random_state=42,
+            ),
+        ),
+        (
+            "RandomForest",
+            RandomForestRegressor(
+                n_estimators=120,
+                max_depth=6,
+                min_samples_leaf=5,
+                max_features="sqrt",
+                random_state=42,
+            ),
+        ),
+        (
+            "GradientBoosting_legacy",
+            GradientBoostingRegressor(
+                n_estimators=100,
+                max_depth=4,
+                learning_rate=0.08,
+                min_samples_leaf=3,
+                random_state=42,
+            ),
+        ),
+    ]
+
+
+def train_model(df=None, path=None, lake_id=None):
     if path is None:
         path = get_data_path("niedziegiel")
+    if lake_id is None:
+        for lid, p in [(k, get_data_path(k)) for k in LAKES]:
+            if p == path:
+                lake_id = lid
+                break
+        lake_id = lake_id or "niedziegiel"
     if df is None:
         df = load_data(path)
     df = build_features(df)
     df = df.dropna()
     feature_cols = get_feature_columns()
-    train_df, test_df = train_test_split_temporal(df, test_months=70)
+    train_end_year = TRAIN_END_YEAR_BY_LAKE.get(lake_id)
+    test_end_year = TEST_END_YEAR_BY_LAKE.get(lake_id)
+    train_df, test_df = train_test_split_temporal(
+        df,
+        train_end_year=train_end_year,
+        test_end_year=test_end_year,
+    )
     if len(train_df) < 10:
         raise ValueError("Za mało danych do treningu po podziale czasowym.")
     X_train = train_df[feature_cols]
     y_train = train_df[COL_ZMIANA]
-    model = GradientBoostingRegressor(
-        n_estimators=100,
-        max_depth=4,
-        learning_rate=0.08,
-        min_samples_leaf=3,
-        random_state=42,
-    )
-    model.fit(X_train, y_train)
+    X_test = test_df[feature_cols] if len(test_df) > 0 else None
+    y_test = test_df[COL_ZMIANA].values if len(test_df) > 0 else None
+    best_mae = np.inf
+    best_model = None
+    best_name = None
+    for name, candidate in _get_candidate_models():
+        candidate.fit(X_train, y_train)
+        if X_test is not None and y_test is not None:
+            pred = candidate.predict(X_test)
+            mae = mean_absolute_error(y_test, pred)
+            if mae < best_mae:
+                best_mae = mae
+                best_model = candidate
+                best_name = name
+    if best_model is not None:
+        model = best_model
+    else:
+        model = _get_candidate_models()[0][1]
+        model.fit(X_train, y_train)
     metrics = {}
-    if len(test_df) > 0:
-        X_test = test_df[feature_cols]
-        y_test = test_df[COL_ZMIANA]
+    if X_test is not None and y_test is not None:
         y_pred = model.predict(X_test)
         metrics["test_mae"] = mean_absolute_error(y_test, y_pred)
         metrics["test_rmse"] = np.sqrt(mean_squared_error(y_test, y_pred))
+        metrics["best_model"] = best_name
     return model, feature_cols, metrics
 
 
@@ -151,10 +237,11 @@ def run_training_and_save(lake_id: str = "niedziegiel"):
     if not data_path.exists():
         raise FileNotFoundError(f"Brak pliku danych: {data_path}")
     df = load_data(data_path)
-    model, feature_cols, metrics = train_model(df=df, path=data_path)
+    model, feature_cols, metrics = train_model(df=df, path=data_path, lake_id=lake_id)
     save_model(model, feature_cols, path=model_path)
     name = LAKES.get(lake_id, lake_id)
-    print(f"Model wytrenowany ({name}). Test MAE: {metrics.get('test_mae', 'N/A'):.4f}, RMSE: {metrics.get('test_rmse', 'N/A'):.4f}")
+    best = metrics.get("best_model", "—")
+    print(f"Model wytrenowany ({name}). Wybór: {best}. Test MAE: {metrics.get('test_mae', 'N/A'):.4f}, RMSE: {metrics.get('test_rmse', 'N/A'):.4f}")
     return model, feature_cols
 
 

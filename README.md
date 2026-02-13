@@ -19,7 +19,7 @@ Format CSV: nagłówki Data, Poziom, Zmiana, Opad, Temperatura; dziesiętne z pr
 ## Szybki start
 
 1. Umieść dane w `data/{jezioro}_data.csv` (np. `niedziegiel_data.csv`, `powidzkie_data.csv`).
-2. Wytrenuj i zapisz model dla wybranego jeziora:
+2. Wytrenuj i zapisz model dla wybranego jeziora (automatyczny wybór najlepszego modelu spośród kilku kandydatów):
    ```bash
    python lake.py niedziegiel
    python lake.py powidzkie
@@ -48,10 +48,12 @@ Szczegóły modelu i API: [docs/model.md](docs/model.md).
 ## Struktura
 
 - `lake.py` – konfiguracja jezior (`LAKES`), ścieżki `get_data_path(lake_id)`, `get_model_path(lake_id)`, wczytywanie danych, budowa cech, trening, zapis/odczyt modelu, `predict_change(...)`.
+- `merge_niedziegiel_data.py` – łączy `data/meteo.csv` (opad, temperatura) z `data/niedziel_realny_pomiar.csv` (poziom), dodaje kolumnę Zmiana i zapisuje `data/niedziegiel_data.csv`.
+- `merge_powidzkie_data.py` – łączy `data/meteo.csv` z `data/powidzkie_realny_pomiar.csv` (poziom), dodaje kolumnę Zmiana i zapisuje `data/powidzkie_data.csv`.
 - `evaluate_predictions.py` – ewaluacja per jezioro, podsumowania w `docs/podsumowanie_ewaluacji_{jezioro}.md`.
 - `generate_report.py` – raporty z wykresami: `docs/raport_podsumowujacy_{jezioro}.md`, `docs/figures_{jezioro}/*.png`.
 - `md_to_pdf.py` – konwersja Markdown → PDF (fpdf2, markdown).
-- `data/{jezioro}_data.csv` – dane miesięczne.
+- `data/{jezioro}_data.csv` – dane miesięczne (Data, Poziom, Zmiana, Opad, Temperatura). Niedzięgiel: `python merge_niedziegiel_data.py` (źródła: `meteo.csv`, `niedziel_realny_pomiar.csv`). Powidzkie: `python merge_powidzkie_data.py` (źródła: `meteo.csv`, `powidzkie_realny_pomiar.csv`).
 - `data/{jezioro}_model.pkl` – wytrenowany model.
 - `docs/model.md` – opis modelu i użycia.
 - `docs/raport_podsumowujacy_*.md`, `docs/podsumowanie_ewaluacji_*.md`, `docs/figures_*/` – raporty i wykresy per jezioro.

@@ -14,7 +14,7 @@ Projekt ma na celu:
 - **Zakres:** dane miesięczne (pierwszy dzień miesiąca).
 - **Kolumny:** Data, Poziom (m), Zmiana (m), Opad (mm), Temperatura (°C).
 - **Target:** Zmiana – miesięczna zmiana poziomu.
-- Wiersze z błędami (#ERROR!) lub brakami są pomijane. Po usunięciu lagów (3 miesiące) do analizy wchodzi **320** miesięcy.
+- Wiersze z błędami (#ERROR!) lub brakami są pomijane. Po usunięciu lagów (3 miesiące) do analizy wchodzi **572** miesięcy.
 
 ---
 
@@ -24,7 +24,7 @@ Projekt ma na celu:
 |--------|------|
 | Algorytm | Gradient Boosting (regresja), scikit-learn |
 | Cechy wejściowe | Miesiąc (sin/cos), Opad, Temperatura, 3 opóźnienia zmiany poziomu, 3 opóźnienia poziomu |
-| Trening | Podział czasowy: ostatnie 70 miesięcy = zbiór testowy |
+| Trening | Podział czasowy: trening do roku 2010, test od 2011 |
 | Wynik | Prognoza zmiany poziomu na dany miesiąc (m) |
 
 Model **nie** używa bieżącego poziomu – tylko opad, temperatura, sezon i historia.
@@ -33,9 +33,9 @@ Model **nie** używa bieżącego poziomu – tylko opad, temperatura, sezon i hi
 
 ## 4. Wyniki ewaluacji
 
-- **MAE (średni błąd bezwzględny):** 0.0084 m (~0.84 cm)
-- **RMSE:** 0.0120 m
-- **Liczba miesięcy:** 320
+- **MAE (średni błąd bezwzględny):** 0.0146 m (~1.46 cm)
+- **RMSE:** 0.0190 m
+- **Liczba miesięcy:** 572
 
 ### 4.1. Wysokość wody: rzeczywista vs scenariusz modelowy
 
@@ -65,7 +65,7 @@ Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.
 
 ## 5. Podsumowanie
 
-- Model prognozuje miesięczną zmianę poziomu Jezioro Powidzkie z MAE ~0.84 cm.
+- Model prognozuje miesięczną zmianę poziomu Jezioro Powidzkie z MAE ~1.46 cm.
 - Scenariusz kumulatywny (wysokość z prognozowanej zmiany) jest porównywany z rzeczywistą wysokością; rozbieżność i błąd miesięczny opisują jakość prognoz.
 
 Szczegóły techniczne: [model.md](model.md), [podsumowanie_ewaluacji_powidzkie.md](podsumowanie_ewaluacji_powidzkie.md).

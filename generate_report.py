@@ -132,7 +132,7 @@ def _write_report(rows, mae, rmse, n, lake_id, lake_name):
         "|--------|------|",
         "| Algorytm | Gradient Boosting (regresja), scikit-learn |",
         "| Cechy wejściowe | Miesiąc (sin/cos), Opad, Temperatura, 3 opóźnienia zmiany poziomu, 3 opóźnienia poziomu |",
-        "| Trening | Podział czasowy: ostatnie 70 miesięcy = zbiór testowy |",
+        "| Trening | Podział czasowy: trening do roku 2010, test od 2011 |",
         "| Wynik | Prognoza zmiany poziomu na dany miesiąc (m) |",
         "",
         "Model **nie** używa bieżącego poziomu – tylko opad, temperatura, sezon i historia.",
