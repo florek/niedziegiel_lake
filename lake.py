@@ -29,6 +29,8 @@ COL_TEMPERATURA = "Temperatura"
 COL_ZMIANA = "Zmiana"
 
 LAG_MONTHS = 3
+LAG_MONTHS_BY_LAKE = {"niedziegiel": 3, "powidzkie": 5}
+METEO_LAG_CANDIDATES_BY_LAKE = {"niedziegiel": [0], "powidzkie": [0, 6, 12]}
 
 
 def load_data(path=None):
@@ -43,28 +45,43 @@ def load_data(path=None):
     return df.sort_values(COL_DATA).reset_index(drop=True)
 
 
-def _add_lags(df):
-    for lag in range(1, LAG_MONTHS + 1):
+def _add_lags(df, lag_months):
+    for lag in range(1, lag_months + 1):
         df[f"zmiana_lag{lag}"] = df[COL_ZMIANA].shift(lag)
         df[f"poziom_lag{lag}"] = df[COL_POZIOM].shift(lag)
     return df
 
 
-def build_features(df):
+def _add_meteo_lags(df, meteo_lag_months):
+    for lag in range(1, meteo_lag_months + 1):
+        df[f"opad_lag{lag}"] = df[COL_OPAD].shift(lag)
+        df[f"temperatura_lag{lag}"] = df[COL_TEMPERATURA].shift(lag)
+    return df
+
+
+def build_features(df, lag_months=None, meteo_lag_months=None):
+    lag_months = lag_months if lag_months is not None else LAG_MONTHS
+    meteo_lag_months = meteo_lag_months if meteo_lag_months is not None else 0
     df = df.copy()
     df["month"] = df[COL_DATA].dt.month
     df["month_sin"] = np.sin(2 * np.pi * df["month"] / 12)
     df["month_cos"] = np.cos(2 * np.pi * df["month"] / 12)
-    df = _add_lags(df)
+    if meteo_lag_months > 0:
+        df = _add_meteo_lags(df, meteo_lag_months)
+    df = _add_lags(df, lag_months)
     return df
 
 
-def get_feature_columns():
+def get_feature_columns(lag_months=None, meteo_lag_months=None):
+    lag_months = lag_months if lag_months is not None else LAG_MONTHS
+    meteo_lag_months = meteo_lag_months if meteo_lag_months is not None else 0
     base = ["month_sin", "month_cos", COL_OPAD, COL_TEMPERATURA]
-    lags = []
-    for lag in range(1, LAG_MONTHS + 1):
-        lags.extend([f"zmiana_lag{lag}", f"poziom_lag{lag}"])
-    return base + lags
+    if meteo_lag_months > 0:
+        for lag in range(1, meteo_lag_months + 1):
+            base.extend([f"opad_lag{lag}", f"temperatura_lag{lag}"])
+    for lag in range(1, lag_months + 1):
+        base.extend([f"zmiana_lag{lag}", f"poziom_lag{lag}"])
+    return base
 
 
 def train_test_split_temporal(df, test_months=70, train_end_year=None, test_end_year=None):
@@ -78,7 +95,7 @@ def train_test_split_temporal(df, test_months=70, train_end_year=None, test_end_
     return df.iloc[:split_idx], df.iloc[split_idx:] if split_idx < len(df) else df.iloc[:0]
 
 
-TRAIN_END_YEAR_BY_LAKE = {"niedziegiel": 2010, "powidzkie": 2010}
+TRAIN_END_YEAR_BY_LAKE = {"niedziegiel": 2013, "powidzkie": 2013}
 TEST_END_YEAR_BY_LAKE = {"niedziegiel": 2023, "powidzkie": 2023}
 
 
@@ -129,6 +146,31 @@ def _get_candidate_models():
                 random_state=42,
             ),
         ),
+        (
+            "HistGradientBoosting_deeper",
+            HistGradientBoostingRegressor(
+                max_iter=300,
+                max_depth=6,
+                learning_rate=0.04,
+                min_samples_leaf=6,
+                l2_regularization=0.15,
+                early_stopping=True,
+                validation_fraction=0.15,
+                n_iter_no_change=15,
+                random_state=42,
+            ),
+        ),
+        (
+            "GradientBoosting_strong",
+            GradientBoostingRegressor(
+                n_estimators=150,
+                max_depth=5,
+                learning_rate=0.05,
+                min_samples_leaf=6,
+                subsample=0.8,
+                random_state=42,
+            ),
+        ),
     ]
 
 
@@ -143,46 +185,87 @@ def train_model(df=None, path=None, lake_id=None):
         lake_id = lake_id or "niedziegiel"
     if df is None:
         df = load_data(path)
-    df = build_features(df)
-    df = df.dropna()
-    feature_cols = get_feature_columns()
+    lag_months = LAG_MONTHS_BY_LAKE.get(lake_id, LAG_MONTHS)
     train_end_year = TRAIN_END_YEAR_BY_LAKE.get(lake_id)
     test_end_year = TEST_END_YEAR_BY_LAKE.get(lake_id)
+    meteo_candidates = METEO_LAG_CANDIDATES_BY_LAKE.get(lake_id, [0])
+    best_mae_global = np.inf
+    best_model = None
+    best_feature_cols = None
+    best_name = None
+    best_meteo_lag = 0
+    for meteo_lag_months in meteo_candidates:
+        df_f = build_features(df.copy(), lag_months=lag_months, meteo_lag_months=meteo_lag_months)
+        df_f = df_f.dropna()
+        feature_cols = get_feature_columns(lag_months=lag_months, meteo_lag_months=meteo_lag_months)
+        train_df, test_df = train_test_split_temporal(
+            df_f,
+            train_end_year=train_end_year,
+            test_end_year=test_end_year,
+        )
+        if len(train_df) < 10:
+            continue
+        X_train = train_df[feature_cols]
+        y_train = train_df[COL_ZMIANA]
+        X_test = test_df[feature_cols] if len(test_df) > 0 else None
+        y_test = test_df[COL_ZMIANA].values if len(test_df) > 0 else None
+        best_mae = np.inf
+        best_cand = None
+        best_cand_name = None
+        for name, candidate in _get_candidate_models():
+            candidate.fit(X_train, y_train)
+            if X_test is not None and y_test is not None:
+                pred = candidate.predict(X_test)
+                mae = mean_absolute_error(y_test, pred)
+                if mae < best_mae:
+                    best_mae = mae
+                    best_cand = candidate
+                    best_cand_name = name
+        if best_cand is not None and best_mae < best_mae_global:
+            best_mae_global = best_mae
+            best_model = best_cand
+            best_feature_cols = feature_cols
+            best_name = best_cand_name
+            best_meteo_lag = meteo_lag_months
+    if best_model is None:
+        best_meteo_lag = meteo_candidates[0]
+        df_f = build_features(
+            df.copy(),
+            lag_months=lag_months,
+            meteo_lag_months=best_meteo_lag,
+        )
+        df_f = df_f.dropna()
+        best_feature_cols = get_feature_columns(
+            lag_months=lag_months,
+            meteo_lag_months=best_meteo_lag,
+        )
+        train_df, test_df = train_test_split_temporal(
+            df_f,
+            train_end_year=train_end_year,
+            test_end_year=test_end_year,
+        )
+        if len(train_df) < 10:
+            raise ValueError("Za mało danych do treningu po podziale czasowym.")
+        best_model = _get_candidate_models()[0][1]
+        best_model.fit(train_df[best_feature_cols], train_df[COL_ZMIANA])
+        best_name = _get_candidate_models()[0][0]
+    metrics = {}
+    df_final = build_features(df.copy(), lag_months=lag_months, meteo_lag_months=best_meteo_lag)
+    df_final = df_final.dropna()
     train_df, test_df = train_test_split_temporal(
-        df,
+        df_final,
         train_end_year=train_end_year,
         test_end_year=test_end_year,
     )
-    if len(train_df) < 10:
-        raise ValueError("Za mało danych do treningu po podziale czasowym.")
-    X_train = train_df[feature_cols]
-    y_train = train_df[COL_ZMIANA]
-    X_test = test_df[feature_cols] if len(test_df) > 0 else None
+    X_test = test_df[best_feature_cols] if len(test_df) > 0 else None
     y_test = test_df[COL_ZMIANA].values if len(test_df) > 0 else None
-    best_mae = np.inf
-    best_model = None
-    best_name = None
-    for name, candidate in _get_candidate_models():
-        candidate.fit(X_train, y_train)
-        if X_test is not None and y_test is not None:
-            pred = candidate.predict(X_test)
-            mae = mean_absolute_error(y_test, pred)
-            if mae < best_mae:
-                best_mae = mae
-                best_model = candidate
-                best_name = name
-    if best_model is not None:
-        model = best_model
-    else:
-        model = _get_candidate_models()[0][1]
-        model.fit(X_train, y_train)
-    metrics = {}
     if X_test is not None and y_test is not None:
-        y_pred = model.predict(X_test)
+        y_pred = best_model.predict(X_test)
         metrics["test_mae"] = mean_absolute_error(y_test, y_pred)
         metrics["test_rmse"] = np.sqrt(mean_squared_error(y_test, y_pred))
         metrics["best_model"] = best_name
-    return model, feature_cols, metrics
+        metrics["meteo_lag_months"] = best_meteo_lag
+    return best_model, best_feature_cols, metrics, lag_months, best_meteo_lag
 
 
 def evaluate_model(model, df, feature_cols):
@@ -195,7 +278,22 @@ def evaluate_model(model, df, feature_cols):
     }
 
 
-def predict_change(model, feature_cols, poziom, opad, temperatura, month, last_changes=None, last_poziomy=None):
+def predict_change(
+    model,
+    feature_cols,
+    poziom,
+    opad,
+    temperatura,
+    month,
+    last_changes=None,
+    last_poziomy=None,
+    last_opady=None,
+    last_temperatury=None,
+    lag_months=None,
+    meteo_lag_months=None,
+):
+    lag_months = lag_months if lag_months is not None else LAG_MONTHS
+    meteo_lag_months = meteo_lag_months if meteo_lag_months is not None else 0
     month_sin = np.sin(2 * np.pi * month / 12)
     month_cos = np.cos(2 * np.pi * month / 12)
     row = {
@@ -204,20 +302,33 @@ def predict_change(model, feature_cols, poziom, opad, temperatura, month, last_c
         COL_OPAD: opad,
         COL_TEMPERATURA: temperatura,
     }
-    for lag in range(1, LAG_MONTHS + 1):
+    if meteo_lag_months > 0:
+        for lag in range(1, meteo_lag_months + 1):
+            row[f"opad_lag{lag}"] = (
+                last_opady[-(lag)] if last_opady and len(last_opady) >= lag else opad
+            )
+            row[f"temperatura_lag{lag}"] = (
+                last_temperatury[-(lag)] if last_temperatury and len(last_temperatury) >= lag else temperatura
+            )
+    for lag in range(1, lag_months + 1):
         row[f"zmiana_lag{lag}"] = (last_changes[-(lag)] if last_changes and len(last_changes) >= lag else 0.0)
         row[f"poziom_lag{lag}"] = (last_poziomy[-(lag)] if last_poziomy and len(last_poziomy) >= lag else poziom)
     X = pd.DataFrame([row])[feature_cols]
     return float(model.predict(X)[0])
 
 
-def save_model(model, feature_cols, path=None):
+def save_model(model, feature_cols, path=None, lag_months=None, meteo_lag_months=None):
     if path is None:
         path = get_model_path("niedziegiel")
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {"model": model, "feature_cols": feature_cols}
+    if lag_months is not None:
+        payload["lag_months"] = lag_months
+    if meteo_lag_months is not None:
+        payload["meteo_lag_months"] = meteo_lag_months
     with open(path, "wb") as f:
-        pickle.dump({"model": model, "feature_cols": feature_cols}, f)
+        pickle.dump(payload, f)
 
 
 def load_model(path=None):
@@ -228,7 +339,9 @@ def load_model(path=None):
         raise FileNotFoundError(f"Brak pliku modelu: {path}")
     with open(path, "rb") as f:
         data = pickle.load(f)
-    return data["model"], data["feature_cols"]
+    lag_months = data.get("lag_months", LAG_MONTHS)
+    meteo_lag_months = data.get("meteo_lag_months", 0)
+    return data["model"], data["feature_cols"], lag_months, meteo_lag_months
 
 
 def run_training_and_save(lake_id: str = "niedziegiel"):
@@ -237,11 +350,25 @@ def run_training_and_save(lake_id: str = "niedziegiel"):
     if not data_path.exists():
         raise FileNotFoundError(f"Brak pliku danych: {data_path}")
     df = load_data(data_path)
-    model, feature_cols, metrics = train_model(df=df, path=data_path, lake_id=lake_id)
-    save_model(model, feature_cols, path=model_path)
+    model, feature_cols, metrics, lag_months, meteo_lag_months = train_model(
+        df=df,
+        path=data_path,
+        lake_id=lake_id,
+    )
+    save_model(
+        model,
+        feature_cols,
+        path=model_path,
+        lag_months=lag_months,
+        meteo_lag_months=meteo_lag_months,
+    )
     name = LAKES.get(lake_id, lake_id)
     best = metrics.get("best_model", "—")
-    print(f"Model wytrenowany ({name}). Wybór: {best}. Test MAE: {metrics.get('test_mae', 'N/A'):.4f}, RMSE: {metrics.get('test_rmse', 'N/A'):.4f}")
+    meteo_lag = metrics.get("meteo_lag_months", meteo_lag_months)
+    print(
+        f"Model wytrenowany ({name}). Wybór: {best}. Opóźnienie meteo: {meteo_lag} mies. "
+        f"Test MAE: {metrics.get('test_mae', 'N/A'):.4f}, RMSE: {metrics.get('test_rmse', 'N/A'):.4f}"
+    )
     return model, feature_cols
 
 

@@ -18,9 +18,9 @@ Kolumny: **Data** (pierwszy dzień miesiąca, dd.mm.yyyy), **Poziom** [m], **Zmi
 
 ## Algorytm
 
-- **Wybór modelu:** przed zapisem trenowane są cztery kandydaty (scikit-learn): HistGradientBoosting z early stopping, GradientBoosting z regularyzacją i subsample, Random Forest, GradientBoosting (legacy). Wybierany jest model z **najniższym MAE na zbiorze testowym**; dla każdego jeziora może to być inny typ.
-- **Cechy:** month_sin, month_cos (cykliczny miesiąc), Opad, Temperatura oraz 3 opóźnienia (lag 1–3) dla Zmiana i Poziom (bez bieżącego poziomu).
-- **Podział:** temporalny – trening do roku 2010 włącznie, test 2011–2023 (obie jeziora).
+- **Wybór modelu:** przed zapisem trenowane są sześć kandydatów (scikit-learn): HistGradientBoosting (early stop, głębszy), GradientBoosting (reg, strong, legacy), Random Forest. Wybierany jest model z **najniższym MAE na zbiorze testowym**; dla każdego jeziora może to być inny typ.
+- **Cechy:** month_sin, month_cos (cykliczny miesiąc), Opad, Temperatura; opcjonalnie **opady i temperatury z opóźnieniem 1–N mies.** (dla Powidzkiego automatycznie testowane N ∈ {0, 6, 12}, wybierane N z najlepszym MAE na teście – typowo 12 mies., zgodnie z rocznym opóźnieniem reakcji jeziora); oraz opóźnienia zmiany i poziomu (Niedzięgiel 3, Powidzkie 5 – `LAG_MONTHS_BY_LAKE`).
+- **Podział:** temporalny – trening do roku 2013 włącznie, test 2014–2023 (obie jeziora).
 - **Ewaluacja:** MAE i RMSE na zbiorze testowym (metryki w metrach).
 
 ## Użycie
@@ -35,9 +35,9 @@ W kodzie:
 - `lake.LAKES` – słownik id → nazwa jeziora.
 - `lake.get_data_path(lake_id)`, `lake.get_model_path(lake_id)` – ścieżki do pliku CSV i modelu.
 - `load_data(path=...)` – wczytanie i czyszczenie CSV.
-- `train_model(df=..., path=...)` – trening, zwraca model, listę cech i metryki.
-- `predict_change(model, feature_cols, poziom, opad, temperatura, month, last_changes=..., last_poziomy=...)` – prognoza zmiany na jeden miesiąc.
-- `save_model(model, feature_cols, path=...)` / `load_model(path=...)` – zapis/odczyt modelu (`data/{lake_id}_model.pkl`).
+- `train_model(df=..., path=...)` – trening, zwraca model, listę cech, metryki, lag_months, meteo_lag_months.
+- `predict_change(model, feature_cols, poziom, opad, temperatura, month, last_changes=..., last_poziomy=..., last_opady=..., last_temperatury=..., lag_months=..., meteo_lag_months=...)` – prognoza zmiany na jeden miesiąc (przy meteo_lag > 0 podaj listy ostatnich opadów i temperatur).
+- `save_model(..., lag_months=..., meteo_lag_months=...)` / `load_model(path=...)` – zapis/odczyt modelu (`data/{lake_id}_model.pkl`); load zwraca model, feature_cols, lag_months, meteo_lag_months.
 
 ## Wyniki (przykładowe)
 

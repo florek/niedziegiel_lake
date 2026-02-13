@@ -14,7 +14,7 @@ Projekt ma na celu:
 - **Zakres:** dane miesięczne (pierwszy dzień miesiąca).
 - **Kolumny:** Data, Poziom (m), Zmiana (m), Opad (mm), Temperatura (°C).
 - **Target:** Zmiana – miesięczna zmiana poziomu.
-- Wiersze z błędami (#ERROR!) lub brakami są pomijane. Po usunięciu lagów (3 miesiące) do analizy wchodzi **572** miesięcy.
+- Wiersze z błędami (#ERROR!) lub brakami są pomijane. Po usunięciu lagów (3 mies.) do analizy wchodzi **572** miesięcy.
 
 ---
 
@@ -24,7 +24,7 @@ Projekt ma na celu:
 |--------|------|
 | Algorytm | Gradient Boosting (regresja), scikit-learn |
 | Cechy wejściowe | Miesiąc (sin/cos), Opad, Temperatura, 3 opóźnienia zmiany poziomu, 3 opóźnienia poziomu |
-| Trening | Podział czasowy: trening do roku 2010, test od 2011 |
+| Trening | Podział czasowy: trening do roku 2013, test 2014-2023 |
 | Wynik | Prognoza zmiany poziomu na dany miesiąc (m) |
 
 Model **nie** używa bieżącego poziomu – tylko opad, temperatura, sezon i historia.
@@ -33,8 +33,8 @@ Model **nie** używa bieżącego poziomu – tylko opad, temperatura, sezon i hi
 
 ## 4. Wyniki ewaluacji
 
-- **MAE (średni błąd bezwzględny):** 0.0113 m (~1.13 cm)
-- **RMSE:** 0.0156 m
+- **MAE (średni błąd bezwzględny):** 0.0085 m (~0.85 cm)
+- **RMSE:** 0.0125 m
 - **Liczba miesięcy:** 572
 
 ### 4.1. Wysokość wody: rzeczywista vs scenariusz modelowy
@@ -65,7 +65,7 @@ Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.
 
 ## 5. Podsumowanie
 
-- Model prognozuje miesięczną zmianę poziomu Jezioro Niedzięgiel z MAE ~1.13 cm.
+- Model prognozuje miesięczną zmianę poziomu Jezioro Niedzięgiel z MAE ~0.85 cm.
 - Scenariusz kumulatywny (wysokość z prognozowanej zmiany) jest porównywany z rzeczywistą wysokością; rozbieżność i błąd miesięczny opisują jakość prognoz.
 
 Szczegóły techniczne: [model.md](model.md), [podsumowanie_ewaluacji_niedziegiel.md](podsumowanie_ewaluacji_niedziegiel.md).

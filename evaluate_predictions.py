@@ -11,9 +11,13 @@ def run_evaluation(lake_id="niedziegiel", data_path=None, model_path=None, outpu
         output_path = DOCS_DIR / f"podsumowanie_ewaluacji_{lake_id}.md"
     data_path = data_path or lake.get_data_path(lake_id)
     model_path = model_path or lake.get_model_path(lake_id)
-    model, feature_cols = lake.load_model(model_path)
+    model, feature_cols, lag_months, meteo_lag_months = lake.load_model(model_path)
     df = lake.load_data(data_path)
-    df = lake.build_features(df)
+    df = lake.build_features(
+        df,
+        lag_months=lag_months,
+        meteo_lag_months=meteo_lag_months,
+    )
     df = df.dropna()
     if len(df) == 0:
         raise ValueError("Brak wierszy z pełnymi cechami.")

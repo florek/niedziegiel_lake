@@ -105,6 +105,18 @@ def _write_report(rows, mae, rmse, n, lake_id, lake_name):
     _plot_zmiana_fakt_vs_prognoza(rows, figs_dir)
     _plot_blad_miesieczny(rows, figs_dir)
     figs_ref = f"figures_{lake_id}"
+    model_path = lake.get_model_path(lake_id)
+    if model_path.exists():
+        _, _, lag_m, meteo_m = lake.load_model(model_path)
+    else:
+        lag_m = lake.LAG_MONTHS_BY_LAKE.get(lake_id, lake.LAG_MONTHS)
+        meteo_m = 0
+    lag_effective = max(lag_m, meteo_m)
+    cechy_text = (
+        f"Miesiąc (sin/cos), Opad, Temperatura"
+        + (f", opad i temperatura z opóźnieniem 1–{meteo_m} mies." if meteo_m > 0 else "")
+        + f", {lag_m} opóźnienia zmiany poziomu, {lag_m} opóźnienia poziomu"
+    )
     sections = [
         f"# Raport podsumowujący: prognoza zmiany poziomu {lake_name}",
         "",
@@ -122,7 +134,10 @@ def _write_report(rows, mae, rmse, n, lake_id, lake_name):
         "- **Zakres:** dane miesięczne (pierwszy dzień miesiąca).",
         "- **Kolumny:** Data, Poziom (m), Zmiana (m), Opad (mm), Temperatura (°C).",
         "- **Target:** Zmiana – miesięczna zmiana poziomu.",
-        "- Wiersze z błędami (#ERROR!) lub brakami są pomijane. Po usunięciu lagów (3 miesiące) do analizy wchodzi **{}** miesięcy.".format(n),
+        "- Wiersze z błędami (#ERROR!) lub brakami są pomijane. Po usunięciu lagów ({} mies.) do analizy wchodzi **{}** miesięcy.".format(
+            lag_effective,
+            n,
+        ),
         "",
         "---",
         "",
@@ -131,8 +146,12 @@ def _write_report(rows, mae, rmse, n, lake_id, lake_name):
         "| Element | Opis |",
         "|--------|------|",
         "| Algorytm | Gradient Boosting (regresja), scikit-learn |",
-        "| Cechy wejściowe | Miesiąc (sin/cos), Opad, Temperatura, 3 opóźnienia zmiany poziomu, 3 opóźnienia poziomu |",
-        "| Trening | Podział czasowy: trening do roku 2010, test od 2011 |",
+        "| Cechy wejściowe | {} |".format(cechy_text),
+        "| Trening | Podział czasowy: trening do roku {}, test {}-{} |".format(
+            lake.TRAIN_END_YEAR_BY_LAKE.get(lake_id, 2013),
+            lake.TRAIN_END_YEAR_BY_LAKE.get(lake_id, 2013) + 1,
+            lake.TEST_END_YEAR_BY_LAKE.get(lake_id, 2023),
+        ),
         "| Wynik | Prognoza zmiany poziomu na dany miesiąc (m) |",
         "",
         "Model **nie** używa bieżącego poziomu – tylko opad, temperatura, sezon i historia.",
