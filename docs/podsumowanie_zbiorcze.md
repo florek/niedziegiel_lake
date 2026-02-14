@@ -1,7 +1,5 @@
 # Podsumowanie zbiorcze – prognoza poziomu jezior i odbudowa
 
-Raport syntetyzujący wnioski ze wszystkich dokumentów w katalogu docs (raporty per jezioro, ewaluacje, szacunek odbudowy, opis modelu). Bez linków i odnośników.
-
 ---
 
 ## 1. Najważniejsze wnioski
