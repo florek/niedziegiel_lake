@@ -49,11 +49,10 @@ def run_evaluation(lake_id="niedziegiel", data_path=None, model_path=None, outpu
     poziom_rzeczywisty_koniec = (df[lake.COL_POZIOM] + df[lake.COL_ZMIANA]).values
     poziom_model_koniec = []
     poziom_prev = float(df.iloc[0][lake.COL_POZIOM])
-    max_poziom = lake.get_max_poziom(lake_id, df)
+    max_poziom, odplyw_m, przesaczanie_m = lake.get_drainage_params(lake_id, df)
     for i in range(len(df)):
         poziom_prev = poziom_prev + float(y_pred[i])
-        if max_poziom is not None:
-            poziom_prev = min(poziom_prev, max_poziom)
+        poziom_prev = lake.apply_cap_and_drainage(poziom_prev, max_poziom, odplyw_m, przesaczanie_m)
         poziom_model_koniec.append(poziom_prev)
     rows = []
     for i in range(len(df)):

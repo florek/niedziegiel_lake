@@ -35,6 +35,11 @@ MAX_POZIOM_SPIETRZANIA_BY_LAKE = {
     "wilczynskie": 99.15,
 }
 
+ODPLYW_M_MIN = 0.2
+ODPLYW_M_MAX = 1.0
+ODPLYW_FRAC_RANGE = 0.05
+PRZESACZANIE_DEFAULT_M = 0.01
+
 
 def get_max_poziom(lake_id: str, df=None):
     cap = MAX_POZIOM_SPIETRZANIA_BY_LAKE.get(lake_id)
@@ -43,6 +48,33 @@ def get_max_poziom(lake_id: str, df=None):
     if df is not None:
         return float((df[COL_POZIOM] + df[COL_ZMIANA]).max())
     return None
+
+
+def get_drainage_params(lake_id: str, df):
+    max_poziom = get_max_poziom(lake_id, df)
+    if max_poziom is None:
+        return None, None, None
+    poziom_koniec = df[COL_POZIOM] + df[COL_ZMIANA]
+    level_max = float(poziom_koniec.max())
+    level_min = float(df[COL_POZIOM].min())
+    range_m = level_max - level_min
+    odplyw_m = max(ODPLYW_M_MIN, min(ODPLYW_M_MAX, range_m * ODPLYW_FRAC_RANGE))
+    zone_mask = poziom_koniec >= (max_poziom - odplyw_m)
+    if zone_mask.sum() == 0:
+        przesaczanie_m = PRZESACZANIE_DEFAULT_M
+    else:
+        mean_zmiana = float(df.loc[zone_mask, COL_ZMIANA].mean())
+        przesaczanie_m = max(PRZESACZANIE_DEFAULT_M, -mean_zmiana) if mean_zmiana < 0 else PRZESACZANIE_DEFAULT_M
+    return max_poziom, odplyw_m, przesaczanie_m
+
+
+def apply_cap_and_drainage(poziom: float, max_poziom: float, odplyw_m: float, przesaczanie_m: float) -> float:
+    if max_poziom is None:
+        return poziom
+    poziom = min(poziom, max_poziom)
+    if odplyw_m is not None and przesaczanie_m is not None and poziom > max_poziom - odplyw_m:
+        poziom = poziom - przesaczanie_m
+    return poziom
 
 
 def get_data_path(lake_id: str) -> Path:
