@@ -37,11 +37,18 @@ def _test_start_label(lake_id):
 
 def _plot_wysokosci(rows, figs_dir, lake_name):
     dates = [np.datetime64(r["data"] + "-01") for r in rows]
-    rzeczywista = [r["wysokosc_rzeczywista"] for r in rows]
-    model = [r["wysokosc_model"] for r in rows]
+    rzeczywista = np.array([r["wysokosc_rzeczywista"] for r in rows], dtype=float)
+    model = np.array([r["wysokosc_model"] for r in rows], dtype=float)
+    x = np.arange(len(dates))
+    coef_r = np.polyfit(x, rzeczywista, 1)
+    coef_m = np.polyfit(x, model, 1)
+    trend_r = np.polyval(coef_r, x)
+    trend_m = np.polyval(coef_m, x)
     fig, ax = plt.subplots(figsize=(12, 5))
     ax.plot(dates, rzeczywista, label="Wysokość rzeczywista", color="#1f77b4", linewidth=1.2)
     ax.plot(dates, model, label="Wysokość scenariusz modelowy", color="#ff7f0e", linewidth=1.2, linestyle="--")
+    ax.plot(dates, trend_r, label="Tendencja spadkowa (rzeczywista)", color="#1f77b4", linewidth=1.5, linestyle=":", alpha=0.9)
+    ax.plot(dates, trend_m, label="Tendencja spadkowa (model)", color="#ff7f0e", linewidth=1.5, linestyle=":", alpha=0.9)
     ax.set_xlabel("Data")
     ax.set_ylabel("Wysokość (m)")
     ax.set_title(f"{lake_name} – wysokość wody: rzeczywista vs scenariusz modelowy")
