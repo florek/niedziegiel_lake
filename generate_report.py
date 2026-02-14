@@ -37,24 +37,24 @@ def _test_start_label(lake_id):
 
 def _plot_wysokosci(rows, figs_dir, lake_name):
     dates = [np.datetime64(r["data"] + "-01") for r in rows]
-    rzeczywista = np.array([r["wysokosc_rzeczywista"] for r in rows], dtype=float)
-    model = np.array([r["wysokosc_model"] for r in rows], dtype=float)
+    rzeczywista = np.array([float(r["wysokosc_rzeczywista"]) for r in rows])
+    model = np.array([float(r["wysokosc_model"]) for r in rows])
     n = len(dates)
     fig, ax = plt.subplots(figsize=(12, 5))
     ax.plot(dates, rzeczywista, label="Wysokość rzeczywista", color="#1f77b4", linewidth=1.2)
     ax.plot(dates, model, label="Wysokość scenariusz modelowy", color="#ff7f0e", linewidth=1.2, linestyle="--")
+    x = np.arange(n, dtype=float)
     if n >= 2:
-        x = np.arange(n)
-        ok_r = np.isfinite(rzeczywista)
-        ok_m = np.isfinite(model)
-        if np.sum(ok_r) >= 2:
-            coef_r = np.polyfit(x[ok_r], rzeczywista[ok_r], 1)
-            trend_r = np.polyval(coef_r, x)
-            ax.plot(dates, trend_r, label="Tendencja spadkowa (rzeczywista)", color="#1f77b4", linewidth=2, linestyle="-", alpha=0.85)
-        if np.sum(ok_m) >= 2:
-            coef_m = np.polyfit(x[ok_m], model[ok_m], 1)
-            trend_m = np.polyval(coef_m, x)
-            ax.plot(dates, trend_m, label="Tendencja spadkowa (model)", color="#ff7f0e", linewidth=2, linestyle="-", alpha=0.85)
+        r_clean = rzeczywista.copy()
+        r_clean[~np.isfinite(r_clean)] = np.nanmean(rzeczywista) if np.any(np.isfinite(rzeczywista)) else 0.0
+        m_clean = model.copy()
+        m_clean[~np.isfinite(m_clean)] = np.nanmean(model) if np.any(np.isfinite(model)) else 0.0
+        coef_r = np.polyfit(x, r_clean, 1)
+        coef_m = np.polyfit(x, m_clean, 1)
+        trend_r = np.polyval(coef_r, x)
+        trend_m = np.polyval(coef_m, x)
+        ax.plot(dates, trend_r, label="Tendencja spadkowa (rzeczywista)", color="#1f77b4", linewidth=2, linestyle="-", alpha=0.85)
+        ax.plot(dates, trend_m, label="Tendencja spadkowa (model)", color="#ff7f0e", linewidth=2, linestyle="-", alpha=0.85)
     ax.set_xlabel("Data")
     ax.set_ylabel("Wysokość (m)")
     ax.set_title(f"{lake_name} – wysokość wody: rzeczywista vs scenariusz modelowy")
