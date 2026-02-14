@@ -59,6 +59,11 @@ Format CSV: nagłówki Data, Poziom, Zmiana, Opad, Temperatura; dziesiętne z pr
    python md_to_pdf.py
    ```
    Konwertuje wszystkie `.md` z `docs/` na PDF (obrazy z odpowiednich `figures_*`).
+7. **Szacunek lat odbudowy poziomu po zaniku dodatkowego drenażu** (analiza osobna, uproszczona):
+   ```bash
+   python recovery_after_drainage_stop.py
+   ```
+   Wynik: `docs/szacunek_odbudowy_po_zaniku_drenazu.md`, pliki per jezioro `docs/zanik_drenazu_{jezioro}.md` oraz wykresy projekcji odbudowy (średnia 5 lat, do 2070) w `docs/figures_odbudowa/odbudowa_{jezioro}.png`.
 
 Szczegóły modelu i API: [docs/model.md](docs/model.md).
 
@@ -76,6 +81,7 @@ Szczegóły modelu i API: [docs/model.md](docs/model.md).
 - `evaluate_predictions.py` – ewaluacja per jezioro, podsumowania w `docs/podsumowanie_ewaluacji_{jezioro}.md`.
 - `generate_report.py` – raporty z wykresami: `docs/raport_podsumowujacy_{jezioro}.md`, `docs/figures_{jezioro}/*.png`.
 - `generate_summary_report.py` – raport ogólny: `docs/raport_ogolny.md` (tabela zbiorcza wszystkich jezior).
+- `recovery_after_drainage_stop.py` – szacunek lat odbudowy po zaniku drenażu (średnia pogoda 5 lat, projekcja do 2070): `docs/szacunek_odbudowy_po_zaniku_drenazu.md`, `docs/zanik_drenazu_{jezioro}.md`, `docs/figures_odbudowa/odbudowa_{jezioro}.png`.
 - `md_to_pdf.py` – konwersja Markdown → PDF (fpdf2, markdown).
 - `data/{jezioro}_data.csv` – dane miesięczne (Data, Poziom, Zmiana, Opad, Temperatura). Budzisławskie: `python merge_budzislawskie_data.py`. Koziegłowskie: `python merge_kozieglowskie_data.py`. Niedzięgiel: `python merge_niedziegiel_data.py`. Powidzkie: `python merge_powidzkie_data.py`. Ostrowskie: `python merge_ostrowskie_data.py`. Skulska Wieś: `python merge_skulskawies_data.py`. Suszewskie: `python merge_suszewskie_data.py`. Wilczyńskie: `python merge_wilczynskie_data.py` (wszystkie łączą `meteo.csv` z odpowiednim plikiem pomiaru).
 - `data/{jezioro}_model.pkl` – wytrenowany model.
