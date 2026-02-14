@@ -4,7 +4,7 @@
 
 ## 1. Najważniejsze wnioski
 
-- Modele uczenia maszynowego (Gradient Boosting, scikit-learn) prognozują **miesięczną zmianę poziomu** jezior na podstawie opadu, temperatury, sezonowości (miesiąc) oraz opóźnień zmiany i poziomu; nie używają bieżącego poziomu. Dla każdego jeziora osobny model i ewentualnie opóźnienia meteo (Fibonacciego).
+- Modele uczenia maszynowego (Gradient Boosting, scikit-learn) prognozują **miesięczną zmianę poziomu** jezior na podstawie opadu, temperatury, sezonowości (miesiąc) oraz opóźnień zmiany i poziomu; nie używają bieżącego poziomu. Dla każdego jeziora osobny model i ewentualnie opóźnienia meteo (zastosowano ciąg Fibonacciego).
 
 - **Jakość prognoz na zbiorze testowym** jest zróżnicowana: MAE od ok. 1,5 cm (Budzisławskie) do ok. 7,3 cm (Suszewskie). RMSE od ok. 1,9 cm do ok. 9,7 cm. Najsłabsze metryki ma Suszewskie, najlepsze Budzisławskie i Powidzkie.
 
