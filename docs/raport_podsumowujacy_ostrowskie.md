@@ -33,8 +33,8 @@ Model **nie** używa bieżącego poziomu – tylko opad, temperatura, sezon i hi
 
 ## 4. Wyniki ewaluacji
 
-- **MAE (średni błąd bezwzględny):** 0.0213 m (~2.13 cm)
-- **RMSE:** 0.0324 m
+- **MAE (średni błąd bezwzględny):** 0.0262 m (~2.62 cm)
+- **RMSE:** 0.0380 m
 - **Liczba miesięcy:** 370
 
 ### 4.1. Wysokość wody: rzeczywista vs scenariusz modelowy
@@ -65,7 +65,7 @@ Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.
 
 ## 5. Podsumowanie
 
-- Model prognozuje miesięczną zmianę poziomu Jezioro Ostrowskie z MAE ~2.13 cm.
+- Model prognozuje miesięczną zmianę poziomu Jezioro Ostrowskie z MAE ~2.62 cm.
 - Scenariusz kumulatywny (wysokość z prognozowanej zmiany) jest porównywany z rzeczywistą wysokością; rozbieżność i błąd miesięczny opisują jakość prognoz.
 
 Szczegóły techniczne: [model.md](model.md), [podsumowanie_ewaluacji_ostrowskie.md](podsumowanie_ewaluacji_ostrowskie.md).

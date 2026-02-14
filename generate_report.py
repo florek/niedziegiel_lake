@@ -232,4 +232,7 @@ if __name__ == "__main__":
         print(f"Dostępne jeziora: {', '.join(lake.LAKES)}")
         sys.exit(1)
     for lid in (lake.LAKES if lake_id is None else [lake_id]):
+        if not lake.get_model_path(lid).exists():
+            print(f"Pomijam {lid}: brak pliku modelu.")
+            continue
         run(lake_id=lid)

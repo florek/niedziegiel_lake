@@ -33,8 +33,8 @@ Model **nie** używa bieżącego poziomu – tylko opad, temperatura, sezon i hi
 
 ## 4. Wyniki ewaluacji
 
-- **MAE (średni błąd bezwzględny):** 0.0530 m (~5.30 cm)
-- **RMSE:** 0.0816 m
+- **MAE (średni błąd bezwzględny):** 0.0734 m (~7.34 cm)
+- **RMSE:** 0.0974 m
 - **Liczba miesięcy:** 356
 
 ### 4.1. Wysokość wody: rzeczywista vs scenariusz modelowy
@@ -65,7 +65,7 @@ Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.
 
 ## 5. Podsumowanie
 
-- Model prognozuje miesięczną zmianę poziomu Jezioro Suszewskie z MAE ~5.30 cm.
+- Model prognozuje miesięczną zmianę poziomu Jezioro Suszewskie z MAE ~7.34 cm.
 - Scenariusz kumulatywny (wysokość z prognozowanej zmiany) jest porównywany z rzeczywistą wysokością; rozbieżność i błąd miesięczny opisują jakość prognoz.
 
 Szczegóły techniczne: [model.md](model.md), [podsumowanie_ewaluacji_suszewskie.md](podsumowanie_ewaluacji_suszewskie.md).

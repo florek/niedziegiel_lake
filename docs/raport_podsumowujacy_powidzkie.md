@@ -33,8 +33,8 @@ Model **nie** używa bieżącego poziomu – tylko opad, temperatura, sezon i hi
 
 ## 4. Wyniki ewaluacji
 
-- **MAE (średni błąd bezwzględny):** 0.0083 m (~0.83 cm)
-- **RMSE:** 0.0122 m
+- **MAE (średni błąd bezwzględny):** 0.0176 m (~1.76 cm)
+- **RMSE:** 0.0223 m
 - **Liczba miesięcy:** 570
 
 ### 4.1. Wysokość wody: rzeczywista vs scenariusz modelowy
@@ -65,7 +65,7 @@ Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.
 
 ## 5. Podsumowanie
 
-- Model prognozuje miesięczną zmianę poziomu Jezioro Powidzkie z MAE ~0.83 cm.
+- Model prognozuje miesięczną zmianę poziomu Jezioro Powidzkie z MAE ~1.76 cm.
 - Scenariusz kumulatywny (wysokość z prognozowanej zmiany) jest porównywany z rzeczywistą wysokością; rozbieżność i błąd miesięczny opisują jakość prognoz.
 
 Szczegóły techniczne: [model.md](model.md), [podsumowanie_ewaluacji_powidzkie.md](podsumowanie_ewaluacji_powidzkie.md).

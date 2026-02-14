@@ -14,12 +14,35 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error
 DATA_DIR = Path(__file__).resolve().parent / "data"
 LAKES = {
     "budzislawskie": "Jezioro Budzisławskie",
+    "kozieglowskie": "Jezioro Koziegłowskie",
     "niedziegiel": "Jezioro Niedzięgiel",
     "ostrowskie": "Jezioro Ostrowskie",
     "powidzkie": "Jezioro Powidzkie",
+    "skulskawies": "Jezioro Skulska Wieś",
     "suszewskie": "Jezioro Suszewskie",
     "wilczynskie": "Jezioro Wilczyńskie",
 }
+
+
+MAX_POZIOM_SPIETRZANIA_BY_LAKE = {
+    "budzislawskie": 99.02,
+    "kozieglowskie": 101.91,
+    "niedziegiel": 103.80,
+    "ostrowskie": 98.66,
+    "powidzkie": 98.79,
+    "skulskawies": 86.49,
+    "suszewskie": 98.94,
+    "wilczynskie": 99.15,
+}
+
+
+def get_max_poziom(lake_id: str, df=None):
+    cap = MAX_POZIOM_SPIETRZANIA_BY_LAKE.get(lake_id)
+    if cap is not None:
+        return float(cap)
+    if df is not None:
+        return float((df[COL_POZIOM] + df[COL_ZMIANA]).max())
+    return None
 
 
 def get_data_path(lake_id: str) -> Path:
@@ -36,13 +59,15 @@ COL_TEMPERATURA = "Temperatura"
 COL_ZMIANA = "Zmiana"
 
 LAG_MONTHS = 3
-LAG_MONTHS_BY_LAKE = {"budzislawskie": 3, "niedziegiel": 3, "ostrowskie": 3, "powidzkie": 5, "suszewskie": 3, "wilczynskie": 3}
+LAG_MONTHS_BY_LAKE = {"budzislawskie": 3, "kozieglowskie": 3, "niedziegiel": 3, "ostrowskie": 3, "powidzkie": 5, "skulskawies": 3, "suszewskie": 3, "wilczynskie": 3}
 METEO_LAG_FIBONACCI = [0, 1, 2, 3, 5, 8, 13]
 METEO_LAG_CANDIDATES_BY_LAKE = {
     "budzislawskie": METEO_LAG_FIBONACCI,
+    "kozieglowskie": METEO_LAG_FIBONACCI,
     "niedziegiel": METEO_LAG_FIBONACCI,
     "ostrowskie": METEO_LAG_FIBONACCI,
     "powidzkie": METEO_LAG_FIBONACCI,
+    "skulskawies": METEO_LAG_FIBONACCI,
     "suszewskie": METEO_LAG_FIBONACCI,
     "wilczynskie": METEO_LAG_FIBONACCI,
 }
@@ -122,9 +147,9 @@ def train_test_split_temporal(
     return df.iloc[:split_idx], df.iloc[split_idx:] if split_idx < len(df) else df.iloc[:0]
 
 
-TRAIN_END_YEAR_BY_LAKE = {"budzislawskie": 2003, "niedziegiel": 2013, "ostrowskie": 2003, "powidzkie": 2013, "suszewskie": 2003, "wilczynskie": 2003}
-TRAIN_END_MONTH_BY_LAKE = {"budzislawskie": 2, "niedziegiel": None, "ostrowskie": 2, "powidzkie": None, "suszewskie": 2, "wilczynskie": 2}
-TEST_END_YEAR_BY_LAKE = {"budzislawskie": 2023, "niedziegiel": 2023, "ostrowskie": 2023, "powidzkie": 2023, "suszewskie": 2023, "wilczynskie": 2023}
+TRAIN_END_YEAR_BY_LAKE = {"budzislawskie": 2003, "kozieglowskie": 2003, "niedziegiel": 2013, "ostrowskie": 2003, "powidzkie": 2013, "skulskawies": 2015, "suszewskie": 2003, "wilczynskie": 2003}
+TRAIN_END_MONTH_BY_LAKE = {"budzislawskie": 2, "kozieglowskie": 2, "niedziegiel": None, "ostrowskie": 2, "powidzkie": None, "skulskawies": None, "suszewskie": 2, "wilczynskie": 2}
+TEST_END_YEAR_BY_LAKE = {"budzislawskie": 2023, "kozieglowskie": 2023, "niedziegiel": 2023, "ostrowskie": 2023, "powidzkie": 2023, "skulskawies": 2023, "suszewskie": 2023, "wilczynskie": 2023}
 
 
 def _get_candidate_models():

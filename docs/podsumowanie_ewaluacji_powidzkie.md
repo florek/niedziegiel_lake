@@ -4,9 +4,10 @@ Dla każdego miesiąca model otrzymuje opad i temperaturę (oraz cechy opóźnio
 
 ## Metryki
 
-- **MAE (średni błąd bezwzględny):** 0.0083 m
-- **RMSE (pierwiastek błędu średniokwadratowego):** 0.0122 m
-- **Liczba miesięcy:** 570
+- **MAE (średni błąd bezwzględny):** 0.0176 m
+- **RMSE (pierwiastek błędu średniokwadratowego):** 0.0223 m
+- **Liczba miesięcy (zbior testowy):** 119
+- **Liczba miesięcy (tabela / wykres):** 570
 
 ## Porównanie miesięczne
 
