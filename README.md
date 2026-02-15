@@ -1,6 +1,6 @@
-# Prognoza zmiany poziomu jezior (Budzisławskie, Koziegłowskie, Niedzięgiel, Ostrowskie, Powidzkie, Skulska Wieś, Suszewskie, Wilczyńskie)
+# Prognoza zmiany poziomu jezior (Budzisławskie, Koziegłowskie, Kownackie, Niedzięgiel, Ostrowskie, Powidzkie, Skulska Wieś, Suszewskie, Wilczyńskie)
 
-Projekt zawiera modele uczenia maszynowego do **prognozowania miesięcznej zmiany poziomu** wybranego jeziora na podstawie danych z pliku CSV (daty, poziom, opad, temperatura). Obsługiwane jeziora: **Jezioro Budzisławskie**, **Jezioro Koziegłowskie**, **Jezioro Niedzięgiel**, **Jezioro Ostrowskie**, **Jezioro Powidzkie**, **Jezioro Skulska Wieś**, **Jezioro Suszewskie**, **Jezioro Wilczyńskie**.
+Projekt zawiera modele uczenia maszynowego do **prognozowania miesięcznej zmiany poziomu** wybranego jeziora na podstawie danych z pliku CSV (daty, poziom, opad, temperatura). Obsługiwane jeziora: **Jezioro Budzisławskie**, **Jezioro Koziegłowskie**, **Jezioro Kownackie**, **Jezioro Niedzięgiel**, **Jezioro Ostrowskie**, **Jezioro Powidzkie**, **Jezioro Skulska Wieś**, **Jezioro Suszewskie**, **Jezioro Wilczyńskie**.
 
 ## Wymagania
 
@@ -29,9 +29,10 @@ Uruchamiaj skrypty z **katalogu głównego projektu** (gdzie są katalogi `data/
    ```bash
    python sources/lake.py budzislawskie
    python sources/lake.py kozieglowskie
+   python sources/lake.py kownackie
    python sources/lake.py niedziegiel
-   python sources/lake.py powidzkie
    python sources/lake.py ostrowskie
+   python sources/lake.py powidzkie
    python sources/lake.py skulskawies
    python sources/lake.py suszewskie
    python sources/lake.py wilczynskie
@@ -96,6 +97,10 @@ Raporty i wykresy powstają po uruchomieniu skryptów z sekcji „Szybki start�
 | **Koziegłowskie** – raport z wykresami | [docs/kozieglowskie/raport_podsumowujacy.md](docs/kozieglowskie/raport_podsumowujacy.md) |
 | **Koziegłowskie** – podsumowanie ewaluacji | [docs/kozieglowskie/podsumowanie_ewaluacji.md](docs/kozieglowskie/podsumowanie_ewaluacji.md) |
 | **Koziegłowskie** – zanik drenażu | [docs/kozieglowskie/zanik_drenazu.md](docs/kozieglowskie/zanik_drenazu.md) |
+| **Kownackie** – prognoza 12 mies. | [docs/kownackie/prognoza.md](docs/kownackie/prognoza.md) |
+| **Kownackie** – raport z wykresami | [docs/kownackie/raport_podsumowujacy.md](docs/kownackie/raport_podsumowujacy.md) |
+| **Kownackie** – podsumowanie ewaluacji | [docs/kownackie/podsumowanie_ewaluacji.md](docs/kownackie/podsumowanie_ewaluacji.md) |
+| **Kownackie** – zanik drenażu | [docs/kownackie/zanik_drenazu.md](docs/kownackie/zanik_drenazu.md) |
 | **Niedzięgiel** – prognoza 12 mies. | [docs/niedziegiel/prognoza.md](docs/niedziegiel/prognoza.md) |
 | **Niedzięgiel** – raport podsumowujący (z wykresami) | [docs/niedziegiel/raport_podsumowujacy.md](docs/niedziegiel/raport_podsumowujacy.md) |
 | **Niedzięgiel** – podsumowanie ewaluacji | [docs/niedziegiel/podsumowanie_ewaluacji.md](docs/niedziegiel/podsumowanie_ewaluacji.md) |
@@ -132,6 +137,7 @@ python sources/merge_niedziegiel_data.py
 python sources/merge_powidzkie_data.py
 python sources/merge_budzislawskie_data.py
 python sources/merge_kozieglowskie_data.py
+python sources/merge_kownackie_data.py
 python sources/merge_ostrowskie_data.py
 python sources/merge_skulskawies_data.py
 python sources/merge_suszewskie_data.py

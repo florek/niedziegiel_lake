@@ -14,7 +14,7 @@ Projekt ma na celu:
 - **Zakres:** dane miesięczne (pierwszy dzień miesiąca).
 - **Kolumny:** Data, Poziom (m), Zmiana (m), Opad (mm), Temperatura (°C).
 - **Target:** Zmiana – miesięczna zmiana poziomu.
-- Wiersze z błędami (#ERROR!) lub brakami są pomijane. Po usunięciu lagów (3 mies.) do analizy wchodzi **334** miesięcy.
+- Wiersze z błędami (#ERROR!) lub brakami są pomijane. Po usunięciu lagów (3 mies.) do analizy wchodzi **360** miesięcy.
 
 ---
 
@@ -33,9 +33,9 @@ Model **nie** używa bieżącego poziomu – tylko opad, temperatura, sezon i hi
 
 ## 4. Wyniki ewaluacji
 
-- **MAE (średni błąd bezwzględny):** 2.74 cm
-- **RMSE:** 3.57 cm
-- **Liczba miesięcy:** 334
+- **MAE (średni błąd bezwzględny):** 2.73 cm
+- **RMSE:** 3.56 cm
+- **Liczba miesięcy:** 360
 
 ### 4.1. Wysokość wody: rzeczywista vs scenariusz modelowy
 
@@ -65,9 +65,9 @@ Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.
 
 ## 5. Podsumowanie
 
-- Model prognozuje miesięczną zmianę poziomu Jezioro Koziegłowskie z MAE ~2.74 cm.
+- Model prognozuje miesięczną zmianę poziomu Jezioro Koziegłowskie z MAE ~2.73 cm.
 - Scenariusz kumulatywny (wysokość z prognozowanej zmiany) jest porównywany z rzeczywistą wysokością; rozbieżność i błąd miesięczny opisują jakość prognoz.
 
 Szczegóły techniczne: [model.md](../model.md), [podsumowanie_ewaluacji.md](podsumowanie_ewaluacji.md).
 
-*Wygenerowano: 2026-02-15 11:28*
+*Wygenerowano: 2026-02-15 12:16*

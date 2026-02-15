@@ -281,4 +281,4 @@ Dla każdego wariantu (temperatura: zimny/normalny/ciepły × opad: suchy/normal
 
 
 
-*Wygenerowano: 2026-02-15 12:08*
+*Wygenerowano: 2026-02-15 12:16*
