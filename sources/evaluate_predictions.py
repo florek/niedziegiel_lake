@@ -1,4 +1,5 @@
 import sys
+from datetime import datetime
 from pathlib import Path
 
 import lake
@@ -99,6 +100,8 @@ def _build_md(rows, mae, rmse, n_test, n_all, lake_name="Jezioro"):
     ]
     for r in rows:
         lines.append(f"| {r['data']} | {r['opad']} | {r['temperatura']} | {r['zmiana_fakt']} | {r['zmiana_prognoza']} | {r['błąd']} | {r['wysokosc_rzeczywista']} | {r['wysokosc_model']} | {r['rozbieznosc']} |")
+    lines.append("")
+    lines.append(f"*Wygenerowano: {datetime.now().strftime('%Y-%m-%d %H:%M')}*")
     return "\n".join(lines)
 
 

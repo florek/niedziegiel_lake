@@ -69,3 +69,5 @@ Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.
 - Scenariusz kumulatywny (wysokość z prognozowanej zmiany) jest porównywany z rzeczywistą wysokością; rozbieżność i błąd miesięczny opisują jakość prognoz.
 
 Szczegóły techniczne: [model.md](../model.md), [podsumowanie_ewaluacji.md](podsumowanie_ewaluacji.md).
+
+*Wygenerowano: 2026-02-15 11:06*

@@ -262,3 +262,6 @@ Dla każdego wariantu (temperatura: zimny/normalny/ciepły × opad: suchy/normal
 - **Różnica poziomu wody** (koniec symulacji − start): +0.265 m
 - **Poziom na koniec stycznia 2027:** 102.115 m n.p.m.
 
+
+
+*Wygenerowano: 2026-02-15 11:06*

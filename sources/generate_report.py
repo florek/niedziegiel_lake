@@ -1,4 +1,5 @@
 import sys
+from datetime import datetime
 from pathlib import Path
 
 import matplotlib
@@ -223,6 +224,8 @@ def _write_report(rows, mae, rmse, n, lake_id, lake_name):
         "- Scenariusz kumulatywny (wysokość z prognozowanej zmiany) jest porównywany z rzeczywistą wysokością; rozbieżność i błąd miesięczny opisują jakość prognoz.",
         "",
         "Szczegóły techniczne: [model.md](../model.md), [podsumowanie_ewaluacji.md](podsumowanie_ewaluacji.md).",
+        "",
+        f"*Wygenerowano: {datetime.now().strftime('%Y-%m-%d %H:%M')}*",
         "",
     ]
     report_path = _report_path(lake_id)

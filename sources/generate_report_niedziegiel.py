@@ -1,3 +1,4 @@
+from datetime import datetime
 from pathlib import Path
 
 import matplotlib
@@ -446,6 +447,8 @@ def _write_report(
                 "",
             ])
         lines.append("")
+    lines.append("")
+    lines.append(f"*Wygenerowano: {datetime.now().strftime('%Y-%m-%d %H:%M')}*")
     return "\n".join(lines)
 
 

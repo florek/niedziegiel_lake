@@ -1,4 +1,5 @@
 import sys
+from datetime import datetime
 from pathlib import Path
 
 import lake
@@ -41,7 +42,7 @@ def _write_summary_report(results):
         "",
         "Podsumowanie ewaluacji modeli dla wszystkich jezior. Metryki (MAE, RMSE) i okres dotyczą **zbioru testowego**.",
         "",
-        "> Linki prowadzą względem **roota repozytorium** (`docs/jezioro/plik.md`). Otwieraj ten plik z poziomu katalogu projektu lub użyj linków z README.",
+        "> Linki są względem katalogu `docs/` (działają w podglądzie na GitHubie).",
         "",
         "## Tabela zbiorcza",
         "",
@@ -49,7 +50,7 @@ def _write_summary_report(results):
         "|---------|----------------|-----------------|---------|----------|--------------------|",
     ]
     for r in results:
-        link = f"[raport](docs/{r['lake_id']}/raport_podsumowujacy.md)"
+        link = f"[raport]({r['lake_id']}/raport_podsumowujacy.md)"
         lines.append(
             f"| {r['lake_name']} | {r['period_start']} – {r['period_end']} | {r['n']} | {r['mae']:.4f} | {r['rmse']:.4f} | {link} |"
         )
@@ -59,7 +60,9 @@ def _write_summary_report(results):
         "",
     ])
     for r in results:
-        lines.append(f"- **{r['lake_name']}:** [raport z wykresami](docs/{r['lake_id']}/raport_podsumowujacy.md), [podsumowanie ewaluacji](docs/{r['lake_id']}/podsumowanie_ewaluacji.md)")
+        lines.append(f"- **{r['lake_name']}:** [raport z wykresami]({r['lake_id']}/raport_podsumowujacy.md), [podsumowanie ewaluacji]({r['lake_id']}/podsumowanie_ewaluacji.md)")
+    lines.append("")
+    lines.append(f"*Wygenerowano: {datetime.now().strftime('%Y-%m-%d %H:%M')}*")
     lines.append("")
     out_path = DOCS_DIR / "raport_ogolny.md"
     out_path.parent.mkdir(parents=True, exist_ok=True)
