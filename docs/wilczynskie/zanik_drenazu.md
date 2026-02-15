@@ -6,11 +6,13 @@
 
 ## Wyniki
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** 20.4 cm
-- **Trend rozbieżności:** -0.44 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 46.3 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 4.1 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 362.9 cm
+- **Trend rozbieżności:** 8.39 cm/rok
+- **Szacunek odbudowy (scenariusz A):** —
+- **Szacunek odbudowy (scenariusz B):** —
 
 ## Wykres projekcji odbudowy
 
-![Odbudowa](../odbudowa/odbudowa_wilczynskie.png)
+Na wykresie: historia poziomu rzeczywistego oraz scenariusze modelowe (drenażowy i naturalny); projekcja odbudowy do zrównania z modelem drenażowym i z modelem naturalnym (porównanie obu wariantów).
+
+![Odbudowa – porównanie drenaż / naturalny](../odbudowa/odbudowa_wilczynskie.png)

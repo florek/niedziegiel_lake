@@ -6,11 +6,13 @@
 
 ## Wyniki
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -114.3 cm
-- **Trend rozbieżności:** -4.04 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 28.3 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 22.9 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 184.4 cm
+- **Trend rozbieżności:** 5.17 cm/rok
+- **Szacunek odbudowy (scenariusz A):** —
+- **Szacunek odbudowy (scenariusz B):** —
 
 ## Wykres projekcji odbudowy
 
-![Odbudowa](../odbudowa/odbudowa_ostrowskie.png)
+Na wykresie: historia poziomu rzeczywistego oraz scenariusze modelowe (drenażowy i naturalny); projekcja odbudowy do zrównania z modelem drenażowym i z modelem naturalnym (porównanie obu wariantów).
+
+![Odbudowa – porównanie drenaż / naturalny](../odbudowa/odbudowa_ostrowskie.png)

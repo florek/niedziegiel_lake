@@ -4,12 +4,21 @@ Opisowa ocena szans na odbudowę poziomu wody w perspektywie **kolejnych 12 mies
 
 **Stan odniesienia:** koniec stycznia 2026 – poziom 96.046 m n.p.m.
 
-**Prognoza na koniec stycznia 2027** (scenariusz najbardziej prawdopodobny, średnia ważona według szans realizacji wariantów): poziom **96.054 m n.p.m.**, czyli **wzrost o 0.8 cm** w stosunku do stanu odniesienia.
+**Porównanie prognoz** (najbardziej prawdopodobny scenariusz, średnia ważona):
 
-W zależności od warunków pogodowych w nadchodzącym roku prognozowana zmiana poziomu w 12 miesięcy mieści się w zakresie od **-8.2 cm** do **+11.5 cm**. Najwyższą szansę realizacji (15.2%) ma jeden z wariantów pogodowych; szczegóły wszystkich wariantów i szans – w raporcie [Prognoza 12 mies.](#docs-budzislawskie-prognoza).
+| Model | Poziom koniec (m n.p.m.) | Zmiana (cm) |
+|-------|-------------------------------------|-------------|
+| Drenażowy (po zmianie reżimu) | 95.756 | -29.0 |
+| Naturalny (sprzed drenażu) | 96.073 | +2.7 |
 
-**Szanse na odbudowę w perspektywie roku:** prognoza wskazuje na **stabilizację lub niewielki przyrost** poziomu w ciągu roku; szanse na odbudowę w tej perspektywie są umiarkowane.
+**Prognoza na koniec stycznia 2027** (model drenażowy): poziom **95.756 m n.p.m.**, czyli **spadek o 29.0 cm** w stosunku do stanu odniesienia.
+
+W zależności od warunków pogodowych w nadchodzącym roku prognozowana zmiana poziomu w 12 miesięcy (model drenażowy) mieści się w zakresie od **-38.4 cm** do **-17.1 cm**. Najwyższą szansę realizacji (15.2%) ma jeden z wariantów pogodowych; szczegóły wszystkich wariantów i szans – w raporcie [Prognoza 12 mies.](#docs-budzislawskie-prognoza).
+
+**Szanse na odbudowę w perspektywie roku (model drenażowy):** prognoza **modelu drenażowego** wskazuje na **spadek** poziomu w ciągu roku; szanse na odbudowę w perspektywie roku są niskie – istotna odbudowa wymagałaby zatrzymania drenażu i korzystnych warunków.
+
+**Szanse na odbudowę w perspektywie roku (model naturalny):** prognoza **modelu naturalnego** wskazuje na **stabilizację lub niewielki przyrost** poziomu w ciągu roku.
 
 Szacunki długoterminowej odbudowy (lata do zamknięcia luki po ewentualnym zaniku drenażu) – patrz [Zanik drenażu](#docs-budzislawskie-zanik-drenazu).
 
-*Wygenerowano: 2026-02-15 14:59*
+*Wygenerowano: 2026-02-15 15:44*

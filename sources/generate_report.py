@@ -46,7 +46,7 @@ def _plot_wysokosci(rows, figs_dir, lake_name, lake_id, rows_natural=None):
     if rows_natural:
         dates_nat = [np.datetime64(r["data"] + "-01") for r in rows_natural]
         natural = np.array([float(r["wysokosc_model"]) for r in rows_natural])
-        ax.plot(dates_nat, natural, label="Model naturalny (przed drenażem)", color="#2ca02c", linewidth=1.2, linestyle=":")
+        ax.plot(dates_nat, natural, label="Model naturalny (sprzed drenażu)", color="#2ca02c", linewidth=1.2, linestyle=":")
     ax.set_xlabel("Data")
     ax.set_ylabel("Wysokość (m)")
     ax.set_title(f"{lake_name} – wysokość wody: rzeczywista vs scenariusze modelowe")

@@ -1,4 +1,3 @@
-import tempfile
 from pathlib import Path
 
 import matplotlib
@@ -172,19 +171,29 @@ def _plot_recovery(
     model_proj: list[float],
     actual_proj: list[float],
     out_path: Path,
+    model_hist_nat: list[float] | None = None,
+    dates_proj_nat: list[str] | None = None,
+    model_proj_nat: list[float] | None = None,
+    actual_proj_nat: list[float] | None = None,
 ):
     fig, ax = plt.subplots(figsize=(12, 5))
     if dates_hist:
         d_hist = [np.datetime64(d + "-01") for d in dates_hist]
         ax.plot(d_hist, actual_hist, label="Poziom rzeczywisty (historia)", color="#1f77b4", linewidth=1.2)
-        ax.plot(d_hist, model_hist, label="Scenariusz modelowy (historia)", color="#ff7f0e", linewidth=1.2, linestyle="--")
+        ax.plot(d_hist, model_hist, label="Scenariusz model drenażowy (historia)", color="#ff7f0e", linewidth=1.2, linestyle="--")
+        if model_hist_nat is not None and len(model_hist_nat) == len(dates_hist):
+            ax.plot(d_hist, model_hist_nat, label="Scenariusz model naturalny (historia)", color="#9467bd", linewidth=1.2, linestyle=":")
     if dates_proj:
         d_proj = [np.datetime64(d + "-01") for d in dates_proj]
-        ax.plot(d_proj, model_proj, label="Scenariusz modelowy – średnia 5 lat (sezonowość)", color="#d62728", linewidth=1.2, linestyle="--")
-        ax.plot(d_proj, actual_proj, label="Projekcja odbudowy (wznios wód gruntowych od II 2026)", color="#2ca02c", linewidth=1.5)
+        ax.plot(d_proj, model_proj, label="Model drenażowy – projekcja", color="#d62728", linewidth=1.2, linestyle="--")
+        ax.plot(d_proj, actual_proj, label="Odbudowa do modelu drenażowego", color="#2ca02c", linewidth=1.5)
+    if dates_proj_nat and model_proj_nat is not None and actual_proj_nat is not None:
+        d_proj_nat = [np.datetime64(d + "-01") for d in dates_proj_nat]
+        ax.plot(d_proj_nat, model_proj_nat, label="Model naturalny – projekcja", color="#8c564b", linewidth=1.2, linestyle=":")
+        ax.plot(d_proj_nat, actual_proj_nat, label="Odbudowa do modelu naturalnego", color="#e377c2", linewidth=1.5)
     ax.set_xlabel("Data")
     ax.set_ylabel("Wysokość (m)")
-    ax.set_title(f"{lake_name} – odbudowa do stanu normalnego (wykres do momentu zrównania z modelem)")
+    ax.set_title(f"{lake_name} – odbudowa: porównanie scenariusza drenażowego i naturalnego (do zrównania z modelem)")
     ax.legend(loc="best")
     ax.xaxis.set_major_locator(mdates.YearLocator(2))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
@@ -224,21 +233,33 @@ def _result_from_rows(lake_id: str, rows: list) -> dict | None:
 
 def _get_lake_result_and_data(lake_id: str):
     if not lake.get_model_path(lake_id).exists():
-        return None, None, None, None, None, None, None
-    with tempfile.TemporaryDirectory() as tmp:
-        out = Path(tmp) / "eval.md"
-        _, _, rows = run_evaluation(
-            lake_id=lake_id,
-            output_path=out,
-        )
+        return None, None, None, None, None, None, None, None, None, None, None, None
+    tmp_dir = DOCS_DIR / ".eval_tmp"
+    tmp_dir.mkdir(parents=True, exist_ok=True)
+    out = tmp_dir / f"{lake_id}_eval.md"
+    _, _, rows = run_evaluation(
+        lake_id=lake_id,
+        output_path=out,
+    )
     if not rows:
-        return None, None, None, None, None, None, None
+        return None, None, None, None, None, None, None, None, None, None, None, None
     result = _result_from_rows(lake_id, rows)
     if result is None:
-        return None, None, None, None, None, None, None
+        return None, None, None, None, None, None, None, None, None, None, None, None
     model, feature_cols, lag_months, meteo_lag_months = lake.load_model(lake.get_model_path(lake_id))
     df = lake.load_data(lake.get_data_path(lake_id))
-    return result, rows, model, feature_cols, lag_months, meteo_lag_months, df
+    natural_path = lake.get_model_path(lake_id, "natural")
+    rows_nat, model_nat, feature_cols_nat, lag_months_nat, meteo_lag_months_nat = None, None, None, None, None
+    if natural_path.exists():
+        out_nat = tmp_dir / f"{lake_id}_eval_nat.md"
+        _, _, rows_nat = run_evaluation(
+            lake_id=lake_id,
+            model_path=natural_path,
+            output_path=out_nat,
+        )
+        if rows_nat:
+            model_nat, feature_cols_nat, lag_months_nat, meteo_lag_months_nat = lake.load_model(natural_path)
+    return result, rows, model, feature_cols, lag_months, meteo_lag_months, df, rows_nat, model_nat, feature_cols_nat, lag_months_nat, meteo_lag_months_nat
 
 
 def build_report(results: list[dict], wznios_by_lake: dict[str, dict]) -> str:
@@ -297,7 +318,7 @@ def build_report(results: list[dict], wznios_by_lake: dict[str, dict]) -> str:
     lines.append("")
     lines.append("## Wykresy projekcji odbudowy")
     lines.append("")
-    lines.append("Średnia 5 lat z sezonowymi wahaniami (opad i temperatura per miesiąc); projekcja do 2070 lub do zrównania z modelem.")
+    lines.append("Dla każdego jeziora dwa warianty odbudowy do porównania: **odbudowa do scenariusza modelu drenażowego** oraz **odbudowa do scenariusza modelu naturalnego** (sprzed drenażu). Średnia 5 lat meteo (sezonowość); projekcja do 2070 lub do zrównania z modelem.")
     lines.append("")
     for r in results:
         lines.append(f"### {r['lake_name']}")
@@ -348,7 +369,9 @@ def _build_single_lake_report(r: dict, wznios_row: dict | None = None) -> str:
         "",
         f"## Wykres projekcji odbudowy",
         "",
-        f"![Odbudowa](../odbudowa/odbudowa_{lid}.png)",
+        "Na wykresie: historia poziomu rzeczywistego oraz scenariusze modelowe (drenażowy i naturalny); projekcja odbudowy do zrównania z modelem drenażowym i z modelem naturalnym (porównanie obu wariantów).",
+        "",
+        f"![Odbudowa – porównanie drenaż / naturalny](../odbudowa/odbudowa_{lid}.png)",
     ])
     return "\n".join(lines)
 
@@ -357,7 +380,7 @@ def main():
     wznios_by_lake = _load_wznios_by_lake()
     results = []
     for lake_id in lake.LAKES:
-        result, rows, model, feature_cols, lag_months, meteo_lag_months, df = _get_lake_result_and_data(lake_id)
+        result, rows, model, feature_cols, lag_months, meteo_lag_months, df, rows_nat, model_nat, feature_cols_nat, lag_months_nat, meteo_lag_months_nat = _get_lake_result_and_data(lake_id)
         if result is None:
             continue
         results.append(result)
@@ -376,6 +399,25 @@ def main():
             avg_meteo=avg_meteo,
             recovery_cm_per_year=recovery_cm,
         )
+        model_hist_nat = None
+        dates_proj_nat, model_proj_nat, actual_proj_nat = None, None, None
+        if rows_nat is not None and model_nat is not None and len(rows_nat) >= AVG_METEO_YEARS * 12:
+            model_hist_nat = [float(r["wysokosc_model"]) for r in rows_nat[-AVG_METEO_YEARS * 12:]]
+            _, _, _, dates_proj_nat, model_proj_nat, actual_proj_nat = _project_recovery(
+                lake_id=lake_id,
+                rows=rows_nat,
+                df=df,
+                model=model_nat,
+                feature_cols=feature_cols_nat,
+                lag_months=lag_months_nat,
+                meteo_lag_months=meteo_lag_months_nat,
+                avg_meteo=avg_meteo,
+                recovery_cm_per_year=recovery_cm,
+            )
+            if len(model_hist_nat) != len(dates_hist):
+                model_hist_nat = None
+            if not dates_proj_nat:
+                dates_proj_nat, model_proj_nat, actual_proj_nat = None, None, None
         FIGURES_ODBUDOWA_DIR.mkdir(parents=True, exist_ok=True)
         _plot_recovery(
             lake_name=result["lake_name"],
@@ -386,6 +428,10 @@ def main():
             model_proj=model_proj,
             actual_proj=actual_proj,
             out_path=FIGURES_ODBUDOWA_DIR / f"odbudowa_{lake_id}.png",
+            model_hist_nat=model_hist_nat,
+            dates_proj_nat=dates_proj_nat,
+            model_proj_nat=model_proj_nat,
+            actual_proj_nat=actual_proj_nat,
         )
         print(f"Wykres: {FIGURES_ODBUDOWA_DIR / f'odbudowa_{lake_id}.png'}")
     DOCS_DIR.mkdir(parents=True, exist_ok=True)

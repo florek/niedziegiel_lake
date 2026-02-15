@@ -4,9 +4,9 @@ Dla każdego miesiąca model otrzymuje opad i temperaturę (oraz cechy opóźnio
 
 ## Metryki
 
-- **MAE (średni błąd bezwzględny):** 7.03 cm
-- **RMSE (pierwiastek błędu średniokwadratowego):** 9.51 cm
-- **Liczba miesięcy (zbior testowy):** 142
+- **MAE (średni błąd bezwzględny):** nan cm
+- **RMSE (pierwiastek błędu średniokwadratowego):** nan cm
+- **Liczba miesięcy (zbior testowy):** 0
 - **Liczba miesięcy (tabela / wykres):** 382
 
 ## Porównanie miesięczne
@@ -396,4 +396,4 @@ Dla każdego miesiąca model otrzymuje opad i temperaturę (oraz cechy opóźnio
 | 2025-12 | 13.0 | 2.4 | -3.9 | -3.1 | -0.8 | 93.738 | 98.031 | -429.3 |
 | 2026-01 | 17.3 | -2.5 | +2.0 | +4.0 | -2.0 | 93.758 | 98.071 | -431.3 |
 
-*Wygenerowano: 2026-02-15 15:00*
+*Wygenerowano: 2026-02-15 15:45*

@@ -6,11 +6,13 @@
 
 ## Wyniki
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -224.7 cm
-- **Trend rozbieżności:** -7.23 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 31.1 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 44.9 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 241.0 cm
+- **Trend rozbieżności:** 5.97 cm/rok
+- **Szacunek odbudowy (scenariusz A):** —
+- **Szacunek odbudowy (scenariusz B):** —
 
 ## Wykres projekcji odbudowy
 
-![Odbudowa](../odbudowa/odbudowa_kownackie.png)
+Na wykresie: historia poziomu rzeczywistego oraz scenariusze modelowe (drenażowy i naturalny); projekcja odbudowy do zrównania z modelem drenażowym i z modelem naturalnym (porównanie obu wariantów).
+
+![Odbudowa – porównanie drenaż / naturalny](../odbudowa/odbudowa_kownackie.png)

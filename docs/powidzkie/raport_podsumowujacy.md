@@ -23,8 +23,8 @@ Projekt ma na celu:
 | Element | Opis |
 |--------|------|
 | Algorytm | Gradient Boosting (regresja), scikit-learn |
-| Cechy wejściowe | Miesiąc (sin/cos), Opad, Temperatura, opad i temperatura z opóźnieniem 1–3 mies., 5 opóźnienia zmiany poziomu, 5 opóźnienia poziomu |
-| Trening | Podział czasowy: trening do 2014-02, test od 2014-03 do 2023 |
+| Cechy wejściowe | Miesiąc (sin/cos), Opad, Temperatura, 5 opóźnienia zmiany poziomu, 5 opóźnienia poziomu |
+| Trening | Podział czasowy: trening do 2023-12, test od 2024 do 2023 |
 | Wynik | Prognoza zmiany poziomu na dany miesiąc (cm) |
 
 Model **nie** używa bieżącego poziomu – tylko opad, temperatura, sezon i historia.
@@ -33,8 +33,8 @@ Model **nie** używa bieżącego poziomu – tylko opad, temperatura, sezon i hi
 
 ## 4. Wyniki ewaluacji
 
-- **MAE (średni błąd bezwzględny):** 1.67 cm
-- **RMSE:** 2.12 cm
+- **MAE (średni błąd bezwzględny):** nan cm
+- **RMSE:** nan cm
 - **Liczba miesięcy:** 596
 
 ### 4.1. Wysokość wody: rzeczywista vs scenariusz modelowy
@@ -65,9 +65,9 @@ Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.
 
 ## 5. Podsumowanie
 
-- Model prognozuje miesięczną zmianę poziomu Jezioro Powidzkie z MAE ~1.67 cm.
+- Model prognozuje miesięczną zmianę poziomu Jezioro Powidzkie z MAE ~nan cm.
 - Scenariusz kumulatywny (wysokość z prognozowanej zmiany) jest porównywany z rzeczywistą wysokością; rozbieżność i błąd miesięczny opisują jakość prognoz.
 
 Szczegóły techniczne: [model.md](../model.md), [podsumowanie_ewaluacji.md](podsumowanie_ewaluacji.md).
 
-*Wygenerowano: 2026-02-15 13:45*
+*Wygenerowano: 2026-02-15 15:38*

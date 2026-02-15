@@ -168,6 +168,8 @@ def train_test_split_temporal(
     test_months=70,
     train_end_year=None,
     train_end_month=None,
+    train_start_year=None,
+    train_start_month=None,
     test_end_year=None,
 ):
     if train_end_year is not None:
@@ -177,6 +179,12 @@ def train_test_split_temporal(
             train_mask = (yr < train_end_year) | ((yr == train_end_year) & (mo <= train_end_month))
         else:
             train_mask = yr <= train_end_year
+        if train_start_year is not None:
+            if train_start_month is not None:
+                start_mask = (yr > train_start_year) | ((yr == train_start_year) & (mo >= train_start_month))
+            else:
+                start_mask = yr >= train_start_year
+            train_mask = train_mask & start_mask
         train_df = df[train_mask]
         test_df = df[~train_mask]
         if test_end_year is not None:
@@ -186,8 +194,10 @@ def train_test_split_temporal(
     return df.iloc[:split_idx], df.iloc[split_idx:] if split_idx < len(df) else df.iloc[:0]
 
 
-TRAIN_END_YEAR_BY_LAKE = {"budzislawskie": 2010, "kozieglowskie": 2002, "kownackie": 2012, "niedziegiel": 2012, "ostrowskie": 2012, "powidzkie": 2014, "skulskawies": 2011, "suszewskie": 2012, "wilczynskie": 2015}
-TRAIN_END_MONTH_BY_LAKE = {"budzislawskie": 2, "kozieglowskie": 2, "kownackie": 2, "niedziegiel": 2, "ostrowskie": 2, "powidzkie": 2, "skulskawies": 2, "suszewskie": 2, "wilczynskie": 2}
+TRAIN_START_YEAR_BY_LAKE = {"budzislawskie": 2011, "kozieglowskie": 2011, "kownackie": 2011, "niedziegiel": 2018, "ostrowskie": 2011, "powidzkie": 2018, "skulskawies": 2015, "suszewskie": 2011, "wilczynskie": 2015}
+TRAIN_START_MONTH_BY_LAKE = {"budzislawskie": 1, "kozieglowskie": 1, "kownackie": 1, "niedziegiel": 1, "ostrowskie": 1, "powidzkie": 1, "skulskawies": 1, "suszewskie": 1, "wilczynskie": 1}
+TRAIN_END_YEAR_BY_LAKE = {"budzislawskie": 2023, "kozieglowskie": 2023, "kownackie": 2023, "niedziegiel": 2023, "ostrowskie": 2023, "powidzkie": 2023, "skulskawies": 2023, "suszewskie": 2023, "wilczynskie": 2023}
+TRAIN_END_MONTH_BY_LAKE = {"budzislawskie": 12, "kozieglowskie": 12, "kownackie": 12, "niedziegiel": 12, "ostrowskie": 12, "powidzkie": 12, "skulskawies": 12, "suszewskie": 12, "wilczynskie": 12}
 TRAIN_END_NATURAL_YEAR_BY_LAKE = {"budzislawskie": 2002, "kozieglowskie": 2002, "kownackie": 2002, "niedziegiel": 2018, "ostrowskie": 2003, "powidzkie": 2017, "skulskawies": 2011, "suszewskie": 2002, "wilczynskie": 2002}
 TRAIN_END_NATURAL_MONTH_BY_LAKE = {"budzislawskie": 12, "kozieglowskie": 12, "kownackie": 12, "niedziegiel": 12, "ostrowskie": 12, "powidzkie": 12, "skulskawies": 12, "suszewskie": 12, "wilczynskie": 12}
 ROK_ZMIANY_REZIMU_BY_LAKE = {"budzislawskie": 2003, "kozieglowskie": 2003, "kownackie": 2003, "niedziegiel": 2019, "ostrowskie": 2004, "powidzkie": 2018, "skulskawies": 2012, "suszewskie": 2003, "wilczynskie": 2003}
@@ -289,6 +299,8 @@ def train_model(
     lag_months = LAG_MONTHS_BY_LAKE.get(lake_id, LAG_MONTHS)
     train_end_year = train_end_year_override if train_end_year_override is not None else TRAIN_END_YEAR_BY_LAKE.get(lake_id)
     train_end_month = train_end_month_override if train_end_month_override is not None else TRAIN_END_MONTH_BY_LAKE.get(lake_id)
+    train_start_year = None if train_end_year_override is not None else TRAIN_START_YEAR_BY_LAKE.get(lake_id)
+    train_start_month = None if train_end_year_override is not None else TRAIN_START_MONTH_BY_LAKE.get(lake_id)
     test_end_year = TEST_END_YEAR_BY_LAKE.get(lake_id)
     meteo_candidates = METEO_LAG_CANDIDATES_BY_LAKE.get(lake_id, [0])
     best_mae_global = np.inf
@@ -304,6 +316,8 @@ def train_model(
             df_f,
             train_end_year=train_end_year,
             train_end_month=train_end_month,
+            train_start_year=train_start_year,
+            train_start_month=train_start_month,
             test_end_year=test_end_year,
         )
         if len(train_df) < 10:
@@ -346,6 +360,8 @@ def train_model(
             df_f,
             train_end_year=train_end_year,
             train_end_month=train_end_month,
+            train_start_year=train_start_year,
+            train_start_month=train_start_month,
             test_end_year=test_end_year,
         )
         if len(train_df) < 10:
@@ -360,6 +376,8 @@ def train_model(
         df_final,
         train_end_year=train_end_year,
         train_end_month=train_end_month,
+        train_start_year=train_start_year,
+        train_start_month=train_start_month,
         test_end_year=test_end_year,
     )
     X_test = test_df[best_feature_cols] if len(test_df) > 0 else None

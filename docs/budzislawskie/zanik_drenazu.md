@@ -6,11 +6,13 @@
 
 ## Wyniki
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -82.7 cm
-- **Trend rozbieżności:** -2.63 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 31.5 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 16.5 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 109.0 cm
+- **Trend rozbieżności:** 2.53 cm/rok
+- **Szacunek odbudowy (scenariusz A):** —
+- **Szacunek odbudowy (scenariusz B):** —
 
 ## Wykres projekcji odbudowy
 
-![Odbudowa](../odbudowa/odbudowa_budzislawskie.png)
+Na wykresie: historia poziomu rzeczywistego oraz scenariusze modelowe (drenażowy i naturalny); projekcja odbudowy do zrównania z modelem drenażowym i z modelem naturalnym (porównanie obu wariantów).
+
+![Odbudowa – porównanie drenaż / naturalny](../odbudowa/odbudowa_budzislawskie.png)

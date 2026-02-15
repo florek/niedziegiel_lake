@@ -4,12 +4,21 @@ Opisowa ocena szans na odbudowę poziomu wody w perspektywie **kolejnych 12 mies
 
 **Stan odniesienia:** koniec stycznia 2026 – poziom 93.738 m n.p.m.
 
-**Prognoza na koniec stycznia 2027** (scenariusz najbardziej prawdopodobny, średnia ważona według szans realizacji wariantów): poziom **94.168 m n.p.m.**, czyli **wzrost o 43.0 cm** w stosunku do stanu odniesienia.
+**Porównanie prognoz** (najbardziej prawdopodobny scenariusz, średnia ważona):
 
-W zależności od warunków pogodowych w nadchodzącym roku prognozowana zmiana poziomu w 12 miesięcy mieści się w zakresie od **+1.2 cm** do **+247.5 cm**. Najwyższą szansę realizacji (15.0%) ma jeden z wariantów pogodowych; szczegóły wszystkich wariantów i szans – w raporcie [Prognoza 12 mies.](#docs-suszewskie-prognoza).
+| Model | Poziom koniec (m n.p.m.) | Zmiana (cm) |
+|-------|-------------------------------------|-------------|
+| Drenażowy (po zmianie reżimu) | 93.759 | +2.1 |
+| Naturalny (sprzed drenażu) | 93.855 | +11.7 |
 
-**Szanse na odbudowę w perspektywie roku:** prognoza wskazuje na **możliwy przyrost** poziomu w ciągu roku; sprzyja to odbudowie, o ile utrzyma się tendencja i nie nasili się drenaż.
+**Prognoza na koniec stycznia 2027** (model drenażowy): poziom **93.759 m n.p.m.**, czyli **wzrost o 2.1 cm** w stosunku do stanu odniesienia.
+
+W zależności od warunków pogodowych w nadchodzącym roku prognozowana zmiana poziomu w 12 miesięcy (model drenażowy) mieści się w zakresie od **-22.1 cm** do **+52.0 cm**. Najwyższą szansę realizacji (15.0%) ma jeden z wariantów pogodowych; szczegóły wszystkich wariantów i szans – w raporcie [Prognoza 12 mies.](#docs-suszewskie-prognoza).
+
+**Szanse na odbudowę w perspektywie roku (model drenażowy):** prognoza **modelu drenażowego** wskazuje na **stabilizację lub niewielki przyrost** poziomu w ciągu roku; szanse na odbudowę w tej perspektywie są umiarkowane.
+
+**Szanse na odbudowę w perspektywie roku (model naturalny):** prognoza **modelu naturalnego** (sprzed drenażu) wskazuje na **możliwy przyrost** poziomu w ciągu roku.
 
 Szacunki długoterminowej odbudowy (lata do zamknięcia luki po ewentualnym zaniku drenażu) – patrz [Zanik drenażu](#docs-suszewskie-zanik-drenazu).
 
-*Wygenerowano: 2026-02-15 15:00*
+*Wygenerowano: 2026-02-15 15:45*

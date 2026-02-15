@@ -6,11 +6,13 @@
 
 ## Wyniki
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -81.8 cm
-- **Trend rozbieżności:** -0.82 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 99.4 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 16.4 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 846.3 cm
+- **Trend rozbieżności:** 18.32 cm/rok
+- **Szacunek odbudowy (scenariusz A):** —
+- **Szacunek odbudowy (scenariusz B):** —
 
 ## Wykres projekcji odbudowy
 
-![Odbudowa](../odbudowa/odbudowa_niedziegiel.png)
+Na wykresie: historia poziomu rzeczywistego oraz scenariusze modelowe (drenażowy i naturalny); projekcja odbudowy do zrównania z modelem drenażowym i z modelem naturalnym (porównanie obu wariantów).
+
+![Odbudowa – porównanie drenaż / naturalny](../odbudowa/odbudowa_niedziegiel.png)

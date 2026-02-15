@@ -6,11 +6,13 @@
 
 ## Wyniki
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -18.5 cm
-- **Trend rozbieżności:** -0.35 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 53.2 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 3.7 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 51.6 cm
+- **Trend rozbieżności:** 1.66 cm/rok
+- **Szacunek odbudowy (scenariusz A):** —
+- **Szacunek odbudowy (scenariusz B):** —
 
 ## Wykres projekcji odbudowy
 
-![Odbudowa](../odbudowa/odbudowa_skulskawies.png)
+Na wykresie: historia poziomu rzeczywistego oraz scenariusze modelowe (drenażowy i naturalny); projekcja odbudowy do zrównania z modelem drenażowym i z modelem naturalnym (porównanie obu wariantów).
+
+![Odbudowa – porównanie drenaż / naturalny](../odbudowa/odbudowa_skulskawies.png)

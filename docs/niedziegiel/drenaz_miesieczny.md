@@ -10,7 +10,7 @@ Tabela: **suma przyrostu dla każdego roku** (cm/rok), bez wierszy miesięcznych
 
 | Rok | Suma przyrostu (cm/rok) |
 |-----|-------------------------|
-| 1976 | -9.8 |
+| 1976 | -0.1 |
 | 1977 | +5.5 |
 | 1978 | -4.5 |
 | 1979 | -0.3 |

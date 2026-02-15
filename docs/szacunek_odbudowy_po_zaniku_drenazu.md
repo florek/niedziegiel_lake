@@ -33,72 +33,72 @@ Dwa wzniosy dla porównania (źródło: `data/zanik_drenazu.csv`): wznios bazowy
 
 ### Jezioro Budzisławskie
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -82.7 cm
-- **Trend rozbieżności:** -2.63 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 31.5 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 16.5 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 109.0 cm
+- **Trend rozbieżności:** 2.53 cm/rok
+- **Szacunek odbudowy (scenariusz A):** —
+- **Szacunek odbudowy (scenariusz B):** —
 
 ### Jezioro Koziegłowskie
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -75.5 cm
-- **Trend rozbieżności:** -3.87 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 19.5 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 15.1 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 75.0 cm
+- **Trend rozbieżności:** 2.98 cm/rok
+- **Szacunek odbudowy (scenariusz A):** —
+- **Szacunek odbudowy (scenariusz B):** —
 
 ### Jezioro Kownackie
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -224.7 cm
-- **Trend rozbieżności:** -7.23 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 31.1 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 44.9 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 241.0 cm
+- **Trend rozbieżności:** 5.97 cm/rok
+- **Szacunek odbudowy (scenariusz A):** —
+- **Szacunek odbudowy (scenariusz B):** —
 
 ### Jezioro Niedzięgiel
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -81.8 cm
-- **Trend rozbieżności:** -0.82 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 99.4 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 16.4 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 846.3 cm
+- **Trend rozbieżności:** 18.32 cm/rok
+- **Szacunek odbudowy (scenariusz A):** —
+- **Szacunek odbudowy (scenariusz B):** —
 
 ### Jezioro Ostrowskie
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -114.3 cm
-- **Trend rozbieżności:** -4.04 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 28.3 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 22.9 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 184.4 cm
+- **Trend rozbieżności:** 5.17 cm/rok
+- **Szacunek odbudowy (scenariusz A):** —
+- **Szacunek odbudowy (scenariusz B):** —
 
 ### Jezioro Powidzkie
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -48.1 cm
-- **Trend rozbieżności:** -1.07 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 44.9 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 9.6 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 395.9 cm
+- **Trend rozbieżności:** 8.23 cm/rok
+- **Szacunek odbudowy (scenariusz A):** —
+- **Szacunek odbudowy (scenariusz B):** —
 
 ### Jezioro Skulska Wieś
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -18.5 cm
-- **Trend rozbieżności:** -0.35 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 53.2 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 3.7 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 51.6 cm
+- **Trend rozbieżności:** 1.66 cm/rok
+- **Szacunek odbudowy (scenariusz A):** —
+- **Szacunek odbudowy (scenariusz B):** —
 
 ### Jezioro Suszewskie
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -274.2 cm
-- **Trend rozbieżności:** -9.25 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 29.7 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 54.8 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 407.1 cm
+- **Trend rozbieżności:** 12.39 cm/rok
+- **Szacunek odbudowy (scenariusz A):** —
+- **Szacunek odbudowy (scenariusz B):** —
 
 ### Jezioro Wilczyńskie
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** 20.4 cm
-- **Trend rozbieżności:** -0.44 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 46.3 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 4.1 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 362.9 cm
+- **Trend rozbieżności:** 8.39 cm/rok
+- **Szacunek odbudowy (scenariusz A):** —
+- **Szacunek odbudowy (scenariusz B):** —
 
 ---
 
 ## Wykresy projekcji odbudowy
 
-Średnia 5 lat z sezonowymi wahaniami (opad i temperatura per miesiąc); projekcja do 2070 lub do zrównania z modelem.
+Dla każdego jeziora dwa warianty odbudowy do porównania: **odbudowa do scenariusza modelu drenażowego** oraz **odbudowa do scenariusza modelu naturalnego** (sprzed drenażu). Średnia 5 lat meteo (sezonowość); projekcja do 2070 lub do zrównania z modelem.
 
 ### Jezioro Budzisławskie
 

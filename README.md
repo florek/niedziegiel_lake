@@ -1,6 +1,6 @@
 # Prognoza zmiany poziomu jezior (Budzisławskie, Koziegłowskie, Kownackie, Niedzięgiel, Ostrowskie, Powidzkie, Skulska Wieś, Suszewskie, Wilczyńskie)
 
-[https://florek.github.io/niedziegiel_lake](https://florek.github.io/niedziegiel_lake)
+**SZYBKI PRZEGLĄD:** [https://florek.github.io/niedziegiel_lake](https://florek.github.io/niedziegiel_lake)
 
 Projekt zawiera modele uczenia maszynowego do **prognozowania miesięcznej zmiany poziomu** wybranego jeziora na podstawie danych z pliku CSV (daty, poziom, opad, temperatura). Obsługiwane jeziora: **Jezioro Budzisławskie**, **Jezioro Koziegłowskie**, **Jezioro Kownackie**, **Jezioro Niedzięgiel**, **Jezioro Ostrowskie**, **Jezioro Powidzkie**, **Jezioro Skulska Wieś**, **Jezioro Suszewskie**, **Jezioro Wilczyńskie**.
 
@@ -40,7 +40,7 @@ Uruchamiaj skrypty z **katalogu głównego projektu** (gdzie są katalogi `data/
    python sources/lake.py suszewskie
    python sources/lake.py wilczynskie
    ```
-   Modele zapisują się w `data/{jezioro}/model.pkl`. Model **naturalny** (trening do końca roku przed drenażem): `python sources/lake.py {jezioro} natural` → `data/{jezioro}/model_natural.pkl`. Na wykresach: pomiar + model po reżimie + model naturalny.
+   Modele zapisują się w `data/{jezioro}/model.pkl`. Model **naturalny** (trening do końca roku przed drenażu): `python sources/lake.py {jezioro} natural` → `data/{jezioro}/model_natural.pkl`. Na wykresach: pomiar + model po reżimie + model naturalny.
 3. Ewaluacja (jedno jezioro lub wszystkie):
    ```bash
    python sources/evaluate_predictions.py
@@ -59,7 +59,7 @@ Uruchamiaj skrypty z **katalogu głównego projektu** (gdzie są katalogi `data/
    python sources/generate_report_12mies.py niedziegiel
    python sources/generate_report_12mies.py all
    ```
-   Wynik per jezioro: `docs/{id}/prognoza.md`, `docs/{id}/szanse_odbudowy.md`, `docs/{id}/poziom_rzeczywisty.png`, `docs/{id}/symulacja_wariant_*.png`, `docs/{id}/podsumowanie_ewaluacji.md`.
+   Wynik per jezioro: `docs/{id}/prognoza.md` (prognoza 12 mies. – model drenażowy oraz, gdy istnieje `model_natural.pkl`, model naturalny sprzed drenażu), `docs/{id}/szanse_odbudowy.md`, `docs/{id}/poziom_rzeczywisty.png`, `docs/{id}/symulacja_wariant_*.png` (oraz `*_natural.png` dla modelu naturalnego), `docs/{id}/podsumowanie_ewaluacji.md`.
 6. Drenaż miesięczny (tabela i wykres: drenaż = model naturalny − poziom rzeczywisty, przyrost co miesiąc):
    ```bash
    python sources/drenaz_miesieczny.py

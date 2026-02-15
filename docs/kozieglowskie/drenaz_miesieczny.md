@@ -10,7 +10,7 @@ Tabela: **suma przyrostu dla każdego roku** (cm/rok), bez wierszy miesięcznych
 
 | Rok | Suma przyrostu (cm/rok) |
 |-----|-------------------------|
-| 1996 | +0.4 |
+| 1996 | +3.9 |
 | 1997 | +2.2 |
 | 1998 | -10.5 |
 | 1999 | +11.8 |

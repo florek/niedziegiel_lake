@@ -185,8 +185,11 @@ def _data_ostatniego_pomiaru(df: pd.DataFrame) -> tuple[int, int] | None:
     return (int(dt.year), int(dt.month))
 
 
-def _symulacje_warianty(df: pd.DataFrame, lake_id: str) -> list[dict] | None:
-    model_path = lake.get_model_path(lake_id)
+def _symulacje_warianty(df: pd.DataFrame, lake_id: str, model_variant: str | None = None) -> list[dict] | None:
+    if model_variant == "natural":
+        model_path = lake.get_model_path(lake_id, "natural")
+    else:
+        model_path = lake.get_model_path(lake_id)
     if not model_path.exists():
         return None
     data_ost = _data_ostatniego_pomiaru(df)
@@ -288,6 +291,8 @@ def _plot_wariant_symulacja(
     out_path: Path,
     nazwa: str,
     nazwa_jeziora: str,
+    wyniki_natural: list[dict] | None = None,
+    level_na_data_referencyjna_natural: float | None = None,
 ) -> None:
     df_poziom = df.dropna(subset=[lake.COL_POZIOM]).copy()
     df_poziom = df_poziom.sort_values(lake.COL_DATA)
@@ -303,10 +308,16 @@ def _plot_wariant_symulacja(
     sim_levels = [level_na_data_referencyjna] + [float(r["poziom"]) for r in wyniki]
     fig, ax = plt.subplots(figsize=(14, 5))
     ax.plot(hist_dates, hist_levels, color="#1f77b4", linewidth=1.2, label=f"Historia (od {HISTORIA_OD_ROKU})")
-    ax.plot(pd.to_datetime(sim_dates), sim_levels, color="#d62728", linewidth=1.5, marker="o", markersize=4, label="Symulacja (12 mies.)")
+    label_drain = "Symulacja model drenażowy (12 mies.)" if (wyniki_natural is not None) else "Symulacja (12 mies.)"
+    ax.plot(pd.to_datetime(sim_dates), sim_levels, color="#d62728", linewidth=1.5, marker="o", markersize=4, label=label_drain)
+    if wyniki_natural is not None and level_na_data_referencyjna_natural is not None:
+        sim_dates_nat = [data_pierwsza_sym] + [r["data"] + "-01" for r in wyniki_natural]
+        sim_levels_nat = [level_na_data_referencyjna_natural] + [float(r["poziom"]) for r in wyniki_natural]
+        ax.plot(pd.to_datetime(sim_dates_nat), sim_levels_nat, color="#2ca02c", linewidth=1.5, marker="s", markersize=4, label="Symulacja model naturalny (12 mies.)")
     ax.set_xlabel("Data")
     ax.set_ylabel("Wysokość (m n.p.m.)")
-    ax.set_title(f"{nazwa_jeziora} – {nazwa}: pełny zakres od {HISTORIA_OD_ROKU} + 12 mies. symulacji")
+    suffix = " (dwa modele)" if wyniki_natural else ""
+    ax.set_title(f"{nazwa_jeziora} – {nazwa}: pełny zakres od {HISTORIA_OD_ROKU} + 12 mies. symulacji{suffix}")
     ax.xaxis.set_major_locator(mdates.YearLocator(2))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
     ax.legend(loc="best")
@@ -335,7 +346,7 @@ def _plot_poziom_rzeczywisty_i_model(
     if eval_rows_natural:
         dates_nat = pd.to_datetime([r["data"] + "-01" for r in eval_rows_natural])
         natural_level = [float(r["wysokosc_model"]) for r in eval_rows_natural]
-        ax.plot(dates_nat, natural_level, color="#2ca02c", linewidth=1.2, linestyle=":", label="Model naturalny (przed drenażem)")
+        ax.plot(dates_nat, natural_level, color="#2ca02c", linewidth=1.2, linestyle=":", label="Model naturalny (sprzed drenażu)")
     ax.set_xlabel("Data")
     ax.set_ylabel("Wysokość (m n.p.m.)")
     ax.set_title(f"{nazwa_jeziora} – poziom wody: rzeczywisty pomiar i scenariusze modelowe")
@@ -368,6 +379,8 @@ def _write_report(
     lake_id: str,
     warianty: list[dict] | None = None,
     wariant_najbardziej_prawdopodobny: dict | None = None,
+    warianty_natural: list[dict] | None = None,
+    wariant_najbardziej_prawdopodobny_natural: dict | None = None,
     data_koniec_prognozy: tuple[int, int] = DATA_KONIEC_PROGNOZY,
     data_referencyjna: tuple[int, int] | None = None,
     level_na_data_referencyjna: float | None = None,
@@ -388,18 +401,28 @@ def _write_report(
     ]
     if warianty:
         lines.extend([
-            "## Symulacje wariantów pogodowych (12 miesięcy do przodu)",
+            "## Prognoza 12 mies.",
             "",
-            f"Dla każdego wariantu (temperatura: zimny/normalny/ciepły × opad: suchy/normalny/wilgotny) opad i temperatura z percentyli historycznych w `data/{lake_id}/data.csv`. Symulacja: 12 miesięcy do końca {_format_koniec_miesiaca(*data_koniec_prognozy)} (stan na koniec {_format_koniec_miesiaca(*data_referencyjna)} to pomiar rzeczywisty). Wykres: pełny zakres historii (od {HISTORIA_OD_ROKU}) + 12 miesięcy symulacji.",
+            f"Dla każdego wariantu (temperatura: zimny/normalny/ciepły × opad: suchy/normalny/wilgotny) opad i temperatura z percentyli historycznych w `data/{lake_id}/data.csv`. Symulacja: 12 miesięcy do końca {_format_koniec_miesiaca(*data_koniec_prognozy)} (stan na koniec {_format_koniec_miesiaca(*data_referencyjna)} to pomiar rzeczywisty). Wykresy i tabele: oba modele (drenażowy i naturalny – sprzed drenażu) na wspólnych wykresach i w jednej tabeli na wariant.",
             "",
             "**Szansa realizacji** (na podstawie zgodności z ostatnimi 12 miesiącami pomiarowymi – średni opad i temperatura):",
             "",
-            "| Wariant | Szansa realizacji (%) |",
-            "|---------|------------------------|",
         ])
-        for v in warianty:
-            if v.get("szansa_pct") is not None:
-                lines.append(f"| {v['nazwa']} | {v['szansa_pct']} |")
+        if warianty_natural:
+            lines.append("| Wariant | Szansa (%) | Poziom koniec – drenaż (m) | Poziom koniec – natural (m) |")
+            lines.append("|---------|------------|-----------------------------|------------------------------|")
+            nat_by_nazwa = {v["nazwa"]: v for v in warianty_natural}
+            for v in warianty:
+                if v.get("szansa_pct") is not None:
+                    vn = nat_by_nazwa.get(v["nazwa"])
+                    pn = round(vn["poziom_koniec"], 3) if vn else "—"
+                    lines.append(f"| {v['nazwa']} | {v['szansa_pct']} | {round(v['poziom_koniec'], 3)} | {pn} |")
+        else:
+            lines.append("| Wariant | Szansa realizacji (%) |")
+            lines.append("|---------|------------------------|")
+            for v in warianty:
+                if v.get("szansa_pct") is not None:
+                    lines.append(f"| {v['nazwa']} | {v['szansa_pct']} |")
         rok_kon, mies_kon = data_koniec_prognozy
         rok_ref, mies_ref = data_referencyjna
         level_ref = level_na_data_referencyjna if level_na_data_referencyjna is not None else warianty[0]["level_start"]
@@ -411,36 +434,56 @@ def _write_report(
         roznica_txt = f"przybędzie {_format_zmiana_m_cm(roznica)}" if roznica >= 0 else f"ubędzie {-roznica:.3f} m ({roznica * 100:+.1f} cm)"
         txt_koniec = _format_koniec_miesiaca(rok_kon, mies_kon)
         txt_ref = _format_koniec_miesiaca(rok_ref, mies_ref)
-        lines.extend([
-            "",
-            f"**Najbardziej prawdopodobny poziom na koniec {txt_koniec}** (średnia ważona zmian miesięcznych według szans realizacji wszystkich wariantów): **{round(poziom_wazony, 3)} m n.p.m.** W stosunku do stanu na koniec {txt_ref} ({level_ref} m n.p.m.): {roznica_txt}.",
-            "",
-            "",
-        ])
+        level_ref_nat = level_na_data_referencyjna if level_na_data_referencyjna is not None else (warianty_natural[0]["level_start"] if warianty_natural else level_ref)
+        if wariant_najbardziej_prawdopodobny_natural is not None:
+            poziom_wazony_nat = wariant_najbardziej_prawdopodobny_natural["poziom_koniec"]
+            roznica_nat = poziom_wazony_nat - level_ref_nat
+            roznica_txt_nat = f"przybędzie {_format_zmiana_m_cm(roznica_nat)}" if roznica_nat >= 0 else f"ubędzie {-roznica_nat:.3f} m ({roznica_nat * 100:+.1f} cm)"
+        else:
+            poziom_wazony_nat = roznica_txt_nat = None
+        lines.append("")
+        lines.append(f"**Najbardziej prawdopodobny poziom na koniec {txt_koniec}** (średnia ważona zmian miesięcznych według szans realizacji wszystkich wariantów). W stosunku do stanu na koniec {txt_ref} ({level_ref} m n.p.m.):")
+        lines.append(f"- **Model drenażowy:** {round(poziom_wazony, 3)} m n.p.m. – {roznica_txt}")
+        if poziom_wazony_nat is not None and roznica_txt_nat:
+            lines.append(f"- **Model naturalny (sprzed drenażu):** {round(poziom_wazony_nat, 3)} m n.p.m. – {roznica_txt_nat}")
+        lines.extend(["", ""])
+        nat_by_nazwa = {}
+        if warianty_natural:
+            for v in ([wariant_najbardziej_prawdopodobny_natural] if wariant_najbardziej_prawdopodobny_natural else []) + warianty_natural:
+                nat_by_nazwa[v["nazwa"]] = v
         warianty_do_sekcji = ([wariant_najbardziej_prawdopodobny] if wariant_najbardziej_prawdopodobny else []) + warianty
         for v in warianty_do_sekcji:
             nazwa = v["nazwa"]
             fname = f"symulacja_wariant_{_variant_to_filename(nazwa)}.png"
-            lines.extend([
-                f"### {nazwa}",
-                "",
-                f"![Symulacja {nazwa}]({fname})",
-                "",
-                "| Data | Opad (mm) | Temperatura (°C) | Zmiana prognoza (cm) | Poziom (m n.p.m.) |",
-                "|------|-----------|------------------|----------------------|-------------------|",
-            ])
-            for r in v["wyniki"]:
-                lines.append(f"| {r['data']} | {round(r['opad'], 1)} | {round(r['temperatura'], 1)} | {_format_zmiana_cm(r['zmiana_prognoza'])} | {r['poziom']} |")
+            v_nat = nat_by_nazwa.get(nazwa)
+            lines.extend([f"### {nazwa}", "", f"![Symulacja {nazwa}]({fname})", ""])
+            if v_nat and len(v_nat["wyniki"]) == len(v["wyniki"]):
+                lines.extend([
+                    "| Data | Opad (mm) | Temp. (°C) | Zmiana drenaż (cm) | Poziom drenaż (m) | Zmiana natural (cm) | Poziom natural (m) |",
+                    "|------|-----------|------------|---------------------|-------------------|----------------------|--------------------|",
+                ])
+                for r, rn in zip(v["wyniki"], v_nat["wyniki"]):
+                    lines.append(f"| {r['data']} | {round(r['opad'], 1)} | {round(r['temperatura'], 1)} | {_format_zmiana_cm(r['zmiana_prognoza'])} | {r['poziom']} | {_format_zmiana_cm(rn['zmiana_prognoza'])} | {rn['poziom']} |")
+            else:
+                lines.extend([
+                    "| Data | Opad (mm) | Temperatura (°C) | Zmiana prognoza (cm) | Poziom (m n.p.m.) |",
+                    "|------|-----------|------------------|----------------------|-------------------|",
+                ])
+                for r in v["wyniki"]:
+                    lines.append(f"| {r['data']} | {round(r['opad'], 1)} | {round(r['temperatura'], 1)} | {_format_zmiana_cm(r['zmiana_prognoza'])} | {r['poziom']} |")
             szansa_line = "- **Średnia ważona wszystkich wariantów (bez własnej szansy realizacji).**" if v.get("czy_srednia_wazona") else f"- **Szansa realizacji:** {v['szansa_pct']} %"
             lines.extend([
                 "",
                 szansa_line,
                 f"- **Średnia temperatura roczna (prognoza):** {round(v['srednia_temp_roczna'], 1)} °C",
                 f"- **Suma opadu (prognoza):** {round(v['suma_opadu'], 1)} mm",
-                f"- **Różnica poziomu wody** (koniec symulacji − start): {_format_zmiana_m_cm(v['roznica_poziomu'])}",
-                f"- **Poziom na koniec {_format_koniec_miesiaca(*data_koniec_prognozy)}:** {round(v['poziom_koniec'], 3)} m n.p.m.",
-                "",
+                f"- **Różnica poziomu wody (drenaż)** (koniec − start): {_format_zmiana_m_cm(v['roznica_poziomu'])}",
+                f"- **Poziom na koniec {_format_koniec_miesiaca(*data_koniec_prognozy)} (drenaż):** {round(v['poziom_koniec'], 3)} m n.p.m.",
             ])
+            if v_nat:
+                lines.append(f"- **Różnica poziomu wody (natural)** (koniec − start): {_format_zmiana_m_cm(v_nat['roznica_poziomu'])}")
+                lines.append(f"- **Poziom na koniec {_format_koniec_miesiaca(*data_koniec_prognozy)} (natural):** {round(v_nat['poziom_koniec'], 3)} m n.p.m.")
+            lines.extend(["", ""])
         lines.append("")
     lines.append("")
     lines.append(f"*Wygenerowano: {datetime.now().strftime('%Y-%m-%d %H:%M')}*")
@@ -455,6 +498,8 @@ def _build_szanse_odbudowy_opis(
     level_ref: float,
     data_referencyjna: tuple[int, int],
     data_koniec_prognozy: tuple[int, int],
+    warianty_natural: list[dict] | None = None,
+    wariant_najbardziej_prawdopodobny_natural: dict | None = None,
 ) -> str:
     rok_kon, mies_kon = data_koniec_prognozy
     rok_ref, mies_ref = data_referencyjna
@@ -478,6 +523,11 @@ def _build_szanse_odbudowy_opis(
     else:
         min_cm = max_cm = roznica_cm
     max_szansa = max((v.get("szansa_pct") or 0) for v in warianty) if warianty else 0
+    if wariant_najbardziej_prawdopodobny_natural is not None:
+        poziom_wazony_nat = wariant_najbardziej_prawdopodobny_natural["poziom_koniec"]
+        roznica_nat_cm = (poziom_wazony_nat - level_ref) * 100
+    else:
+        poziom_wazony_nat = roznica_nat_cm = None
     lines = [
         f"# Szanse na odbudowę – {nazwa_jeziora}",
         "",
@@ -485,20 +535,42 @@ def _build_szanse_odbudowy_opis(
         "",
         f"**Stan odniesienia:** koniec {txt_ref} – poziom {level_ref:.3f} m n.p.m.",
         "",
-        f"**Prognoza na koniec {txt_koniec}** (scenariusz najbardziej prawdopodobny, średnia ważona według szans realizacji wariantów): poziom **{poziom_wazony:.3f} m n.p.m.**, czyli **{'wzrost' if roznica_cm >= 0 else 'spadek'} o {abs(roznica_cm):.1f} cm** w stosunku do stanu odniesienia.",
-        "",
-        f"W zależności od warunków pogodowych w nadchodzącym roku prognozowana zmiana poziomu w 12 miesięcy mieści się w zakresie od **{min_cm:+.1f} cm** do **{max_cm:+.1f} cm**. Najwyższą szansę realizacji ({max_szansa:.1f}%) ma jeden z wariantów pogodowych; szczegóły wszystkich wariantów i szans – w raporcie [Prognoza 12 mies.](#docs-{lake_id}-prognoza).",
-        "",
     ]
+    if poziom_wazony_nat is not None and roznica_nat_cm is not None:
+        lines.extend([
+            "**Porównanie prognoz** (najbardziej prawdopodobny scenariusz, średnia ważona):",
+            "",
+            "| Model | Poziom koniec (m n.p.m.) | Zmiana (cm) |",
+            "|-------|-------------------------------------|-------------|",
+            f"| Drenażowy (po zmianie reżimu) | {poziom_wazony:.3f} | {roznica_cm:+.1f} |",
+            f"| Naturalny (sprzed drenażu) | {poziom_wazony_nat:.3f} | {roznica_nat_cm:+.1f} |",
+            "",
+        ])
+    lines.extend([
+        f"**Prognoza na koniec {txt_koniec}** (model drenażowy): poziom **{poziom_wazony:.3f} m n.p.m.**, czyli **{'wzrost' if roznica_cm >= 0 else 'spadek'} o {abs(roznica_cm):.1f} cm** w stosunku do stanu odniesienia.",
+        "",
+        f"W zależności od warunków pogodowych w nadchodzącym roku prognozowana zmiana poziomu w 12 miesięcy (model drenażowy) mieści się w zakresie od **{min_cm:+.1f} cm** do **{max_cm:+.1f} cm**. Najwyższą szansę realizacji ({max_szansa:.1f}%) ma jeden z wariantów pogodowych; szczegóły wszystkich wariantów i szans – w raporcie [Prognoza 12 mies.](#docs-{lake_id}-prognoza).",
+        "",
+    ])
     if roznica_cm >= 5:
-        sent = "prognoza wskazuje na **możliwy przyrost** poziomu w ciągu roku; sprzyja to odbudowie, o ile utrzyma się tendencja i nie nasili się drenaż."
+        sent = "prognoza **modelu drenażowego** wskazuje na **możliwy przyrost** poziomu w ciągu roku; sprzyja to odbudowie, o ile utrzyma się tendencja i nie nasili się drenaż."
     elif roznica_cm >= 0:
-        sent = "prognoza wskazuje na **stabilizację lub niewielki przyrost** poziomu w ciągu roku; szanse na odbudowę w tej perspektywie są umiarkowane."
+        sent = "prognoza **modelu drenażowego** wskazuje na **stabilizację lub niewielki przyrost** poziomu w ciągu roku; szanse na odbudowę w tej perspektywie są umiarkowane."
     elif roznica_cm >= -10:
-        sent = "prognoza wskazuje na **niewielki spadek** poziomu w ciągu roku; szanse na odbudowę w perspektywie 12 miesięcy są ograniczone bez zatrzymania drenażu."
+        sent = "prognoza **modelu drenażowego** wskazuje na **niewielki spadek** poziomu w ciągu roku; szanse na odbudowę w perspektywie 12 miesięcy są ograniczone bez zatrzymania drenażu."
     else:
-        sent = "prognoza wskazuje na **spadek** poziomu w ciągu roku; szanse na odbudowę w perspektywie roku są niskie – istotna odbudowa wymagałaby zatrzymania drenażu i korzystnych warunków."
-    lines.append("**Szanse na odbudowę w perspektywie roku:** " + sent)
+        sent = "prognoza **modelu drenażowego** wskazuje na **spadek** poziomu w ciągu roku; szanse na odbudowę w perspektywie roku są niskie – istotna odbudowa wymagałaby zatrzymania drenażu i korzystnych warunków."
+    lines.append("**Szanse na odbudowę w perspektywie roku (model drenażowy):** " + sent)
+    if poziom_wazony_nat is not None and roznica_nat_cm is not None:
+        if roznica_nat_cm >= 5:
+            sent_nat = "prognoza **modelu naturalnego** (sprzed drenażu) wskazuje na **możliwy przyrost** poziomu w ciągu roku."
+        elif roznica_nat_cm >= 0:
+            sent_nat = "prognoza **modelu naturalnego** wskazuje na **stabilizację lub niewielki przyrost** poziomu w ciągu roku."
+        elif roznica_nat_cm >= -10:
+            sent_nat = "prognoza **modelu naturalnego** wskazuje na **niewielki spadek** poziomu w ciągu roku."
+        else:
+            sent_nat = "prognoza **modelu naturalnego** wskazuje na **spadek** poziomu w ciągu roku."
+        lines.extend(["", "**Szanse na odbudowę w perspektywie roku (model naturalny):** " + sent_nat])
     lines.extend([
         "",
         f"Szacunki długoterminowej odbudowy (lata do zamknięcia luki po ewentualnym zaniku drenażu) – patrz [Zanik drenażu](#docs-{lake_id}-zanik-drenazu).",
@@ -559,6 +631,9 @@ def run_report_for_lake(lake_id: str) -> None:
         _, _, eval_rows = run_evaluation(lake_id=lake_id)
     eval_rows_natural = None
     natural_path = lake.get_model_path(lake_id, "natural")
+    if not natural_path.exists() and lake.get_model_path(lake_id).exists():
+        print(f"Brak modelu naturalnego dla {lake_id}, trening...")
+        lake.run_training_and_save(lake_id, variant="natural")
     if natural_path.exists():
         _, _, eval_rows_natural = run_evaluation(
             lake_id=lake_id,
@@ -587,7 +662,25 @@ def run_report_for_lake(lake_id: str) -> None:
             level_start_symulacji=warianty[0]["level_start"],
             level_ref_do_porownania=level_na_data_ref if level_na_data_ref is not None else warianty[0]["level_start"],
         )
+    natural_by_nazwa = {}
+    if natural_path.exists():
+        warianty_natural = _symulacje_warianty(df, lake_id, model_variant="natural")
+    else:
+        warianty_natural = None
+    wariant_np_natural = None
+    if warianty_natural:
+        _dodaj_szanse_realizacji(df, warianty_natural)
+        level_ref_nat = level_na_data_ref if level_na_data_ref is not None else warianty_natural[0]["level_start"]
+        wariant_np_natural = _wariant_najbardziej_prawdopodobny(
+            warianty_natural,
+            level_start_symulacji=warianty_natural[0]["level_start"],
+            level_ref_do_porownania=level_ref_nat,
+        )
+        for v in [wariant_np_natural] + warianty_natural:
+            natural_by_nazwa[v["nazwa"]] = v["wyniki"]
+    if warianty:
         for v in [wariant_np] + warianty:
+            wyniki_nat = natural_by_nazwa.get(v["nazwa"])
             path_wariant = figures_dir / f"symulacja_wariant_{_variant_to_filename(v['nazwa'])}.png"
             _plot_wariant_symulacja(
                 df=df,
@@ -597,6 +690,8 @@ def run_report_for_lake(lake_id: str) -> None:
                 out_path=path_wariant,
                 nazwa=v["nazwa"],
                 nazwa_jeziora=nazwa_jeziora,
+                wyniki_natural=wyniki_nat,
+                level_na_data_referencyjna_natural=level_na_data_ref_plot if wyniki_nat else None,
             )
             print(f"Wykres wariantu zapisany: {path_wariant}")
     content = _write_report(
@@ -605,6 +700,8 @@ def run_report_for_lake(lake_id: str) -> None:
         lake_id=lake_id,
         warianty=warianty,
         wariant_najbardziej_prawdopodobny=wariant_np,
+        warianty_natural=warianty_natural,
+        wariant_najbardziej_prawdopodobny_natural=wariant_np_natural,
         data_referencyjna=data_ref,
         level_na_data_referencyjna=level_na_data_ref,
     )
@@ -621,6 +718,8 @@ def run_report_for_lake(lake_id: str) -> None:
             level_ref=level_ref,
             data_referencyjna=data_ref,
             data_koniec_prognozy=DATA_KONIEC_PROGNOZY,
+            warianty_natural=warianty_natural,
+            wariant_najbardziej_prawdopodobny_natural=wariant_np_natural,
         )
         szanse_path = figures_dir / "szanse_odbudowy.md"
         szanse_path.write_text(szanse_content, encoding="utf-8")
