@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prognoza poziomu jezior – dokumentacja</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --sidebar: #1a2332;
+      --sidebar-hover: #243447;
+      --text: #e6edf3;
+      --text-muted: #8b9cb3;
+      --accent: #58a6ff;
+      --accent-soft: rgba(88, 166, 255, 0.15);
+      --border: #30363d;
+      --code-bg: #21262d;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+    .sidebar {
+      width: 280px;
+      min-width: 280px;
+      background: var(--sidebar);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 1rem 0;
+    }
+    .sidebar h2 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin: 0 1rem 0.75rem;
+      padding-bottom: 0.25rem;
+    }
+    .tree ul { list-style: none; margin: 0; padding-left: 0; }
+    .tree > ul { padding-left: 0; }
+    .tree li { margin: 0; }
+    .tree .branch > .label {
+      cursor: pointer;
+      padding: 0.35rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      user-select: none;
+    }
+    .tree .branch > .label:hover { background: var(--sidebar-hover); color: var(--text); }
+    .tree .branch.open > .label { color: var(--text); }
+    .tree .branch .twist { font-size: 0.7rem; transition: transform 0.15s ease; }
+    .tree .branch.open > .label .twist { transform: rotate(90deg); }
+    .tree .branch ul { padding-left: 1.25rem; border-left: 1px solid var(--border); margin-left: 0.75rem; }
+    .tree .leaf a {
+      display: block;
+      padding: 0.4rem 1rem;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.9rem;
+      border-left: 2px solid transparent;
+    }
+    .tree .leaf a:hover { background: var(--sidebar-hover); color: var(--accent); }
+    .tree .leaf a.active { background: var(--accent-soft); color: var(--accent); border-left-color: var(--accent); }
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 2rem 3rem 4rem;
+    }
+    .main .content {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .main .content h1 { font-size: 1.75rem; margin-top: 0; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .main .content h2 { font-size: 1.35rem; margin-top: 1.5rem; }
+    .main .content h3 { font-size: 1.15rem; margin-top: 1.25rem; }
+    .main .content p { margin: 0.75rem 0; }
+    .main .content ul, .main .content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    .main .content pre, .main .content code { background: var(--code-bg); border-radius: 6px; font-size: 0.9em; }
+    .main .content pre { padding: 1rem; overflow-x: auto; }
+    .main .content code { padding: 0.2em 0.4em; }
+    .main .content pre code { padding: 0; }
+    .main .content table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.9rem; }
+    .main .content th, .main .content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    .main .content th { background: var(--sidebar); }
+    .main .content img { max-width: 100%; height: auto; border-radius: 6px; margin: 0.5rem 0; }
+    .main .content blockquote { border-left: 4px solid var(--accent); margin: 1rem 0; padding-left: 1rem; color: var(--text-muted); }
+    .main .placeholder { color: var(--text-muted); font-style: italic; }
+    .main .error { color: #f85149; }
+    .hint {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      background: var(--sidebar);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      margin-bottom: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <nav class="sidebar">
+      <h2>Nawigacja</h2>
+      <div class="tree" id="nav-tree"></div>
+    </nav>
+    <main class="main">
+      <div class="hint">Wybierz pozycję z listy po lewej. Otwórz stronę przez serwer HTTP (np. <code>python -m http.server 8000</code> w katalogu projektu), aby raporty i obrazy ładowały się poprawnie.</div>
+      <div class="content" id="content"></div>
+    </main>
+  </div>
+  <script>
+    const LAKES = [
+      { id: "budzislawskie", name: "Budzisławskie" },
+      { id: "kozieglowskie", name: "Koziegłowskie" },
+      { id: "kownackie", name: "Kownackie" },
+      { id: "niedziegiel", name: "Niedzięgiel" },
+      { id: "ostrowskie", name: "Ostrowskie" },
+      { id: "powidzkie", name: "Powidzkie" },
+      { id: "skulskawies", name: "Skulska Wieś" },
+      { id: "suszewskie", name: "Suszewskie" },
+      { id: "wilczynskie", name: "Wilczyńskie" }
+    ];
+    const DOCS_ROOT = [
+      { path: "docs/model.md", label: "Model" },
+      { path: "docs/raport_ogolny.md", label: "Raport ogólny" },
+      { path: "docs/podsumowanie_zbiorcze.md", label: "Podsumowanie zbiorcze" },
+      { path: "docs/szacunek_odbudowy_po_zaniku_drenazu.md", label: "Szacunek odbudowy po zaniku drenażu" }
+    ];
+    const LAKE_DOCS = [
+      { file: "prognoza.md", label: "Prognoza 12 mies." },
+      { file: "raport_podsumowujacy.md", label: "Raport podsumowujący" },
+      { file: "podsumowanie_ewaluacji.md", label: "Podsumowanie ewaluacji" },
+      { file: "zanik_drenazu.md", label: "Zanik drenażu" }
+    ];
+
+    function buildTree() {
+      const root = document.getElementById("nav-tree");
+      const ul = document.createElement("ul");
+      const itemStart = document.createElement("li");
+      itemStart.className = "leaf";
+      itemStart.innerHTML = '<a href="#" data-src="README.md" data-base="">README</a>';
+      ul.appendChild(itemStart);
+      const branchDocs = document.createElement("li");
+      branchDocs.className = "branch open";
+      branchDocs.innerHTML = '<span class="label"><span class="twist">▶</span> docs</span>';
+      const docsUl = document.createElement("ul");
+      DOCS_ROOT.forEach(({ path, label }) => {
+        const li = document.createElement("li");
+        li.className = "leaf";
+        const base = path.replace(/\/[^/]+\.md$/, "/");
+        li.innerHTML = `<a href="#" data-src="${path}" data-base="${base}">${label}</a>`;
+        docsUl.appendChild(li);
+      });
+      LAKES.forEach(({ id, name }) => {
+        const branch = document.createElement("li");
+        branch.className = "branch";
+        branch.innerHTML = `<span class="label"><span class="twist">▶</span> ${name}</span>`;
+        const subUl = document.createElement("ul");
+        LAKE_DOCS.forEach(({ file, label }) => {
+          const path = `docs/${id}/${file}`;
+          const base = `docs/${id}/`;
+          const li = document.createElement("li");
+          li.className = "leaf";
+          li.innerHTML = `<a href="#" data-src="${path}" data-base="${base}">${label}</a>`;
+          subUl.appendChild(li);
+        });
+        branch.appendChild(subUl);
+        docsUl.appendChild(branch);
+      });
+      branchDocs.appendChild(docsUl);
+      ul.appendChild(branchDocs);
+      root.appendChild(ul);
+      root.querySelectorAll(".branch > .label").forEach(el => {
+        el.addEventListener("click", () => {
+          const br = el.closest(".branch");
+          br.classList.toggle("open");
+        });
+      });
+      root.querySelectorAll(".tree .leaf a").forEach(a => {
+        a.addEventListener("click", (e) => {
+          e.preventDefault();
+          const src = a.getAttribute("data-src");
+          const base = a.getAttribute("data-base") || "";
+          root.querySelectorAll(".tree .leaf a").forEach(x => x.classList.remove("active"));
+          a.classList.add("active");
+          loadDoc(src, base);
+        });
+      });
+    }
+
+    function loadDoc(src, basePath) {
+      const content = document.getElementById("content");
+      content.innerHTML = "<p class=\"placeholder\">Ładowanie…</p>";
+      fetch(src)
+        .then(r => {
+          if (!r.ok) throw new Error(r.statusText);
+          return r.text();
+        })
+        .then(md => {
+          const html = marked.parse(md, { gfm: true });
+          content.innerHTML = html;
+          content.querySelectorAll("img").forEach(img => {
+            const s = img.getAttribute("src");
+            if (s && !s.startsWith("http") && !s.startsWith("data:")) {
+              img.setAttribute("src", basePath + s);
+            }
+          });
+        })
+        .catch(() => {
+          content.innerHTML = "<p class=\"error\">Nie udało się załadować pliku. Otwórz stronę przez serwer HTTP (np. <code>python -m http.server 8000</code>).</p>";
+        });
+    }
+
+    buildTree();
+    const first = document.querySelector(".tree .leaf a[data-src='README.md']");
+    if (first) {
+      first.classList.add("active");
+      loadDoc("README.md", "");
+    }
+  </script>
+</body>
+</html>

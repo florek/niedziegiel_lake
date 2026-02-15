@@ -9,6 +9,7 @@ Projekt zawiera modele uczenia maszynowego do **prognozowania miesięcznej zmian
 
 ## Struktura projektu
 
+- **index.html** – strona dokumentacji z nawigacją drzewkową (README + wszystkie raporty z docs/).
 - **sources/** – kod Pythona (lake.py, evaluate_predictions.py, generate_report.py, generate_report_12mies.py, poziom_do_stycznia_2026.py, merge_*.py itd.).
 - **data/** – dane per jezioro w podkatalogach:
   - **data/{id}/** – np. `data/niedziegiel/`: pliki `data.csv`, `model.pkl`, opcjonalnie `opad.txt`, `temp.txt`, `realny_pomiar.csv`.
@@ -78,6 +79,16 @@ Uruchamiaj skrypty z **katalogu głównego projektu** (gdzie są katalogi `data/
    Wynik: `docs/szacunek_odbudowy_po_zaniku_drenazu.md`, `docs/{id}/zanik_drenazu.md`, wykresy w `docs/odbudowa/`.
 
 Szczegóły modelu i API: [docs/model.md](docs/model.md).
+
+## Strona dokumentacji (index.html)
+
+W katalogu głównym znajduje się plik **index.html** – strona z nawigacją drzewkową po lewej stronie, łącząca README i wszystkie raporty z `docs/` (model, raport ogólny, podsumowanie zbiorcze, szacunek odbudowy oraz per jezioro: prognoza, raport podsumowujący, podsumowanie ewaluacji, zanik drenażu). Markdown jest renderowany w przeglądarce, obrazy z raportów ładują się względem katalogu danego jeziora. Aby ładowanie plików działało (fetch), otwórz stronę przez serwer HTTP:
+
+```bash
+python -m http.server 8000
+```
+
+Następnie wejdź na: [http://localhost:8000](http://localhost:8000) (w katalogu projektu musi być plik `index.html`).
 
 ## Wygenerowane raporty (linki)
 
