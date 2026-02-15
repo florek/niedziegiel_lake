@@ -487,7 +487,7 @@ def _build_szanse_odbudowy_opis(
         "",
         f"**Prognoza na koniec {txt_koniec}** (scenariusz najbardziej prawdopodobny, średnia ważona według szans realizacji wariantów): poziom **{poziom_wazony:.3f} m n.p.m.**, czyli **{'wzrost' if roznica_cm >= 0 else 'spadek'} o {abs(roznica_cm):.1f} cm** w stosunku do stanu odniesienia.",
         "",
-        f"W zależności od warunków pogodowych w nadchodzącym roku prognozowana zmiana poziomu w 12 miesięcy mieści się w zakresie od **{min_cm:+.1f} cm** do **{max_cm:+.1f} cm**. Najwyższą szansę realizacji ({max_szansa:.1f}%) ma jeden z wariantów pogodowych; szczegóły wszystkich wariantów i szans – w raporcie [Prognoza 12 mies.](prognoza.md).",
+        f"W zależności od warunków pogodowych w nadchodzącym roku prognozowana zmiana poziomu w 12 miesięcy mieści się w zakresie od **{min_cm:+.1f} cm** do **{max_cm:+.1f} cm**. Najwyższą szansę realizacji ({max_szansa:.1f}%) ma jeden z wariantów pogodowych; szczegóły wszystkich wariantów i szans – w raporcie [Prognoza 12 mies.](#docs-{lake_id}-prognoza).",
         "",
     ]
     if roznica_cm >= 5:
@@ -501,7 +501,7 @@ def _build_szanse_odbudowy_opis(
     lines.append("**Szanse na odbudowę w perspektywie roku:** " + sent)
     lines.extend([
         "",
-        "Szacunki długoterminowej odbudowy (lata do zamknięcia luki po ewentualnym zaniku drenażu) – patrz [Zanik drenażu](zanik_drenazu.md).",
+        f"Szacunki długoterminowej odbudowy (lata do zamknięcia luki po ewentualnym zaniku drenażu) – patrz [Zanik drenażu](#docs-{lake_id}-zanik-drenazu).",
         "",
         f"*Wygenerowano: {datetime.now().strftime('%Y-%m-%d %H:%M')}*",
     ])

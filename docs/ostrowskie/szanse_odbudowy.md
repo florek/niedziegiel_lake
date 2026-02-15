@@ -6,10 +6,10 @@ Opisowa ocena szans na odbudowę poziomu wody w perspektywie **kolejnych 12 mies
 
 **Prognoza na koniec stycznia 2027** (scenariusz najbardziej prawdopodobny, średnia ważona według szans realizacji wariantów): poziom **94.487 m n.p.m.**, czyli **spadek o 19.8 cm** w stosunku do stanu odniesienia.
 
-W zależności od warunków pogodowych w nadchodzącym roku prognozowana zmiana poziomu w 12 miesięcy mieści się w zakresie od **-41.1 cm** do **+14.0 cm**. Najwyższą szansę realizacji (15.2%) ma jeden z wariantów pogodowych; szczegóły wszystkich wariantów i szans – w raporcie [Prognoza 12 mies.](prognoza.md).
+W zależności od warunków pogodowych w nadchodzącym roku prognozowana zmiana poziomu w 12 miesięcy mieści się w zakresie od **-41.1 cm** do **+14.0 cm**. Najwyższą szansę realizacji (15.2%) ma jeden z wariantów pogodowych; szczegóły wszystkich wariantów i szans – w raporcie [Prognoza 12 mies.](#docs-ostrowskie-prognoza).
 
 **Szanse na odbudowę w perspektywie roku:** prognoza wskazuje na **spadek** poziomu w ciągu roku; szanse na odbudowę w perspektywie roku są niskie – istotna odbudowa wymagałaby zatrzymania drenażu i korzystnych warunków.
 
-Szacunki długoterminowej odbudowy (lata do zamknięcia luki po ewentualnym zaniku drenażu) – patrz [Zanik drenażu](zanik_drenazu.md).
+Szacunki długoterminowej odbudowy (lata do zamknięcia luki po ewentualnym zaniku drenażu) – patrz [Zanik drenażu](#docs-ostrowskie-zanik-drenazu).
 
-*Wygenerowano: 2026-02-15 14:10*
+*Wygenerowano: 2026-02-15 15:00*
