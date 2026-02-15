@@ -93,13 +93,12 @@ COL_TEMPERATURA = "Temperatura"
 COL_ZMIANA = "Zmiana"
 
 LAG_MONTHS = 3
-LAG_MONTHS_BY_LAKE = {"budzislawskie": 3, "kozieglowskie": 3, "niedziegiel": 3, "niedziegiel_zaklocony": 3, "ostrowskie": 3, "powidzkie": 5, "skulskawies": 3, "suszewskie": 3, "wilczynskie": 3}
+LAG_MONTHS_BY_LAKE = {"budzislawskie": 3, "kozieglowskie": 3, "niedziegiel": 3, "ostrowskie": 3, "powidzkie": 5, "skulskawies": 3, "suszewskie": 3, "wilczynskie": 3}
 METEO_LAG_FIBONACCI = [0, 1, 2, 3, 5, 8, 13]
 METEO_LAG_CANDIDATES_BY_LAKE = {
     "budzislawskie": METEO_LAG_FIBONACCI,
     "kozieglowskie": METEO_LAG_FIBONACCI,
     "niedziegiel": METEO_LAG_FIBONACCI,
-    "niedziegiel_zaklocony": METEO_LAG_FIBONACCI,
     "ostrowskie": METEO_LAG_FIBONACCI,
     "powidzkie": METEO_LAG_FIBONACCI,
     "skulskawies": METEO_LAG_FIBONACCI,
@@ -182,9 +181,9 @@ def train_test_split_temporal(
     return df.iloc[:split_idx], df.iloc[split_idx:] if split_idx < len(df) else df.iloc[:0]
 
 
-TRAIN_END_YEAR_BY_LAKE = {"budzislawskie": 2003, "kozieglowskie": 2003, "niedziegiel": 2013, "niedziegiel_zaklocony": 2024, "ostrowskie": 2003, "powidzkie": 2013, "skulskawies": 2015, "suszewskie": 2003, "wilczynskie": 2003}
-TRAIN_END_MONTH_BY_LAKE = {"budzislawskie": 2, "kozieglowskie": 2, "niedziegiel": None, "niedziegiel_zaklocony": None, "ostrowskie": 2, "powidzkie": None, "skulskawies": None, "suszewskie": 2, "wilczynskie": 2}
-TEST_END_YEAR_BY_LAKE = {"budzislawskie": 2023, "kozieglowskie": 2023, "niedziegiel": 2023, "niedziegiel_zaklocony": 2025, "ostrowskie": 2023, "powidzkie": 2023, "skulskawies": 2023, "suszewskie": 2023, "wilczynskie": 2023}
+TRAIN_END_YEAR_BY_LAKE = {"budzislawskie": 2003, "kozieglowskie": 2003, "niedziegiel": 2013, "ostrowskie": 2003, "powidzkie": 2013, "skulskawies": 2015, "suszewskie": 2003, "wilczynskie": 2003}
+TRAIN_END_MONTH_BY_LAKE = {"budzislawskie": 2, "kozieglowskie": 2, "niedziegiel": None, "ostrowskie": 2, "powidzkie": None, "skulskawies": None, "suszewskie": 2, "wilczynskie": 2}
+TEST_END_YEAR_BY_LAKE = {"budzislawskie": 2023, "kozieglowskie": 2023, "niedziegiel": 2023, "ostrowskie": 2023, "powidzkie": 2023, "skulskawies": 2023, "suszewskie": 2023, "wilczynskie": 2023}
 
 
 def _get_candidate_models():

@@ -1,3 +1,4 @@
+import sys
 from datetime import datetime
 from pathlib import Path
 
@@ -14,11 +15,6 @@ from evaluate_predictions import run_evaluation
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
 DOCS_DIR = ROOT / "docs"
-FIGURES_DIR = DOCS_DIR / "niedziegiel"
-REPORT_PATH = DOCS_DIR / "niedziegiel" / "raport.md"
-LAKE_ID = "niedziegiel"
-OPAD_PATH = DATA_DIR / "niedziegiel" / "opad.txt"
-TEMP_PATH = DATA_DIR / "niedziegiel" / "temp.txt"
 MONTH_NAMES = {
     "Jan": 1, "Feb": 2, "Mar": 3, "Apr": 4, "May": 5, "Jun": 6,
     "Jul": 7, "Aug": 8, "Sep": 9, "Oct": 10, "Nov": 11, "Dec": 12,
@@ -189,8 +185,8 @@ def _data_ostatniego_pomiaru(df: pd.DataFrame) -> tuple[int, int] | None:
     return (int(dt.year), int(dt.month))
 
 
-def _symulacje_warianty(df: pd.DataFrame) -> list[dict] | None:
-    model_path = lake.get_model_path(LAKE_ID)
+def _symulacje_warianty(df: pd.DataFrame, lake_id: str) -> list[dict] | None:
+    model_path = lake.get_model_path(lake_id)
     if not model_path.exists():
         return None
     data_ost = _data_ostatniego_pomiaru(df)
@@ -214,7 +210,7 @@ def _symulacje_warianty(df: pd.DataFrame) -> list[dict] | None:
     meteo_tail = hist.tail(meteo_lag_months) if meteo_lag_months else []
     last_opady = [float(meteo_tail.iloc[i][lake.COL_OPAD]) for i in range(len(meteo_tail))] if meteo_lag_months else []
     last_temperatury = [float(meteo_tail.iloc[i][lake.COL_TEMPERATURA]) for i in range(len(meteo_tail))] if meteo_lag_months else []
-    max_poziom, odplyw_m, przesaczanie_m = lake.get_drainage_params(LAKE_ID, df)
+    max_poziom, odplyw_m, przesaczanie_m = lake.get_drainage_params(lake_id, df)
     month_percentiles = _monthly_percentiles(df)
     out = []
     for temp_klasa in TEMP_KLASY:
@@ -291,6 +287,7 @@ def _plot_wariant_symulacja(
     wyniki: list[dict],
     out_path: Path,
     nazwa: str,
+    nazwa_jeziora: str,
 ) -> None:
     df_poziom = df.dropna(subset=[lake.COL_POZIOM]).copy()
     df_poziom = df_poziom.sort_values(lake.COL_DATA)
@@ -309,7 +306,7 @@ def _plot_wariant_symulacja(
     ax.plot(pd.to_datetime(sim_dates), sim_levels, color="#d62728", linewidth=1.5, marker="o", markersize=4, label="Symulacja (12 mies.)")
     ax.set_xlabel("Data")
     ax.set_ylabel("Wysokość (m n.p.m.)")
-    ax.set_title(f"Jezioro Niedzięgiel – {nazwa}: pełny zakres od {HISTORIA_OD_ROKU} + 12 mies. symulacji")
+    ax.set_title(f"{nazwa_jeziora} – {nazwa}: pełny zakres od {HISTORIA_OD_ROKU} + 12 mies. symulacji")
     ax.xaxis.set_major_locator(mdates.YearLocator(2))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
     ax.legend(loc="best")
@@ -324,6 +321,7 @@ def _plot_poziom_rzeczywisty_i_model(
     df: pd.DataFrame,
     eval_rows: list | None,
     out_path: Path,
+    nazwa_jeziora: str,
 ) -> None:
     df = df.dropna(subset=[lake.COL_POZIOM])
     if df.empty:
@@ -338,7 +336,7 @@ def _plot_poziom_rzeczywisty_i_model(
         ax.plot(dates_model, model_level, color="#ff7f0e", linewidth=1.2, linestyle="--", label="Wahania według modelu")
     ax.set_xlabel("Data")
     ax.set_ylabel("Wysokość (m n.p.m.)")
-    ax.set_title("Jezioro Niedzięgiel – poziom wody: rzeczywisty pomiar i scenariusz modelowy")
+    ax.set_title(f"{nazwa_jeziora} – poziom wody: rzeczywisty pomiar i scenariusz modelowy")
     ax.legend(loc="best")
     ax.xaxis.set_major_locator(mdates.YearLocator(2))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
@@ -364,6 +362,8 @@ def _format_zmiana_cm(zmiana_m: float) -> str:
 
 def _write_report(
     fig_filename: str,
+    nazwa_jeziora: str,
+    lake_id: str,
     warianty: list[dict] | None = None,
     wariant_najbardziej_prawdopodobny: dict | None = None,
     data_koniec_prognozy: tuple[int, int] = DATA_KONIEC_PROGNOZY,
@@ -373,13 +373,13 @@ def _write_report(
     if data_referencyjna is None:
         data_referencyjna = _data_referencyjna()
     lines = [
-        "# Raport: Jezioro Niedzięgiel",
+        f"# Raport: {nazwa_jeziora}",
         "",
-        "Raport dedykowany tylko dla Jeziora Niedzięgiel.",
+        f"Raport ewaluacji na następne 12 miesięcy dla {nazwa_jeziora}.",
         "",
         "## Poziom wody: rzeczywisty pomiar i model",
         "",
-        "Niebieska linia: poziom z pliku `data/niedziegiel/data.csv` (pomiar na pierwszy dzień miesiąca). Przerywana pomarańczowa: wahania poziomu według modelu (scenariusz kumulatywny z prognozy zmiany miesięcznej).",
+        f"Niebieska linia: poziom z pliku `data/{lake_id}/data.csv` (pomiar na pierwszy dzień miesiąca). Przerywana pomarańczowa: wahania poziomu według modelu (scenariusz kumulatywny z prognozy zmiany miesięcznej).",
         "",
         f"![Poziom wody – pomiar i model]({fig_filename})",
         "",
@@ -388,7 +388,7 @@ def _write_report(
         lines.extend([
             "## Symulacje wariantów pogodowych (12 miesięcy do przodu)",
             "",
-            f"Dla każdego wariantu (temperatura: zimny/normalny/ciepły × opad: suchy/normalny/wilgotny) opad i temperatura z percentyli historycznych w `data/niedziegiel/data.csv`. Symulacja: 12 miesięcy do końca {_format_koniec_miesiaca(*data_koniec_prognozy)} (stan na koniec {_format_koniec_miesiaca(*data_referencyjna)} to pomiar rzeczywisty). Wykres: pełny zakres historii (od {HISTORIA_OD_ROKU}) + 12 miesięcy symulacji.",
+            f"Dla każdego wariantu (temperatura: zimny/normalny/ciepły × opad: suchy/normalny/wilgotny) opad i temperatura z percentyli historycznych w `data/{lake_id}/data.csv`. Symulacja: 12 miesięcy do końca {_format_koniec_miesiaca(*data_koniec_prognozy)} (stan na koniec {_format_koniec_miesiaca(*data_referencyjna)} to pomiar rzeczywisty). Wykres: pełny zakres historii (od {HISTORIA_OD_ROKU}) + 12 miesięcy symulacji.",
             "",
             "**Szansa realizacji** (na podstawie zgodności z ostatnimi 12 miesiącami pomiarowymi – średni opad i temperatura):",
             "",
@@ -486,15 +486,23 @@ def _level_na_koniec_miesiaca(df: pd.DataFrame, rok: int, miesiac: int) -> float
     return float(wiersze.iloc[0][lake.COL_POZIOM])
 
 
-def main() -> None:
-    df = lake.load_data(lake.get_data_path(LAKE_ID))
+def run_report_for_lake(lake_id: str) -> None:
+    figures_dir = DOCS_DIR / lake_id
+    report_path = figures_dir / "raport.md"
+    nazwa_jeziora = lake.LAKES.get(lake_id, lake_id)
+    df = lake.load_data(lake.get_data_path(lake_id))
     eval_rows = None
-    if lake.get_model_path(LAKE_ID).exists():
-        _, _, eval_rows = run_evaluation(lake_id=LAKE_ID)
-    fig_path = FIGURES_DIR / "poziom_rzeczywisty.png"
-    _plot_poziom_rzeczywisty_i_model(df, eval_rows, fig_path)
+    if lake.get_model_path(lake_id).exists():
+        _, _, eval_rows = run_evaluation(lake_id=lake_id)
+    fig_path = figures_dir / "poziom_rzeczywisty.png"
+    _plot_poziom_rzeczywisty_i_model(
+        df,
+        eval_rows,
+        fig_path,
+        nazwa_jeziora=nazwa_jeziora,
+    )
     print(f"Wykres zapisany: {fig_path}")
-    warianty = _symulacje_warianty(df)
+    warianty = _symulacje_warianty(df, lake_id)
     data_ref = _data_referencyjna()
     level_na_data_ref = _level_na_koniec_miesiaca(df, data_ref[0], data_ref[1])
     wariant_np = None
@@ -507,7 +515,7 @@ def main() -> None:
             level_ref_do_porownania=level_na_data_ref if level_na_data_ref is not None else warianty[0]["level_start"],
         )
         for v in [wariant_np] + warianty:
-            path_wariant = FIGURES_DIR / f"symulacja_wariant_{_variant_to_filename(v['nazwa'])}.png"
+            path_wariant = figures_dir / f"symulacja_wariant_{_variant_to_filename(v['nazwa'])}.png"
             _plot_wariant_symulacja(
                 df=df,
                 data_referencyjna=data_ref,
@@ -515,18 +523,40 @@ def main() -> None:
                 wyniki=v["wyniki"],
                 out_path=path_wariant,
                 nazwa=v["nazwa"],
+                nazwa_jeziora=nazwa_jeziora,
             )
             print(f"Wykres wariantu zapisany: {path_wariant}")
     content = _write_report(
         "poziom_rzeczywisty.png",
+        nazwa_jeziora=nazwa_jeziora,
+        lake_id=lake_id,
         warianty=warianty,
         wariant_najbardziej_prawdopodobny=wariant_np,
         data_referencyjna=data_ref,
         level_na_data_referencyjna=level_na_data_ref,
     )
-    REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    REPORT_PATH.write_text(content, encoding="utf-8")
-    print(f"Raport zapisany: {REPORT_PATH}")
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    report_path.write_text(content, encoding="utf-8")
+    print(f"Raport zapisany: {report_path}")
+
+
+def main() -> None:
+    if len(sys.argv) > 1 and sys.argv[1].lower() == "all":
+        for lid in lake.LAKES:
+            if not lake.get_model_path(lid).exists():
+                print(f"Pomijam {lid}: brak modelu.")
+                continue
+            print(f"\n--- {lake.LAKES.get(lid, lid)} ---")
+            run_report_for_lake(lid)
+        return
+    lake_id = sys.argv[1] if len(sys.argv) > 1 else "niedziegiel"
+    if lake_id not in lake.LAKES:
+        print(f"Dostępne jeziora: {', '.join(lake.LAKES)}")
+        sys.exit(1)
+    if not lake.get_model_path(lake_id).exists():
+        print(f"Brak modelu dla {lake_id}: {lake.get_model_path(lake_id)}")
+        sys.exit(1)
+    run_report_for_lake(lake_id)
 
 
 if __name__ == "__main__":

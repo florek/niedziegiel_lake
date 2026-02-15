@@ -1,6 +1,6 @@
 # Raport: Jezioro Niedzięgiel
 
-Raport dedykowany tylko dla Jeziora Niedzięgiel.
+Raport ewaluacji na następne 12 miesięcy dla Jezioro Niedzięgiel.
 
 ## Poziom wody: rzeczywisty pomiar i model
 
@@ -281,4 +281,4 @@ Dla każdego wariantu (temperatura: zimny/normalny/ciepły × opad: suchy/normal
 
 
 
-*Wygenerowano: 2026-02-15 11:46*
+*Wygenerowano: 2026-02-15 12:03*

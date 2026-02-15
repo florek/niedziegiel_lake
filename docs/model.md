@@ -49,6 +49,14 @@ W kodzie:
 
 Na zbiorze testowym (70 ostatnich miesięcy) typowe wartości to rzędu kilku centymetrów MAE (średni błąd bezwzględny prognozy zmiany poziomu).
 
+## Prognoza poziomu do stycznia 2026 (meteo.csv)
+
+Skrypt `sources/poziom_do_stycznia_2026.py` dla każdego jeziora z modelem i danymi uruchamia symulację od miesiąca następującego po ostatnim wpisie w `data/{id}/data.csv` do stycznia 2026 włącznie, używając warunków z `data/meteo.csv`. Wyliczone wiersze (Data, Poziom, Zmiana, Opad, Temperatura) są dopisywane do `data/{id}/data.csv`. Uruchomienie: `python sources/poziom_do_stycznia_2026.py`.
+
+## Raport ewaluacji na 12 miesięcy
+
+`python sources/generate_report_12mies.py` (bez argumentu: Niedzięgiel; z argumentem: `all` lub id jeziora) generuje per jezioro: `docs/{id}/raport.md`, wykres poziomu i symulacje 9 wariantów pogodowych do końca stycznia 2027 oraz `docs/{id}/podsumowanie_ewaluacji.md`.
+
 ## Raport ogólny
 
 `python sources/generate_summary_report.py` generuje `docs/raport_ogolny.md`: tabelę zbiorczą (jezioro, okres testowy, liczba miesięcy, MAE, RMSE) oraz linki do raportów szczegółowych per jezioro (`docs/{id}/raport_podsumowujacy.md`, `docs/{id}/podsumowanie_ewaluacji.md`).

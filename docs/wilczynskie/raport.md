@@ -1,0 +1,284 @@
+# Raport: Jezioro Wilczyńskie
+
+Raport ewaluacji na następne 12 miesięcy dla Jezioro Wilczyńskie.
+
+## Poziom wody: rzeczywisty pomiar i model
+
+Niebieska linia: poziom z pliku `data/wilczynskie/data.csv` (pomiar na pierwszy dzień miesiąca). Przerywana pomarańczowa: wahania poziomu według modelu (scenariusz kumulatywny z prognozy zmiany miesięcznej).
+
+![Poziom wody – pomiar i model](poziom_rzeczywisty.png)
+
+## Symulacje wariantów pogodowych (12 miesięcy do przodu)
+
+Dla każdego wariantu (temperatura: zimny/normalny/ciepły × opad: suchy/normalny/wilgotny) opad i temperatura z percentyli historycznych w `data/wilczynskie/data.csv`. Symulacja: 12 miesięcy do końca stycznia 2027 (stan na koniec stycznia 2026 to pomiar rzeczywisty). Wykres: pełny zakres historii (od 1974) + 12 miesięcy symulacji.
+
+**Szansa realizacji** (na podstawie zgodności z ostatnimi 12 miesiącami pomiarowymi – średni opad i temperatura):
+
+| Wariant | Szansa realizacji (%) |
+|---------|------------------------|
+| zimny, suchy | 11.3 |
+| zimny, normalny | 14.2 |
+| zimny, wilgotny | 7.1 |
+| normalny, suchy | 11.7 |
+| normalny, normalny | 15.2 |
+| normalny, wilgotny | 7.2 |
+| ciepły, suchy | 11.5 |
+| ciepły, normalny | 14.5 |
+| ciepły, wilgotny | 7.2 |
+
+**Najbardziej prawdopodobny poziom na koniec stycznia 2027** (średnia ważona zmian miesięcznych według szans realizacji wszystkich wariantów): **94.474 m n.p.m.** W stosunku do stanu na koniec stycznia 2026 (94.0036 m n.p.m.): przybędzie +0.470 m (+47.0 cm).
+
+
+### najbardziej prawdopodobny
+
+![Symulacja najbardziej prawdopodobny](symulacja_wariant_najbardziej_prawdopodobny.png)
+
+| Data | Opad (mm) | Temperatura (°C) | Zmiana prognoza (cm) | Poziom (m n.p.m.) |
+|------|-----------|------------------|----------------------|-------------------|
+| 2026-02 | 34.0 | 1.2 | +11.8 cm | 94.122 |
+| 2026-03 | 33.4 | 4.2 | +13.7 cm | 94.259 |
+| 2026-04 | 25.1 | 9.3 | +14.8 cm | 94.407 |
+| 2026-05 | 46.0 | 13.9 | +12.0 cm | 94.527 |
+| 2026-06 | 50.1 | 17.7 | +3.6 cm | 94.562 |
+| 2026-07 | 69.9 | 19.7 | -2.2 cm | 94.541 |
+| 2026-08 | 53.6 | 19.2 | -4.2 cm | 94.498 |
+| 2026-09 | 40.3 | 14.8 | -4.8 cm | 94.451 |
+| 2026-10 | 31.5 | 9.8 | -4.7 cm | 94.404 |
+| 2026-11 | 34.6 | 4.7 | -1.8 cm | 94.386 |
+| 2026-12 | 34.9 | 1.4 | +2.6 cm | 94.412 |
+| 2027-01 | 38.4 | 0.0 | +6.2 cm | 94.474 |
+
+- **Średnia ważona wszystkich wariantów (bez własnej szansy realizacji).**
+- **Średnia temperatura roczna (prognoza):** 9.7 °C
+- **Suma opadu (prognoza):** 491.7 mm
+- **Różnica poziomu wody** (koniec symulacji − start): +0.470 m (+47.0 cm)
+- **Poziom na koniec stycznia 2027:** 94.474 m n.p.m.
+
+### zimny, suchy
+
+![Symulacja zimny, suchy](symulacja_wariant_zimny_suchy.png)
+
+| Data | Opad (mm) | Temperatura (°C) | Zmiana prognoza (cm) | Poziom (m n.p.m.) |
+|------|-----------|------------------|----------------------|-------------------|
+| 2026-02 | 25.8 | -1.0 | +11.5 cm | 94.118 |
+| 2026-03 | 22.8 | 3.0 | +13.6 cm | 94.254 |
+| 2026-04 | 15.0 | 8.4 | +15.0 cm | 94.404 |
+| 2026-05 | 34.0 | 12.8 | +12.9 cm | 94.533 |
+| 2026-06 | 33.6 | 16.5 | +2.2 cm | 94.555 |
+| 2026-07 | 53.9 | 18.8 | -4.5 cm | 94.51 |
+| 2026-08 | 35.5 | 18.3 | -4.5 cm | 94.465 |
+| 2026-09 | 22.7 | 13.7 | -6.1 cm | 94.404 |
+| 2026-10 | 17.6 | 8.3 | -5.7 cm | 94.347 |
+| 2026-11 | 21.8 | 3.6 | -1.4 cm | 94.334 |
+| 2026-12 | 25.6 | -0.2 | +3.5 cm | 94.369 |
+| 2027-01 | 28.6 | -1.9 | +8.1 cm | 94.45 |
+
+- **Szansa realizacji:** 11.3 %
+- **Średnia temperatura roczna (prognoza):** 8.4 °C
+- **Suma opadu (prognoza):** 336.9 mm
+- **Różnica poziomu wody** (koniec symulacji − start): +0.446 m (+44.6 cm)
+- **Poziom na koniec stycznia 2027:** 94.45 m n.p.m.
+
+### zimny, normalny
+
+![Symulacja zimny, normalny](symulacja_wariant_zimny_normalny.png)
+
+| Data | Opad (mm) | Temperatura (°C) | Zmiana prognoza (cm) | Poziom (m n.p.m.) |
+|------|-----------|------------------|----------------------|-------------------|
+| 2026-02 | 34.4 | -1.0 | +11.5 cm | 94.118 |
+| 2026-03 | 33.9 | 3.0 | +13.7 cm | 94.255 |
+| 2026-04 | 27.7 | 8.4 | +14.8 cm | 94.403 |
+| 2026-05 | 46.4 | 12.8 | +13.0 cm | 94.533 |
+| 2026-06 | 53.1 | 16.5 | +3.5 cm | 94.569 |
+| 2026-07 | 66.7 | 18.8 | -2.0 cm | 94.548 |
+| 2026-08 | 56.2 | 18.3 | -5.1 cm | 94.498 |
+| 2026-09 | 43.3 | 13.7 | -5.5 cm | 94.443 |
+| 2026-10 | 33.9 | 8.3 | -5.4 cm | 94.389 |
+| 2026-11 | 38.8 | 3.6 | -0.8 cm | 94.381 |
+| 2026-12 | 36.7 | -0.2 | +3.1 cm | 94.411 |
+| 2027-01 | 39.8 | -1.9 | +8.3 cm | 94.494 |
+
+- **Szansa realizacji:** 14.2 %
+- **Średnia temperatura roczna (prognoza):** 8.4 °C
+- **Suma opadu (prognoza):** 510.9 mm
+- **Różnica poziomu wody** (koniec symulacji − start): +0.490 m (+49.0 cm)
+- **Poziom na koniec stycznia 2027:** 94.494 m n.p.m.
+
+### zimny, wilgotny
+
+![Symulacja zimny, wilgotny](symulacja_wariant_zimny_wilgotny.png)
+
+| Data | Opad (mm) | Temperatura (°C) | Zmiana prognoza (cm) | Poziom (m n.p.m.) |
+|------|-----------|------------------|----------------------|-------------------|
+| 2026-02 | 46.4 | -1.0 | +12.8 cm | 94.131 |
+| 2026-03 | 49.5 | 3.0 | +17.0 cm | 94.301 |
+| 2026-04 | 36.1 | 8.4 | +20.9 cm | 94.51 |
+| 2026-05 | 64.7 | 12.8 | +22.1 cm | 94.731 |
+| 2026-06 | 70.6 | 16.5 | +16.0 cm | 94.892 |
+| 2026-07 | 102.3 | 18.8 | +11.1 cm | 95.002 |
+| 2026-08 | 77.4 | 18.3 | +2.3 cm | 95.026 |
+| 2026-09 | 62.5 | 13.7 | -1.9 cm | 95.007 |
+| 2026-10 | 49.0 | 8.3 | -3.6 cm | 94.971 |
+| 2026-11 | 46.6 | 3.6 | +1.7 cm | 94.987 |
+| 2026-12 | 46.4 | -0.2 | +4.6 cm | 95.033 |
+| 2027-01 | 51.6 | -1.9 | +9.6 cm | 95.129 |
+
+- **Szansa realizacji:** 7.1 %
+- **Średnia temperatura roczna (prognoza):** 8.4 °C
+- **Suma opadu (prognoza):** 703.1 mm
+- **Różnica poziomu wody** (koniec symulacji − start): +1.125 m (+112.5 cm)
+- **Poziom na koniec stycznia 2027:** 95.129 m n.p.m.
+
+### normalny, suchy
+
+![Symulacja normalny, suchy](symulacja_wariant_normalny_suchy.png)
+
+| Data | Opad (mm) | Temperatura (°C) | Zmiana prognoza (cm) | Poziom (m n.p.m.) |
+|------|-----------|------------------|----------------------|-------------------|
+| 2026-02 | 25.8 | 0.8 | +11.5 cm | 94.118 |
+| 2026-03 | 22.8 | 4.3 | +13.4 cm | 94.252 |
+| 2026-04 | 15.0 | 9.1 | +15.0 cm | 94.402 |
+| 2026-05 | 34.0 | 13.7 | +11.2 cm | 94.514 |
+| 2026-06 | 33.6 | 17.8 | +0.4 cm | 94.518 |
+| 2026-07 | 53.9 | 19.8 | -6.1 cm | 94.457 |
+| 2026-08 | 35.5 | 19.3 | -6.4 cm | 94.393 |
+| 2026-09 | 22.7 | 14.7 | -6.1 cm | 94.332 |
+| 2026-10 | 17.6 | 9.8 | -5.3 cm | 94.278 |
+| 2026-11 | 21.8 | 4.8 | -3.2 cm | 94.246 |
+| 2026-12 | 25.6 | 1.8 | +2.4 cm | 94.27 |
+| 2027-01 | 28.6 | 0.1 | +5.0 cm | 94.32 |
+
+- **Szansa realizacji:** 11.7 %
+- **Średnia temperatura roczna (prognoza):** 9.7 °C
+- **Suma opadu (prognoza):** 336.9 mm
+- **Różnica poziomu wody** (koniec symulacji − start): +0.316 m (+31.6 cm)
+- **Poziom na koniec stycznia 2027:** 94.32 m n.p.m.
+
+### normalny, normalny
+
+![Symulacja normalny, normalny](symulacja_wariant_normalny_normalny.png)
+
+| Data | Opad (mm) | Temperatura (°C) | Zmiana prognoza (cm) | Poziom (m n.p.m.) |
+|------|-----------|------------------|----------------------|-------------------|
+| 2026-02 | 34.4 | 0.8 | +11.5 cm | 94.118 |
+| 2026-03 | 33.9 | 4.3 | +13.5 cm | 94.253 |
+| 2026-04 | 27.7 | 9.1 | +14.8 cm | 94.401 |
+| 2026-05 | 46.4 | 13.7 | +11.3 cm | 94.514 |
+| 2026-06 | 53.1 | 17.8 | +1.6 cm | 94.53 |
+| 2026-07 | 66.7 | 19.8 | -2.9 cm | 94.501 |
+| 2026-08 | 56.2 | 19.3 | -4.3 cm | 94.458 |
+| 2026-09 | 43.3 | 14.7 | -3.8 cm | 94.42 |
+| 2026-10 | 33.9 | 9.8 | -3.9 cm | 94.381 |
+| 2026-11 | 38.8 | 4.8 | -1.7 cm | 94.364 |
+| 2026-12 | 36.7 | 1.8 | +2.3 cm | 94.387 |
+| 2027-01 | 39.8 | 0.1 | +5.2 cm | 94.439 |
+
+- **Szansa realizacji:** 15.2 %
+- **Średnia temperatura roczna (prognoza):** 9.7 °C
+- **Suma opadu (prognoza):** 510.9 mm
+- **Różnica poziomu wody** (koniec symulacji − start): +0.435 m (+43.5 cm)
+- **Poziom na koniec stycznia 2027:** 94.439 m n.p.m.
+
+### normalny, wilgotny
+
+![Symulacja normalny, wilgotny](symulacja_wariant_normalny_wilgotny.png)
+
+| Data | Opad (mm) | Temperatura (°C) | Zmiana prognoza (cm) | Poziom (m n.p.m.) |
+|------|-----------|------------------|----------------------|-------------------|
+| 2026-02 | 46.4 | 0.8 | +12.8 cm | 94.131 |
+| 2026-03 | 49.5 | 4.3 | +16.8 cm | 94.299 |
+| 2026-04 | 36.1 | 9.1 | +20.9 cm | 94.508 |
+| 2026-05 | 64.7 | 13.7 | +21.5 cm | 94.723 |
+| 2026-06 | 70.6 | 17.8 | +14.5 cm | 94.868 |
+| 2026-07 | 102.3 | 19.8 | +2.8 cm | 94.896 |
+| 2026-08 | 77.4 | 19.3 | -1.6 cm | 94.88 |
+| 2026-09 | 62.5 | 14.7 | -4.6 cm | 94.834 |
+| 2026-10 | 49.0 | 9.8 | -5.3 cm | 94.78 |
+| 2026-11 | 46.6 | 4.8 | -3.3 cm | 94.747 |
+| 2026-12 | 46.4 | 1.8 | +2.2 cm | 94.769 |
+| 2027-01 | 51.6 | 0.1 | +6.7 cm | 94.836 |
+
+- **Szansa realizacji:** 7.2 %
+- **Średnia temperatura roczna (prognoza):** 9.7 °C
+- **Suma opadu (prognoza):** 703.1 mm
+- **Różnica poziomu wody** (koniec symulacji − start): +0.832 m (+83.2 cm)
+- **Poziom na koniec stycznia 2027:** 94.836 m n.p.m.
+
+### ciepły, suchy
+
+![Symulacja ciepły, suchy](symulacja_wariant_cieply_suchy.png)
+
+| Data | Opad (mm) | Temperatura (°C) | Zmiana prognoza (cm) | Poziom (m n.p.m.) |
+|------|-----------|------------------|----------------------|-------------------|
+| 2026-02 | 25.8 | 3.8 | +11.8 cm | 94.121 |
+| 2026-03 | 22.8 | 5.4 | +11.8 cm | 94.24 |
+| 2026-04 | 15.0 | 10.4 | +11.4 cm | 94.353 |
+| 2026-05 | 34.0 | 15.1 | +7.2 cm | 94.426 |
+| 2026-06 | 33.6 | 18.9 | -0.2 cm | 94.424 |
+| 2026-07 | 53.9 | 20.4 | -6.2 cm | 94.363 |
+| 2026-08 | 35.5 | 20.0 | -6.3 cm | 94.3 |
+| 2026-09 | 22.7 | 16.0 | -6.1 cm | 94.238 |
+| 2026-10 | 17.6 | 11.2 | -5.3 cm | 94.185 |
+| 2026-11 | 21.8 | 5.7 | -3.5 cm | 94.15 |
+| 2026-12 | 25.6 | 2.6 | +1.9 cm | 94.169 |
+| 2027-01 | 28.6 | 1.9 | +4.5 cm | 94.214 |
+
+- **Szansa realizacji:** 11.5 %
+- **Średnia temperatura roczna (prognoza):** 10.9 °C
+- **Suma opadu (prognoza):** 336.9 mm
+- **Różnica poziomu wody** (koniec symulacji − start): +0.210 m (+21.0 cm)
+- **Poziom na koniec stycznia 2027:** 94.214 m n.p.m.
+
+### ciepły, normalny
+
+![Symulacja ciepły, normalny](symulacja_wariant_cieply_normalny.png)
+
+| Data | Opad (mm) | Temperatura (°C) | Zmiana prognoza (cm) | Poziom (m n.p.m.) |
+|------|-----------|------------------|----------------------|-------------------|
+| 2026-02 | 34.4 | 3.8 | +11.8 cm | 94.121 |
+| 2026-03 | 33.9 | 5.4 | +12.0 cm | 94.241 |
+| 2026-04 | 27.7 | 10.4 | +11.1 cm | 94.352 |
+| 2026-05 | 46.4 | 15.1 | +7.4 cm | 94.426 |
+| 2026-06 | 53.1 | 18.9 | +1.1 cm | 94.437 |
+| 2026-07 | 66.7 | 20.4 | -3.0 cm | 94.407 |
+| 2026-08 | 56.2 | 20.0 | -4.2 cm | 94.365 |
+| 2026-09 | 43.3 | 16.0 | -3.8 cm | 94.328 |
+| 2026-10 | 33.9 | 11.2 | -3.9 cm | 94.288 |
+| 2026-11 | 38.8 | 5.7 | -1.9 cm | 94.269 |
+| 2026-12 | 36.7 | 2.6 | +1.8 cm | 94.288 |
+| 2027-01 | 39.8 | 1.9 | +4.7 cm | 94.335 |
+
+- **Szansa realizacji:** 14.5 %
+- **Średnia temperatura roczna (prognoza):** 10.9 °C
+- **Suma opadu (prognoza):** 510.9 mm
+- **Różnica poziomu wody** (koniec symulacji − start): +0.331 m (+33.1 cm)
+- **Poziom na koniec stycznia 2027:** 94.335 m n.p.m.
+
+### ciepły, wilgotny
+
+![Symulacja ciepły, wilgotny](symulacja_wariant_cieply_wilgotny.png)
+
+| Data | Opad (mm) | Temperatura (°C) | Zmiana prognoza (cm) | Poziom (m n.p.m.) |
+|------|-----------|------------------|----------------------|-------------------|
+| 2026-02 | 46.4 | 3.8 | +13.1 cm | 94.135 |
+| 2026-03 | 49.5 | 5.4 | +15.2 cm | 94.286 |
+| 2026-04 | 36.1 | 10.4 | +14.5 cm | 94.431 |
+| 2026-05 | 64.7 | 15.1 | +9.1 cm | 94.522 |
+| 2026-06 | 70.6 | 18.9 | +2.8 cm | 94.55 |
+| 2026-07 | 102.3 | 20.4 | -0.8 cm | 94.542 |
+| 2026-08 | 77.4 | 20.0 | -4.4 cm | 94.498 |
+| 2026-09 | 62.5 | 16.0 | -3.8 cm | 94.46 |
+| 2026-10 | 49.0 | 11.2 | -3.4 cm | 94.426 |
+| 2026-11 | 46.6 | 5.7 | -1.4 cm | 94.411 |
+| 2026-12 | 46.4 | 2.6 | +2.2 cm | 94.434 |
+| 2027-01 | 51.6 | 1.9 | +5.8 cm | 94.491 |
+
+- **Szansa realizacji:** 7.2 %
+- **Średnia temperatura roczna (prognoza):** 10.9 °C
+- **Suma opadu (prognoza):** 703.1 mm
+- **Różnica poziomu wody** (koniec symulacji − start): +0.487 m (+48.7 cm)
+- **Poziom na koniec stycznia 2027:** 94.491 m n.p.m.
+
+
+
+*Wygenerowano: 2026-02-15 12:03*

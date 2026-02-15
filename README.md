@@ -49,11 +49,13 @@ Uruchamiaj skrypty z **katalogu głównego projektu** (gdzie są katalogi `data/
    python sources/generate_report.py powidzkie
    ```
    Wynik: `docs/{id}/raport_podsumowujacy.md` oraz wykresy w `docs/{id}/`.
-5. Raport tylko dla Niedzięgła (wykres poziomu z rzeczywistego pomiaru, prognoza grudzień–luty):
+5. Raport ewaluacji na 12 miesięcy: poziom rzeczywisty vs model, 9 wariantów pogodowych, symulacja do końca stycznia 2027, szanse realizacji. Dla jednego jeziora lub wszystkich:
    ```bash
-   python sources/generate_report_niedziegiel.py
+   python sources/generate_report_12mies.py
+   python sources/generate_report_12mies.py niedziegiel
+   python sources/generate_report_12mies.py all
    ```
-   Wynik: `docs/niedziegiel/raport.md`, wykres `docs/niedziegiel/poziom_rzeczywisty.png`.
+   Wynik per jezioro: `docs/{id}/raport.md`, `docs/{id}/poziom_rzeczywisty.png`, `docs/{id}/symulacja_wariant_*.png`, `docs/{id}/podsumowanie_ewaluacji.md`.
 6. Raport ogólny (tabela zbiorcza dla wszystkich jezior z modelami):
    ```bash
    python sources/generate_summary_report.py
@@ -64,7 +66,11 @@ Uruchamiaj skrypty z **katalogu głównego projektu** (gdzie są katalogi `data/
    python md_to_pdf.py
    ```
    Obrazy z `docs/{jezioro}/` i `docs/odbudowa/` są osadzane w PDF.
-8. Szacunek lat odbudowy poziomu po zaniku dodatkowego drenażu:
+8. Symulacja poziomu do stycznia 2026 (warunki z `data/meteo.csv`): dla każdego jeziora od ostatniego miesiąca w `data/{id}/data.csv` do stycznia 2026 włącznie; wyliczone wiersze (Data, Poziom, Zmiana, Opad, Temperatura) są dopisywane do tego pliku.
+   ```bash
+   python sources/poziom_do_stycznia_2026.py
+   ```
+9. Szacunek lat odbudowy poziomu po zaniku dodatkowego drenażu:
    ```bash
    python sources/recovery_after_drainage_stop.py
    ```
@@ -87,10 +93,9 @@ Raporty i wykresy powstają po uruchomieniu skryptów z sekcji „Szybki start�
 | **Koziegłowskie** – raport z wykresami | [docs/kozieglowskie/raport_podsumowujacy.md](docs/kozieglowskie/raport_podsumowujacy.md) |
 | **Koziegłowskie** – podsumowanie ewaluacji | [docs/kozieglowskie/podsumowanie_ewaluacji.md](docs/kozieglowskie/podsumowanie_ewaluacji.md) |
 | **Koziegłowskie** – zanik drenażu | [docs/kozieglowskie/zanik_drenazu.md](docs/kozieglowskie/zanik_drenazu.md) |
-| **Niedzięgiel** – raport główny (poziom, prognoza grudzień–luty, symulacje wariantów 12 mies.) | [docs/niedziegiel/raport.md](docs/niedziegiel/raport.md) |
+| **Niedzięgiel** – raport 12 mies. (poziom, symulacje wariantów) | [docs/niedziegiel/raport.md](docs/niedziegiel/raport.md) |
 | **Niedzięgiel** – raport podsumowujący (z wykresami) | [docs/niedziegiel/raport_podsumowujacy.md](docs/niedziegiel/raport_podsumowujacy.md) |
 | **Niedzięgiel** – podsumowanie ewaluacji | [docs/niedziegiel/podsumowanie_ewaluacji.md](docs/niedziegiel/podsumowanie_ewaluacji.md) |
-| **Niedzięgiel** – symulacja reżimu zakłóconego | [docs/niedziegiel/symulacja_rezim_zaklocony.md](docs/niedziegiel/symulacja_rezim_zaklocony.md) |
 | **Niedzięgiel** – zanik drenażu | [docs/niedziegiel/zanik_drenazu.md](docs/niedziegiel/zanik_drenazu.md) |
 | **Ostrowskie** – raport z wykresami | [docs/ostrowskie/raport_podsumowujacy.md](docs/ostrowskie/raport_podsumowujacy.md) |
 | **Ostrowskie** – podsumowanie ewaluacji | [docs/ostrowskie/podsumowanie_ewaluacji.md](docs/ostrowskie/podsumowanie_ewaluacji.md) |
@@ -125,12 +130,3 @@ python sources/merge_suszewskie_data.py
 python sources/merge_wilczynskie_data.py
 ```
 
-## Symulacja reżimu zakłóconego (Niedzięgiel)
-
-Scenariusz opad/temperatura z plików `data/niedziegiel/opad.txt` i `data/niedziegiel/temp.txt`:
-
-```bash
-python sources/simulate_disturbed_regime.py
-```
-
-Wynik: `docs/niedziegiel/symulacja_rezim_zaklocony.md`, wykres w `docs/niedziegiel/`.
