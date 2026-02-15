@@ -70,4 +70,4 @@ Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.
 
 Szczegóły techniczne: [model.md](../model.md), [podsumowanie_ewaluacji.md](podsumowanie_ewaluacji.md).
 
-*Wygenerowano: 2026-02-15 11:27*
+*Wygenerowano: 2026-02-15 11:28*

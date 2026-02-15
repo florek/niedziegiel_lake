@@ -46,13 +46,13 @@ def _write_summary_report(results):
         "",
         "## Tabela zbiorcza",
         "",
-        "| Jezioro | Okres testowy | Liczba miesięcy | MAE (m) | RMSE (m) | Raport szczegółowy |",
-        "|---------|----------------|-----------------|---------|----------|--------------------|",
+        "| Jezioro | Okres testowy | Liczba miesięcy | MAE (cm) | RMSE (cm) | Raport szczegółowy |",
+        "|---------|----------------|-----------------|----------|-----------|--------------------|",
     ]
     for r in results:
         link = f"[raport]({r['lake_id']}/raport_podsumowujacy.md)"
         lines.append(
-            f"| {r['lake_name']} | {r['period_start']} – {r['period_end']} | {r['n']} | {r['mae']:.4f} | {r['rmse']:.4f} | {link} |"
+            f"| {r['lake_name']} | {r['period_start']} – {r['period_end']} | {r['n']} | {r['mae'] * 100:.2f} | {r['rmse'] * 100:.2f} | {link} |"
         )
     lines.extend([
         "",
