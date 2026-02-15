@@ -20,8 +20,8 @@ MONTH_NAMES = {
     "Jul": 7, "Aug": 8, "Sep": 9, "Oct": 10, "Nov": 11, "Dec": 12,
 }
 OKNO_HISTORII_LAT = 10
-OKNO_REFERENCJA_MIESIACE = 12
-HISTORIA_OD_ROKU = 1974
+OKNO_REFERENCJA_MIESIACE = 6
+WYKRES_PROGNOZ_LAT = 15
 DATA_KONIEC_PROGNOZY = (2027, 1)
 MIESIACE_DOPELNIENIA = (
     "stycznia", "lutego", "marca", "kwietnia", "maja", "czerwca",
@@ -296,9 +296,10 @@ def _plot_wariant_symulacja(
 ) -> None:
     df_poziom = df.dropna(subset=[lake.COL_POZIOM]).copy()
     df_poziom = df_poziom.sort_values(lake.COL_DATA)
-    if df_poziom.empty:
+    if df_poziom.empty or not wyniki:
         return
-    cutoff = pd.Timestamp(f"{HISTORIA_OD_ROKU}-01-01")
+    end_year = int(wyniki[-1]["data"][:4])
+    cutoff = pd.Timestamp(f"{end_year - WYKRES_PROGNOZ_LAT}-01-01")
     hist = df_poziom[df_poziom[lake.COL_DATA] >= cutoff]
     hist_dates = pd.to_datetime(hist[lake.COL_DATA])
     hist_levels = hist[lake.COL_POZIOM].astype(float)
@@ -307,7 +308,7 @@ def _plot_wariant_symulacja(
     sim_dates = [data_pierwsza_sym] + [r["data"] + "-01" for r in wyniki]
     sim_levels = [level_na_data_referencyjna] + [float(r["poziom"]) for r in wyniki]
     fig, ax = plt.subplots(figsize=(14, 5))
-    ax.plot(hist_dates, hist_levels, color="#1f77b4", linewidth=1.2, label=f"Historia (od {HISTORIA_OD_ROKU})")
+    ax.plot(hist_dates, hist_levels, color="#1f77b4", linewidth=1.2, label=f"Historia (ostatnie {WYKRES_PROGNOZ_LAT} lat)")
     label_drain = "Symulacja model drenażowy (12 mies.)" if (wyniki_natural is not None) else "Symulacja (12 mies.)"
     ax.plot(pd.to_datetime(sim_dates), sim_levels, color="#d62728", linewidth=1.5, marker="o", markersize=4, label=label_drain)
     if wyniki_natural is not None and level_na_data_referencyjna_natural is not None:
@@ -317,7 +318,7 @@ def _plot_wariant_symulacja(
     ax.set_xlabel("Data")
     ax.set_ylabel("Wysokość (m n.p.m.)")
     suffix = " (dwa modele)" if wyniki_natural else ""
-    ax.set_title(f"{nazwa_jeziora} – {nazwa}: pełny zakres od {HISTORIA_OD_ROKU} + 12 mies. symulacji{suffix}")
+    ax.set_title(f"{nazwa_jeziora} – {nazwa}: ostatnie {WYKRES_PROGNOZ_LAT} lat + 12 mies. symulacji{suffix}")
     ax.xaxis.set_major_locator(mdates.YearLocator(2))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
     ax.legend(loc="best")
@@ -340,16 +341,23 @@ def _plot_poziom_rzeczywisty_i_model(
     if df.empty:
         return
     dates = pd.to_datetime(df[lake.COL_DATA])
+    max_date = dates.max()
+    cutoff = max_date - pd.DateOffset(years=WYKRES_PROGNOZ_LAT)
+    mask = dates >= cutoff
+    df = df.loc[mask]
+    dates = pd.to_datetime(df[lake.COL_DATA])
     poziom = df[lake.COL_POZIOM].astype(float)
     fig, ax = plt.subplots(figsize=(12, 5))
     ax.plot(dates, poziom, color="#1f77b4", linewidth=1.2, label="Poziom wody (rzeczywisty pomiar)")
     if eval_rows_natural:
         dates_nat = pd.to_datetime([r["data"] + "-01" for r in eval_rows_natural])
         natural_level = [float(r["wysokosc_model"]) for r in eval_rows_natural]
-        ax.plot(dates_nat, natural_level, color="#2ca02c", linewidth=1.2, linestyle=":", label="Model naturalny (sprzed drenażu)")
+        mask_nat = dates_nat >= cutoff
+        if mask_nat.any():
+            ax.plot(dates_nat[mask_nat], np.array(natural_level)[np.asarray(mask_nat)], color="#2ca02c", linewidth=1.2, linestyle=":", label="Model naturalny (sprzed drenażu)")
     ax.set_xlabel("Data")
     ax.set_ylabel("Wysokość (m n.p.m.)")
-    ax.set_title(f"{nazwa_jeziora} – poziom wody: rzeczywisty pomiar i scenariusze modelowe")
+    ax.set_title(f"{nazwa_jeziora} – poziom wody: rzeczywisty pomiar i scenariusze modelowe (ostatnie {WYKRES_PROGNOZ_LAT} lat)")
     ax.legend(loc="best")
     ax.xaxis.set_major_locator(mdates.YearLocator(2))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
@@ -405,6 +413,13 @@ def _write_report(
             "",
             f"Dla każdego wariantu (temperatura: zimny/normalny/ciepły × opad: suchy/normalny/wilgotny) opad i temperatura z percentyli historycznych w `data/{lake_id}/data.csv`. Symulacja: 12 miesięcy do końca {_format_koniec_miesiaca(*data_koniec_prognozy)} (stan na koniec {_format_koniec_miesiaca(*data_referencyjna)} to pomiar rzeczywisty). Wykresy i tabele: oba modele (drenażowy i naturalny – sprzed drenażu) na wspólnych wykresach i w jednej tabeli na wariant.",
             "",
+        ])
+        if warianty_natural:
+            lines.extend([
+                "W niektórych miesiącach **model naturalny** może dawać prognozę gorszą (np. większy spadek poziomu lub mniejszy przyrost) niż model drenażowy – wynika to z tego, że był uczony tylko na danych sprzed drenażu i nie odzwierciedla aktualnego reżimu; model drenażowy jest dopasowany do okresu po zmianie reżimu.",
+                "",
+            ])
+        lines.extend([
             "**Szansa realizacji** (na podstawie zgodności z ostatnimi 12 miesiącami pomiarowymi – średni opad i temperatura):",
             "",
         ])
@@ -457,20 +472,6 @@ def _write_report(
             fname = f"symulacja_wariant_{_variant_to_filename(nazwa)}.png"
             v_nat = nat_by_nazwa.get(nazwa)
             lines.extend([f"### {nazwa}", "", f"![Symulacja {nazwa}]({fname})", ""])
-            if v_nat and len(v_nat["wyniki"]) == len(v["wyniki"]):
-                lines.extend([
-                    "| Data | Opad (mm) | Temp. (°C) | Zmiana drenaż (cm) | Poziom drenaż (m) | Zmiana natural (cm) | Poziom natural (m) |",
-                    "|------|-----------|------------|---------------------|-------------------|----------------------|--------------------|",
-                ])
-                for r, rn in zip(v["wyniki"], v_nat["wyniki"]):
-                    lines.append(f"| {r['data']} | {round(r['opad'], 1)} | {round(r['temperatura'], 1)} | {_format_zmiana_cm(r['zmiana_prognoza'])} | {r['poziom']} | {_format_zmiana_cm(rn['zmiana_prognoza'])} | {rn['poziom']} |")
-            else:
-                lines.extend([
-                    "| Data | Opad (mm) | Temperatura (°C) | Zmiana prognoza (cm) | Poziom (m n.p.m.) |",
-                    "|------|-----------|------------------|----------------------|-------------------|",
-                ])
-                for r in v["wyniki"]:
-                    lines.append(f"| {r['data']} | {round(r['opad'], 1)} | {round(r['temperatura'], 1)} | {_format_zmiana_cm(r['zmiana_prognoza'])} | {r['poziom']} |")
             szansa_line = "- **Średnia ważona wszystkich wariantów (bez własnej szansy realizacji).**" if v.get("czy_srednia_wazona") else f"- **Szansa realizacji:** {v['szansa_pct']} %"
             lines.extend([
                 "",
