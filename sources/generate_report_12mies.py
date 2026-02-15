@@ -447,6 +447,67 @@ def _write_report(
     return "\n".join(lines)
 
 
+def _build_szanse_odbudowy_opis(
+    nazwa_jeziora: str,
+    lake_id: str,
+    warianty: list[dict],
+    wariant_najbardziej_prawdopodobny: dict | None,
+    level_ref: float,
+    data_referencyjna: tuple[int, int],
+    data_koniec_prognozy: tuple[int, int],
+) -> str:
+    rok_kon, mies_kon = data_koniec_prognozy
+    rok_ref, mies_ref = data_referencyjna
+    txt_ref = _format_koniec_miesiaca(rok_ref, mies_ref)
+    txt_koniec = _format_koniec_miesiaca(rok_kon, mies_kon)
+    if wariant_najbardziej_prawdopodobny:
+        poziom_wazony = wariant_najbardziej_prawdopodobny["poziom_koniec"]
+    else:
+        poziom_wazony = sum(
+            v["poziom_koniec"] * (v["szansa_pct"] / 100.0)
+            for v in warianty
+            if v.get("szansa_pct") is not None
+        )
+    roznica_m = poziom_wazony - level_ref
+    roznica_cm = roznica_m * 100
+    warianty_bez_np = [v for v in warianty if not v.get("czy_srednia_wazona")]
+    if warianty_bez_np:
+        zmiany_cm = [v["roznica_poziomu"] * 100 for v in warianty_bez_np]
+        min_cm = min(zmiany_cm)
+        max_cm = max(zmiany_cm)
+    else:
+        min_cm = max_cm = roznica_cm
+    max_szansa = max((v.get("szansa_pct") or 0) for v in warianty) if warianty else 0
+    lines = [
+        f"# Szanse na odbudowę – {nazwa_jeziora}",
+        "",
+        "Opisowa ocena szans na odbudowę poziomu wody w perspektywie **kolejnych 12 miesięcy**, na podstawie prognozy z symulacji wariantów pogodowych (opad i temperatura z percentyli historycznych) oraz szacowanych szans realizacji każdego wariantu (zgodność z ostatnimi 12 miesiącami pomiarowymi).",
+        "",
+        f"**Stan odniesienia:** koniec {txt_ref} – poziom {level_ref:.3f} m n.p.m.",
+        "",
+        f"**Prognoza na koniec {txt_koniec}** (scenariusz najbardziej prawdopodobny, średnia ważona według szans realizacji wariantów): poziom **{poziom_wazony:.3f} m n.p.m.**, czyli **{'wzrost' if roznica_cm >= 0 else 'spadek'} o {abs(roznica_cm):.1f} cm** w stosunku do stanu odniesienia.",
+        "",
+        f"W zależności od warunków pogodowych w nadchodzącym roku prognozowana zmiana poziomu w 12 miesięcy mieści się w zakresie od **{min_cm:+.1f} cm** do **{max_cm:+.1f} cm**. Najwyższą szansę realizacji ({max_szansa:.1f}%) ma jeden z wariantów pogodowych; szczegóły wszystkich wariantów i szans – w raporcie [Prognoza 12 mies.](prognoza.md).",
+        "",
+    ]
+    if roznica_cm >= 5:
+        sent = "prognoza wskazuje na **możliwy przyrost** poziomu w ciągu roku; sprzyja to odbudowie, o ile utrzyma się tendencja i nie nasili się drenaż."
+    elif roznica_cm >= 0:
+        sent = "prognoza wskazuje na **stabilizację lub niewielki przyrost** poziomu w ciągu roku; szanse na odbudowę w tej perspektywie są umiarkowane."
+    elif roznica_cm >= -10:
+        sent = "prognoza wskazuje na **niewielki spadek** poziomu w ciągu roku; szanse na odbudowę w perspektywie 12 miesięcy są ograniczone bez zatrzymania drenażu."
+    else:
+        sent = "prognoza wskazuje na **spadek** poziomu w ciągu roku; szanse na odbudowę w perspektywie roku są niskie – istotna odbudowa wymagałaby zatrzymania drenażu i korzystnych warunków."
+    lines.append("**Szanse na odbudowę w perspektywie roku:** " + sent)
+    lines.extend([
+        "",
+        "Szacunki długoterminowej odbudowy (lata do zamknięcia luki po ewentualnym zaniku drenażu) – patrz [Zanik drenażu](zanik_drenazu.md).",
+        "",
+        f"*Wygenerowano: {datetime.now().strftime('%Y-%m-%d %H:%M')}*",
+    ])
+    return "\n".join(lines)
+
+
 def _wariant_najbardziej_prawdopodobny(
     warianty: list[dict],
     level_start_symulacji: float,
@@ -550,6 +611,20 @@ def run_report_for_lake(lake_id: str) -> None:
     report_path.parent.mkdir(parents=True, exist_ok=True)
     report_path.write_text(content, encoding="utf-8")
     print(f"Raport zapisany: {report_path}")
+    if warianty:
+        level_ref = level_na_data_ref if level_na_data_ref is not None else warianty[0]["level_start"]
+        szanse_content = _build_szanse_odbudowy_opis(
+            nazwa_jeziora=nazwa_jeziora,
+            lake_id=lake_id,
+            warianty=warianty,
+            wariant_najbardziej_prawdopodobny=wariant_np,
+            level_ref=level_ref,
+            data_referencyjna=data_ref,
+            data_koniec_prognozy=DATA_KONIEC_PROGNOZY,
+        )
+        szanse_path = figures_dir / "szanse_odbudowy.md"
+        szanse_path.write_text(szanse_content, encoding="utf-8")
+        print(f"Szanse na odbudowę zapisane: {szanse_path}")
 
 
 def main() -> None:
