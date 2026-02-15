@@ -20,10 +20,10 @@ DOCS_ROOT = [
     ("docs/model.md", "Model"),
 ]
 LAKE_DOCS = [
-    ("prognoza.md", "Prognoza 12 mies."),
-    ("szanse_odbudowy.md", "Szanse na odbudowę"),
     ("raport_podsumowujacy.md", "Raport podsumowujący"),
     ("podsumowanie_ewaluacji.md", "Podsumowanie ewaluacji"),
+    ("prognoza.md", "Prognoza 12 mies."),
+    ("szanse_odbudowy.md", "Szanse na odbudowę"),
     ("drenaz_miesieczny.md", "Drenaż miesięczny"),
     ("zanik_drenazu.md", "Zanik drenażu"),
 ]

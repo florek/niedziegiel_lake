@@ -27,6 +27,12 @@ Projekt ma na celu:
 | Trening (od–do) | **Po drenażu:** uczony od 2011-01 do 2023-12. **Sprzed drenażu:** uczony od 1996 do 2002-12. |
 | Wynik | Prognoza zmiany poziomu na dany miesiąc (cm) |
 
+**Szczegóły – na czym uczony i testowany:**
+
+- **Model drenażowy:** uczony na danych do 2023-12, testowany na danych od 2024 do 2026.
+
+- **Model naturalny** (sprzed drenażu): uczony na danych do 2002-12, stosowany do porównań (wykresy rozbieżności, błąd miesięczny) na okresie od 1996 do 2026.
+
 Model **nie** używa bieżącego poziomu – tylko opad, temperatura, sezon i historia.
 
 
@@ -71,4 +77,4 @@ Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu przez **mo
 
 Szczegóły techniczne: [model.md](../model.md), [podsumowanie_ewaluacji.md](podsumowanie_ewaluacji.md).
 
-*Wygenerowano: 2026-02-15 16:13*
+*Wygenerowano: 2026-02-15 16:18*

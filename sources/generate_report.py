@@ -250,9 +250,27 @@ def _write_report(rows, mae, rmse, n, lake_id, lake_name, rows_natural=None):
         "| Trening (od–do) | {} |".format(_train_range_table_cell(lake_id, rows, rows_natural)),
         "| Wynik | Prognoza zmiany poziomu na dany miesiąc (cm) |",
         "",
-        "Model **nie** używa bieżącego poziomu – tylko opad, temperatura, sezon i historia.",
+        "**Szczegóły – na czym uczony i testowany:**",
+        "",
+        "- **Model drenażowy:** uczony na danych do {}, testowany na danych od {} do {}.".format(
+            _train_end_label(lake_id),
+            _test_start_label(lake_id),
+            _year_range_from_rows(rows)[1],
+        ),
         "",
     ]
+    if rows_natural and _train_end_natural_label(lake_id):
+        min_yr, max_yr = _year_range_from_rows(rows)
+        sections.append(
+            "- **Model naturalny** (sprzed drenażu): uczony na danych do {}, stosowany do porównań (wykresy rozbieżności, błąd miesięczny) na okresie od {} do {}.".format(
+                _train_end_natural_label(lake_id),
+                min_yr,
+                max_yr,
+            )
+        )
+        sections.append("")
+    sections.append("Model **nie** używa bieżącego poziomu – tylko opad, temperatura, sezon i historia.")
+    sections.append("")
     sections += [
         "",
         "---",

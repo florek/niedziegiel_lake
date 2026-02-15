@@ -612,4 +612,4 @@ Dla każdego miesiąca model otrzymuje opad i temperaturę (oraz cechy opóźnio
 | 2025-12 | 13.0 | 2.4 | +1.0 | +1.4 | -0.4 | 101.87 | 102.609 | -73.9 |
 | 2026-01 | 17.3 | -2.9 | +3.0 | +2.2 | +0.8 | 101.92 | 102.632 | -71.2 |
 
-*Wygenerowano: 2026-02-15 16:13*
+*Wygenerowano: 2026-02-15 16:18*
