@@ -72,6 +72,44 @@ Uruchamiaj skrypty z **katalogu głównego projektu** (gdzie są katalogi `data/
 
 Szczegóły modelu i API: [docs/model.md](docs/model.md).
 
+## Wygenerowane raporty (linki)
+
+Raporty i wykresy powstają po uruchomieniu skryptów z sekcji „Szybki start”. Poniżej linki z opisami.
+
+| Opis | Plik |
+|------|------|
+| **Raport ogólny** – tabela zbiorcza dla wszystkich jezior z modelami | [docs/raport_ogolny.md](docs/raport_ogolny.md) |
+| **Dokumentacja modelu** – opis modelu i API | [docs/model.md](docs/model.md) |
+| **Szacunek odbudowy** – lat do odbudowy poziomu po zaniku dodatkowego drenażu (zbiorczo) | [docs/szacunek_odbudowy_po_zaniku_drenazu.md](docs/szacunek_odbudowy_po_zaniku_drenazu.md) |
+| **Budzisławskie** – raport z wykresami | [docs/budzislawskie/raport_podsumowujacy.md](docs/budzislawskie/raport_podsumowujacy.md) |
+| **Budzisławskie** – podsumowanie ewaluacji | [docs/budzislawskie/podsumowanie_ewaluacji.md](docs/budzislawskie/podsumowanie_ewaluacji.md) |
+| **Budzisławskie** – zanik drenażu | [docs/budzislawskie/zanik_drenazu.md](docs/budzislawskie/zanik_drenazu.md) |
+| **Koziegłowskie** – raport z wykresami | [docs/kozieglowskie/raport_podsumowujacy.md](docs/kozieglowskie/raport_podsumowujacy.md) |
+| **Koziegłowskie** – podsumowanie ewaluacji | [docs/kozieglowskie/podsumowanie_ewaluacji.md](docs/kozieglowskie/podsumowanie_ewaluacji.md) |
+| **Koziegłowskie** – zanik drenażu | [docs/kozieglowskie/zanik_drenazu.md](docs/kozieglowskie/zanik_drenazu.md) |
+| **Niedzięgiel** – raport główny (poziom, prognoza grudzień–luty, symulacje wariantów 12 mies.) | [docs/niedziegiel/raport.md](docs/niedziegiel/raport.md) |
+| **Niedzięgiel** – raport podsumowujący (z wykresami) | [docs/niedziegiel/raport_podsumowujacy.md](docs/niedziegiel/raport_podsumowujacy.md) |
+| **Niedzięgiel** – podsumowanie ewaluacji | [docs/niedziegiel/podsumowanie_ewaluacji.md](docs/niedziegiel/podsumowanie_ewaluacji.md) |
+| **Niedzięgiel** – symulacja reżimu zakłóconego | [docs/niedziegiel/symulacja_rezim_zaklocony.md](docs/niedziegiel/symulacja_rezim_zaklocony.md) |
+| **Niedzięgiel** – zanik drenażu | [docs/niedziegiel/zanik_drenazu.md](docs/niedziegiel/zanik_drenazu.md) |
+| **Ostrowskie** – raport z wykresami | [docs/ostrowskie/raport_podsumowujacy.md](docs/ostrowskie/raport_podsumowujacy.md) |
+| **Ostrowskie** – podsumowanie ewaluacji | [docs/ostrowskie/podsumowanie_ewaluacji.md](docs/ostrowskie/podsumowanie_ewaluacji.md) |
+| **Ostrowskie** – zanik drenażu | [docs/ostrowskie/zanik_drenazu.md](docs/ostrowskie/zanik_drenazu.md) |
+| **Powidzkie** – raport z wykresami | [docs/powidzkie/raport_podsumowujacy.md](docs/powidzkie/raport_podsumowujacy.md) |
+| **Powidzkie** – podsumowanie ewaluacji | [docs/powidzkie/podsumowanie_ewaluacji.md](docs/powidzkie/podsumowanie_ewaluacji.md) |
+| **Powidzkie** – zanik drenażu | [docs/powidzkie/zanik_drenazu.md](docs/powidzkie/zanik_drenazu.md) |
+| **Skulska Wieś** – raport z wykresami | [docs/skulskawies/raport_podsumowujacy.md](docs/skulskawies/raport_podsumowujacy.md) |
+| **Skulska Wieś** – podsumowanie ewaluacji | [docs/skulskawies/podsumowanie_ewaluacji.md](docs/skulskawies/podsumowanie_ewaluacji.md) |
+| **Skulska Wieś** – zanik drenażu | [docs/skulskawies/zanik_drenazu.md](docs/skulskawies/zanik_drenazu.md) |
+| **Suszewskie** – raport z wykresami | [docs/suszewskie/raport_podsumowujacy.md](docs/suszewskie/raport_podsumowujacy.md) |
+| **Suszewskie** – podsumowanie ewaluacji | [docs/suszewskie/podsumowanie_ewaluacji.md](docs/suszewskie/podsumowanie_ewaluacji.md) |
+| **Suszewskie** – zanik drenażu | [docs/suszewskie/zanik_drenazu.md](docs/suszewskie/zanik_drenazu.md) |
+| **Wilczyńskie** – raport z wykresami | [docs/wilczynskie/raport_podsumowujacy.md](docs/wilczynskie/raport_podsumowujacy.md) |
+| **Wilczyńskie** – podsumowanie ewaluacji | [docs/wilczynskie/podsumowanie_ewaluacji.md](docs/wilczynskie/podsumowanie_ewaluacji.md) |
+| **Wilczyńskie** – zanik drenażu | [docs/wilczynskie/zanik_drenazu.md](docs/wilczynskie/zanik_drenazu.md) |
+
+Wykresy PNG (poziom, symulacje wariantów itd.) znajdują się w tych samych katalogach co raporty (np. `docs/niedziegiel/`).
+
 ## Merge danych (realny pomiar + meteo → data.csv)
 
 Dla każdego jeziora: `data/{id}/realny_pomiar.csv` oraz wspólny `data/meteo.csv` → `data/{id}/data.csv`:

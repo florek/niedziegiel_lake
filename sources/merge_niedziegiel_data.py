@@ -9,13 +9,43 @@ REALNY_PATH = DATA_DIR / LAKE_ID / "realny_pomiar.csv"
 OUTPUT_PATH = DATA_DIR / LAKE_ID / "data.csv"
 
 
-def norm_poziom(s):
+def _norm_poziom(s):
     s = str(s).strip().replace(",", ".")
     try:
         return float(s)
     except ValueError:
         return None
 
+
+def _parse_data(data_str):
+    parts = data_str.strip().split(".")
+    if len(parts) != 3:
+        return None
+    try:
+        day, month, year = int(parts[0]), int(parts[1]), int(parts[2])
+        return (year, month)
+    except ValueError:
+        return None
+
+
+realny_by_key = {}
+with REALNY_PATH.open(encoding="utf-8") as f:
+    r = csv.reader(f)
+    next(r)
+    for row in r:
+        if len(row) < 2:
+            continue
+        parts = row[0].strip().split("-")
+        if len(parts) != 2:
+            continue
+        try:
+            year, month = int(parts[0]), int(parts[1])
+        except ValueError:
+            continue
+        poziom = _norm_poziom(row[1])
+        if poziom is None:
+            continue
+        realny_by_key[(year, month)] = poziom
 
 meteo_by_key = {}
 with METEO_PATH.open(encoding="utf-8") as f:
@@ -24,8 +54,7 @@ with METEO_PATH.open(encoding="utf-8") as f:
     for row in r:
         if len(row) < 3:
             continue
-        datestr = row[0].strip()
-        parts = datestr.split("-")
+        parts = row[0].strip().split("-")
         if len(parts) != 2:
             continue
         month, year = int(parts[0]), int(parts[1])
@@ -40,34 +69,44 @@ with METEO_PATH.open(encoding="utf-8") as f:
         meteo_by_key[(year, month)] = (opad, temp)
 
 rows = []
-with REALNY_PATH.open(encoding="utf-8") as f:
+with OUTPUT_PATH.open(encoding="utf-8") as f:
     r = csv.reader(f)
-    next(r)
+    header = next(r)
     for row in r:
         if len(row) < 2:
             continue
-        datestr = row[0].strip()
-        parts = datestr.split("-")
-        if len(parts) != 2:
+        data_str = row[0].strip()
+        key = _parse_data(data_str)
+        if key is None:
             continue
-        year, month = int(parts[0]), int(parts[1])
-        poziom = norm_poziom(row[1])
+        year, month = key
+        poziom = realny_by_key.get((year, month))
+        if poziom is None:
+            poziom = _norm_poziom(row[1])
         if poziom is None:
             continue
-        rows.append((year, month, poziom))
+        opad, temp = meteo_by_key.get((year, month), (row[3] if len(row) > 3 else "", row[4] if len(row) > 4 else ""))
+        if opad == "" and len(row) > 3 and row[3].strip():
+            try:
+                opad = float(str(row[3]).replace(",", "."))
+            except (ValueError, TypeError):
+                pass
+        if temp == "" and len(row) > 4 and row[4].strip():
+            try:
+                temp = float(str(row[4]).replace(",", "."))
+            except (ValueError, TypeError):
+                pass
+        rows.append((data_str, poziom, opad, temp))
 
-rows.sort(key=lambda x: (x[0], x[1]))
 out = [["Data", "Poziom", "Zmiana", "Opad", "Temperatura"]]
 prev_poziom = None
-for year, month, poziom in rows:
-    data_str = f"01.{month:02d}.{year}"
+for data_str, poziom, opad, temp in rows:
     poziom_str = f"{poziom:.2f}".replace(".", ",")
     if prev_poziom is not None:
         zmiana = poziom - prev_poziom
         zmiana_str = f"{zmiana:.2f}".replace(".", ",")
     else:
         zmiana_str = "0"
-    opad, temp = meteo_by_key.get((year, month), ("", ""))
     opad_str = str(opad).replace(".", ",") if opad != "" else ""
     temp_str = str(temp).replace(".", ",") if temp != "" else ""
     out.append([data_str, poziom_str, zmiana_str, opad_str, temp_str])
