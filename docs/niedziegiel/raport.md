@@ -20,7 +20,22 @@ Wyliczenie od ostatniego rzeczywistego pomiaru (listopad 2025) z użyciem modelu
 
 ## Symulacje wariantów pogodowych (12 miesięcy do przodu)
 
-Dla każdego wariantu (temperatura: zimny/normalny/ciepły × opad: suchy/normalny/wilgotny) opad i temperatura z percentyli historycznych w `data/niedziegiel/data.csv`. Symulacja: 12 miesięcy od lutego 2026 (styczeń 2026 to pomiar rzeczywisty) – luty 2026–styczeń 2027. Wykres: 10 lat historii + 12 miesięcy symulacji (do porównania).
+Dla każdego wariantu (temperatura: zimny/normalny/ciepły × opad: suchy/normalny/wilgotny) opad i temperatura z percentyli historycznych w `data/niedziegiel/data.csv`. Symulacja: 12 miesięcy od lutego 2026 (styczeń 2026 to pomiar rzeczywisty) – luty 2026–styczeń 2027. Wykres: pełny zakres historii (od 1974) + 12 miesięcy symulacji.
+
+**Szansa realizacji** (na podstawie zgodności z ostatnimi 12 miesiącami pomiarowymi – średni opad i temperatura):
+
+| Wariant | Szansa realizacji (%) |
+|---------|------------------------|
+| zimny, suchy | 10.2 |
+| zimny, normalny | 13.8 |
+| zimny, wilgotny | 7.3 |
+| normalny, suchy | 10.8 |
+| normalny, normalny | 16.0 |
+| normalny, wilgotny | 7.6 |
+| ciepły, suchy | 10.8 |
+| ciepły, normalny | 15.8 |
+| ciepły, wilgotny | 7.6 |
+
 
 ### zimny, suchy
 
@@ -41,6 +56,7 @@ Dla każdego wariantu (temperatura: zimny/normalny/ciepły × opad: suchy/normal
 | 2026-12 | 26.2 | -0.4 | 0.034 | 101.832 |
 | 2027-01 | 23.3 | -2.2 | 0.0433 | 101.875 |
 
+- **Szansa realizacji:** 10.2 %
 - **Średnia temperatura roczna (prognoza):** 7.7 °C
 - **Suma opadu (prognoza):** 322.2 mm
 - **Różnica poziomu wody** (koniec symulacji − start): +0.025 m
@@ -65,6 +81,7 @@ Dla każdego wariantu (temperatura: zimny/normalny/ciepły × opad: suchy/normal
 | 2026-12 | 39.2 | -0.4 | 0.0468 | 101.98 |
 | 2027-01 | 35.5 | -2.2 | 0.0605 | 102.04 |
 
+- **Szansa realizacji:** 13.8 %
 - **Średnia temperatura roczna (prognoza):** 7.7 °C
 - **Suma opadu (prognoza):** 486.1 mm
 - **Różnica poziomu wody** (koniec symulacji − start): +0.190 m
@@ -89,6 +106,7 @@ Dla każdego wariantu (temperatura: zimny/normalny/ciepły × opad: suchy/normal
 | 2026-12 | 47.8 | -0.4 | 0.0697 | 102.155 |
 | 2027-01 | 48.5 | -2.2 | 0.0908 | 102.246 |
 
+- **Szansa realizacji:** 7.3 %
 - **Średnia temperatura roczna (prognoza):** 7.7 °C
 - **Suma opadu (prognoza):** 683.9 mm
 - **Różnica poziomu wody** (koniec symulacji − start): +0.396 m
@@ -113,6 +131,7 @@ Dla każdego wariantu (temperatura: zimny/normalny/ciepły × opad: suchy/normal
 | 2026-12 | 26.2 | 1.2 | 0.0319 | 101.765 |
 | 2027-01 | 23.3 | -0.2 | 0.0445 | 101.81 |
 
+- **Szansa realizacji:** 10.8 %
 - **Średnia temperatura roczna (prognoza):** 9.1 °C
 - **Suma opadu (prognoza):** 322.2 mm
 - **Różnica poziomu wody** (koniec symulacji − start): -0.040 m
@@ -137,6 +156,7 @@ Dla każdego wariantu (temperatura: zimny/normalny/ciepły × opad: suchy/normal
 | 2026-12 | 39.2 | 1.2 | 0.0432 | 101.843 |
 | 2027-01 | 35.5 | -0.2 | 0.0533 | 101.896 |
 
+- **Szansa realizacji:** 16.0 %
 - **Średnia temperatura roczna (prognoza):** 9.1 °C
 - **Suma opadu (prognoza):** 486.1 mm
 - **Różnica poziomu wody** (koniec symulacji − start): +0.046 m
@@ -161,6 +181,7 @@ Dla każdego wariantu (temperatura: zimny/normalny/ciepły × opad: suchy/normal
 | 2026-12 | 47.8 | 1.2 | 0.0698 | 102.024 |
 | 2027-01 | 48.5 | -0.2 | 0.0908 | 102.115 |
 
+- **Szansa realizacji:** 7.6 %
 - **Średnia temperatura roczna (prognoza):** 9.1 °C
 - **Suma opadu (prognoza):** 683.9 mm
 - **Różnica poziomu wody** (koniec symulacji − start): +0.265 m
@@ -185,6 +206,7 @@ Dla każdego wariantu (temperatura: zimny/normalny/ciepły × opad: suchy/normal
 | 2026-12 | 26.2 | 2.2 | 0.0349 | 101.771 |
 | 2027-01 | 23.3 | 1.8 | 0.0414 | 101.813 |
 
+- **Szansa realizacji:** 10.8 %
 - **Średnia temperatura roczna (prognoza):** 10.5 °C
 - **Suma opadu (prognoza):** 322.2 mm
 - **Różnica poziomu wody** (koniec symulacji − start): -0.037 m
@@ -209,6 +231,7 @@ Dla każdego wariantu (temperatura: zimny/normalny/ciepły × opad: suchy/normal
 | 2026-12 | 39.2 | 2.2 | 0.046 | 101.874 |
 | 2027-01 | 35.5 | 1.8 | 0.0594 | 101.934 |
 
+- **Szansa realizacji:** 15.8 %
 - **Średnia temperatura roczna (prognoza):** 10.5 °C
 - **Suma opadu (prognoza):** 486.1 mm
 - **Różnica poziomu wody** (koniec symulacji − start): +0.084 m
@@ -233,6 +256,7 @@ Dla każdego wariantu (temperatura: zimny/normalny/ciepły × opad: suchy/normal
 | 2026-12 | 47.8 | 2.2 | 0.0696 | 102.025 |
 | 2027-01 | 48.5 | 1.8 | 0.0904 | 102.115 |
 
+- **Szansa realizacji:** 7.6 %
 - **Średnia temperatura roczna (prognoza):** 10.5 °C
 - **Suma opadu (prognoza):** 683.9 mm
 - **Różnica poziomu wody** (koniec symulacji − start): +0.265 m

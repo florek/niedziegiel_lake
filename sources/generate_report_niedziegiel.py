@@ -24,6 +24,8 @@ MONTH_NAMES = {
 }
 PROGNOZA_MIESIACE = [(2025, 12), (2026, 1), (2026, 2)]
 OKNO_HISTORII_LAT = 10
+OKNO_REFERENCJA_MIESIACE = 12
+HISTORIA_OD_ROKU = 1974
 SIMULACJA_MIESIACE_12 = [(2026, m) for m in range(2, 13)] + [(2027, 1)]
 TEMP_KLASY = ("zimny", "normalny", "ciepły")
 OPAD_KLASY = ("suchy", "normalny", "wilgotny")
@@ -66,6 +68,30 @@ def _get_variant_meteo(
         )
         for _, m in months_sequence
     ]
+
+
+def _dodaj_szanse_realizacji(df: pd.DataFrame, warianty: list[dict]) -> None:
+    df_meteo = df.dropna(subset=[lake.COL_OPAD, lake.COL_TEMPERATURA]).sort_values(lake.COL_DATA)
+    if len(df_meteo) < OKNO_REFERENCJA_MIESIACE:
+        for v in warianty:
+            v["szansa_pct"] = 100.0 / len(warianty) if warianty else 0.0
+        return
+    tail = df_meteo.tail(OKNO_REFERENCJA_MIESIACE)
+    ref_opad = float(tail[lake.COL_OPAD].astype(float).mean())
+    ref_temp = float(tail[lake.COL_TEMPERATURA].astype(float).mean())
+    std_opad = float(tail[lake.COL_OPAD].astype(float).std()) or 1.0
+    std_temp = float(tail[lake.COL_TEMPERATURA].astype(float).std()) or 1.0
+    dists = []
+    for v in warianty:
+        o = v["suma_opadu"] / len(v["wyniki"])
+        t = v["srednia_temp_roczna"]
+        d = np.sqrt(((o - ref_opad) / std_opad) ** 2 + ((t - ref_temp) / std_temp) ** 2)
+        dists.append(np.exp(-d))
+    total = sum(dists)
+    if total <= 0:
+        total = 1.0
+    for v, w in zip(warianty, dists):
+        v["szansa_pct"] = round(100.0 * w / total, 1)
 
 
 def _variant_to_filename(nazwa: str) -> str:
@@ -294,8 +320,7 @@ def _plot_wariant_symulacja(
     df_poziom = df_poziom.sort_values(lake.COL_DATA)
     if df_poziom.empty:
         return
-    last_date = df_poziom[lake.COL_DATA].iloc[-1]
-    cutoff = last_date - pd.DateOffset(years=OKNO_HISTORII_LAT)
+    cutoff = pd.Timestamp(f"{HISTORIA_OD_ROKU}-01-01")
     hist = df_poziom[df_poziom[lake.COL_DATA] >= cutoff]
     hist_dates = pd.to_datetime(hist[lake.COL_DATA])
     hist_levels = hist[lake.COL_POZIOM].astype(float)
@@ -304,11 +329,11 @@ def _plot_wariant_symulacja(
     sim_dates = ["2026-01-01"] + [r["data"] + "-01" for r in wyniki]
     sim_levels = [level_jan_2026] + [float(r["poziom"]) for r in wyniki]
     fig, ax = plt.subplots(figsize=(14, 5))
-    ax.plot(hist_dates, hist_levels, color="#1f77b4", linewidth=1.2, label=f"Historia ({OKNO_HISTORII_LAT} lat)")
+    ax.plot(hist_dates, hist_levels, color="#1f77b4", linewidth=1.2, label=f"Historia (od {HISTORIA_OD_ROKU})")
     ax.plot(pd.to_datetime(sim_dates), sim_levels, color="#d62728", linewidth=1.5, marker="o", markersize=4, label="Symulacja (12 mies.)")
     ax.set_xlabel("Data")
     ax.set_ylabel("Wysokość (m n.p.m.)")
-    ax.set_title(f"Jezioro Niedzięgiel – {nazwa}: 10 lat historii + 12 mies. symulacji")
+    ax.set_title(f"Jezioro Niedzięgiel – {nazwa}: pełny zakres od {HISTORIA_OD_ROKU} + 12 mies. symulacji")
     ax.xaxis.set_major_locator(mdates.YearLocator(2))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
     ax.legend(loc="best")
@@ -388,9 +413,16 @@ def _write_report(
         lines.extend([
             "## Symulacje wariantów pogodowych (12 miesięcy do przodu)",
             "",
-            "Dla każdego wariantu (temperatura: zimny/normalny/ciepły × opad: suchy/normalny/wilgotny) opad i temperatura z percentyli historycznych w `data/niedziegiel/data.csv`. Symulacja: 12 miesięcy od lutego 2026 (styczeń 2026 to pomiar rzeczywisty) – luty 2026–styczeń 2027. Wykres: 10 lat historii + 12 miesięcy symulacji (do porównania).",
+            "Dla każdego wariantu (temperatura: zimny/normalny/ciepły × opad: suchy/normalny/wilgotny) opad i temperatura z percentyli historycznych w `data/niedziegiel/data.csv`. Symulacja: 12 miesięcy od lutego 2026 (styczeń 2026 to pomiar rzeczywisty) – luty 2026–styczeń 2027. Wykres: pełny zakres historii (od 1974) + 12 miesięcy symulacji.",
             "",
+            "**Szansa realizacji** (na podstawie zgodności z ostatnimi 12 miesiącami pomiarowymi – średni opad i temperatura):",
+            "",
+            "| Wariant | Szansa realizacji (%) |",
+            "|---------|------------------------|",
         ])
+        for v in warianty:
+            lines.append(f"| {v['nazwa']} | {v['szansa_pct']} |")
+        lines.extend(["", ""])
         for v in warianty:
             nazwa = v["nazwa"]
             fname = f"symulacja_wariant_{_variant_to_filename(nazwa)}.png"
@@ -406,6 +438,7 @@ def _write_report(
                 lines.append(f"| {r['data']} | {round(r['opad'], 1)} | {round(r['temperatura'], 1)} | {r['zmiana_prognoza']} | {r['poziom']} |")
             lines.extend([
                 "",
+                f"- **Szansa realizacji:** {v['szansa_pct']} %",
                 f"- **Średnia temperatura roczna (prognoza):** {round(v['srednia_temp_roczna'], 1)} °C",
                 f"- **Suma opadu (prognoza):** {round(v['suma_opadu'], 1)} mm",
                 f"- **Różnica poziomu wody** (koniec symulacji − start): {v['roznica_poziomu']:+.3f} m",
@@ -427,6 +460,7 @@ def main() -> None:
     print(f"Wykres zapisany: {fig_path}")
     warianty = _symulacje_warianty(df)
     if warianty:
+        _dodaj_szanse_realizacji(df, warianty)
         for v in warianty:
             path_wariant = FIGURES_DIR / f"symulacja_wariant_{_variant_to_filename(v['nazwa'])}.png"
             _plot_wariant_symulacja(
