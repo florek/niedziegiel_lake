@@ -488,7 +488,7 @@ def _level_na_koniec_miesiaca(df: pd.DataFrame, rok: int, miesiac: int) -> float
 
 def run_report_for_lake(lake_id: str) -> None:
     figures_dir = DOCS_DIR / lake_id
-    report_path = figures_dir / "raport.md"
+    report_path = figures_dir / "prognoza.md"
     nazwa_jeziora = lake.LAKES.get(lake_id, lake_id)
     df = lake.load_data(lake.get_data_path(lake_id))
     eval_rows = None

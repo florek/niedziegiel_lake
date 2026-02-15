@@ -14,7 +14,7 @@ Projekt zawiera modele uczenia maszynowego do **prognozowania miesięcznej zmian
   - **data/{id}/** – np. `data/niedziegiel/`: pliki `data.csv`, `model.pkl`, opcjonalnie `opad.txt`, `temp.txt`, `realny_pomiar.csv`.
   - **data/meteo.csv**, **data/zanik_drenazu.csv** – pliki współdzielone.
 - **docs/** – raporty i wykresy per jezioro:
-  - **docs/{id}/** – np. `docs/niedziegiel/`: raporty (raport.md z ewaluacją 12 mies., raport_podsumowujacy.md, podsumowanie_ewaluacji.md), wykresy PNG (poziom_rzeczywisty.png, symulacja_wariant_*.png).
+  - **docs/{id}/** – np. `docs/niedziegiel/`: raporty (prognoza.md z ewaluacją 12 mies., raport_podsumowujacy.md, podsumowanie_ewaluacji.md), wykresy PNG (poziom_rzeczywisty.png, symulacja_wariant_*.png).
   - **docs/odbudowa/** – wykresy projekcji odbudowy.
   - **docs/raport_ogolny.md**, **docs/szacunek_odbudowy_po_zaniku_drenazu.md** – raporty zbiorcze.
 
@@ -55,7 +55,7 @@ Uruchamiaj skrypty z **katalogu głównego projektu** (gdzie są katalogi `data/
    python sources/generate_report_12mies.py niedziegiel
    python sources/generate_report_12mies.py all
    ```
-   Wynik per jezioro: `docs/{id}/raport.md`, `docs/{id}/poziom_rzeczywisty.png`, `docs/{id}/symulacja_wariant_*.png`, `docs/{id}/podsumowanie_ewaluacji.md`.
+   Wynik per jezioro: `docs/{id}/prognoza.md`, `docs/{id}/poziom_rzeczywisty.png`, `docs/{id}/symulacja_wariant_*.png`, `docs/{id}/podsumowanie_ewaluacji.md`.
 6. Raport ogólny (tabela zbiorcza dla wszystkich jezior z modelami):
    ```bash
    python sources/generate_summary_report.py
@@ -86,30 +86,37 @@ Raporty i wykresy powstają po uruchomieniu skryptów z sekcji „Szybki start�
 |------|------|
 | **Raport ogólny** – tabela zbiorcza dla wszystkich jezior z modelami | [docs/raport_ogolny.md](docs/raport_ogolny.md) |
 | **Dokumentacja modelu** – opis modelu i API | [docs/model.md](docs/model.md) |
-| **Raport ewaluacji 12 mies.** – poziom vs model, 9 wariantów pogodowych (każde jezioro: `docs/{id}/raport.md`) | [docs/niedziegiel/raport.md](docs/niedziegiel/raport.md) |
+| **Raport ewaluacji 12 mies.** – poziom vs model, 9 wariantów pogodowych (każde jezioro: `docs/{id}/prognoza.md`) | [docs/niedziegiel/prognoza.md](docs/niedziegiel/prognoza.md) |
 | **Szacunek odbudowy** – lat do odbudowy poziomu po zaniku dodatkowego drenażu (zbiorczo) | [docs/szacunek_odbudowy_po_zaniku_drenazu.md](docs/szacunek_odbudowy_po_zaniku_drenazu.md) |
+| **Budzisławskie** – prognoza 12 mies. | [docs/budzislawskie/prognoza.md](docs/budzislawskie/prognoza.md) |
 | **Budzisławskie** – raport z wykresami | [docs/budzislawskie/raport_podsumowujacy.md](docs/budzislawskie/raport_podsumowujacy.md) |
 | **Budzisławskie** – podsumowanie ewaluacji | [docs/budzislawskie/podsumowanie_ewaluacji.md](docs/budzislawskie/podsumowanie_ewaluacji.md) |
 | **Budzisławskie** – zanik drenażu | [docs/budzislawskie/zanik_drenazu.md](docs/budzislawskie/zanik_drenazu.md) |
+| **Koziegłowskie** – prognoza 12 mies. | [docs/kozieglowskie/prognoza.md](docs/kozieglowskie/prognoza.md) |
 | **Koziegłowskie** – raport z wykresami | [docs/kozieglowskie/raport_podsumowujacy.md](docs/kozieglowskie/raport_podsumowujacy.md) |
 | **Koziegłowskie** – podsumowanie ewaluacji | [docs/kozieglowskie/podsumowanie_ewaluacji.md](docs/kozieglowskie/podsumowanie_ewaluacji.md) |
 | **Koziegłowskie** – zanik drenażu | [docs/kozieglowskie/zanik_drenazu.md](docs/kozieglowskie/zanik_drenazu.md) |
-| **Niedzięgiel** – raport 12 mies. (poziom, symulacje wariantów) | [docs/niedziegiel/raport.md](docs/niedziegiel/raport.md) |
+| **Niedzięgiel** – prognoza 12 mies. | [docs/niedziegiel/prognoza.md](docs/niedziegiel/prognoza.md) |
 | **Niedzięgiel** – raport podsumowujący (z wykresami) | [docs/niedziegiel/raport_podsumowujacy.md](docs/niedziegiel/raport_podsumowujacy.md) |
 | **Niedzięgiel** – podsumowanie ewaluacji | [docs/niedziegiel/podsumowanie_ewaluacji.md](docs/niedziegiel/podsumowanie_ewaluacji.md) |
 | **Niedzięgiel** – zanik drenażu | [docs/niedziegiel/zanik_drenazu.md](docs/niedziegiel/zanik_drenazu.md) |
+| **Ostrowskie** – prognoza 12 mies. | [docs/ostrowskie/prognoza.md](docs/ostrowskie/prognoza.md) |
 | **Ostrowskie** – raport z wykresami | [docs/ostrowskie/raport_podsumowujacy.md](docs/ostrowskie/raport_podsumowujacy.md) |
 | **Ostrowskie** – podsumowanie ewaluacji | [docs/ostrowskie/podsumowanie_ewaluacji.md](docs/ostrowskie/podsumowanie_ewaluacji.md) |
 | **Ostrowskie** – zanik drenażu | [docs/ostrowskie/zanik_drenazu.md](docs/ostrowskie/zanik_drenazu.md) |
+| **Powidzkie** – prognoza 12 mies. | [docs/powidzkie/prognoza.md](docs/powidzkie/prognoza.md) |
 | **Powidzkie** – raport z wykresami | [docs/powidzkie/raport_podsumowujacy.md](docs/powidzkie/raport_podsumowujacy.md) |
 | **Powidzkie** – podsumowanie ewaluacji | [docs/powidzkie/podsumowanie_ewaluacji.md](docs/powidzkie/podsumowanie_ewaluacji.md) |
 | **Powidzkie** – zanik drenażu | [docs/powidzkie/zanik_drenazu.md](docs/powidzkie/zanik_drenazu.md) |
+| **Skulska Wieś** – prognoza 12 mies. | [docs/skulskawies/prognoza.md](docs/skulskawies/prognoza.md) |
 | **Skulska Wieś** – raport z wykresami | [docs/skulskawies/raport_podsumowujacy.md](docs/skulskawies/raport_podsumowujacy.md) |
 | **Skulska Wieś** – podsumowanie ewaluacji | [docs/skulskawies/podsumowanie_ewaluacji.md](docs/skulskawies/podsumowanie_ewaluacji.md) |
 | **Skulska Wieś** – zanik drenażu | [docs/skulskawies/zanik_drenazu.md](docs/skulskawies/zanik_drenazu.md) |
+| **Suszewskie** – prognoza 12 mies. | [docs/suszewskie/prognoza.md](docs/suszewskie/prognoza.md) |
 | **Suszewskie** – raport z wykresami | [docs/suszewskie/raport_podsumowujacy.md](docs/suszewskie/raport_podsumowujacy.md) |
 | **Suszewskie** – podsumowanie ewaluacji | [docs/suszewskie/podsumowanie_ewaluacji.md](docs/suszewskie/podsumowanie_ewaluacji.md) |
 | **Suszewskie** – zanik drenażu | [docs/suszewskie/zanik_drenazu.md](docs/suszewskie/zanik_drenazu.md) |
+| **Wilczyńskie** – prognoza 12 mies. | [docs/wilczynskie/prognoza.md](docs/wilczynskie/prognoza.md) |
 | **Wilczyńskie** – raport z wykresami | [docs/wilczynskie/raport_podsumowujacy.md](docs/wilczynskie/raport_podsumowujacy.md) |
 | **Wilczyńskie** – podsumowanie ewaluacji | [docs/wilczynskie/podsumowanie_ewaluacji.md](docs/wilczynskie/podsumowanie_ewaluacji.md) |
 | **Wilczyńskie** – zanik drenażu | [docs/wilczynskie/zanik_drenazu.md](docs/wilczynskie/zanik_drenazu.md) |

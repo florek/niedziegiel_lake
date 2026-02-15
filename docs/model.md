@@ -55,7 +55,7 @@ Skrypt `sources/poziom_do_stycznia_2026.py` dla każdego jeziora z modelem i dan
 
 ## Raport ewaluacji na 12 miesięcy
 
-`python sources/generate_report_12mies.py` (bez argumentu: Niedzięgiel; z argumentem: `all` lub id jeziora) generuje per jezioro: `docs/{id}/raport.md`, wykres poziomu i symulacje 9 wariantów pogodowych do końca stycznia 2027 oraz `docs/{id}/podsumowanie_ewaluacji.md`.
+`python sources/generate_report_12mies.py` (bez argumentu: Niedzięgiel; z argumentem: `all` lub id jeziora) generuje per jezioro: `docs/{id}/prognoza.md`, wykres poziomu i symulacje 9 wariantów pogodowych do końca stycznia 2027 oraz `docs/{id}/podsumowanie_ewaluacji.md`.
 
 ## Raport ogólny
 
