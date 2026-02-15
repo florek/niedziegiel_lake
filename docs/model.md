@@ -12,7 +12,7 @@ Obsługiwane jeziora: **Jezioro Budzisławskie** (`budzislawskie`), **Jezioro Ko
 
 ## Dane wejściowe
 
-Pliki CSV w `data/`: `data/budzislawskie_data.csv`, `data/kozieglowskie_data.csv`, `data/niedziegiel_data.csv`, `data/ostrowskie_data.csv`, `data/powidzkie_data.csv`, `data/skulskawies_data.csv`, `data/suszewskie_data.csv`, `data/wilczynskie_data.csv`. Modele: `data/{id}_model.pkl`.
+Dane i modele per jezioro w katalogach `data/{id}/`: plik `data.csv`, model `model.pkl`. Np. `data/niedziegiel/data.csv`, `data/niedziegiel/model.pkl`.
 
 Kolumny: **Data** (pierwszy dzień miesiąca, dd.mm.yyyy), **Poziom** [m], **Zmiana** [m] (target), **Opad** [mm], **Temperatura** [°C]. Wartości dziesiętne z przecinkiem. Wiersze z #ERROR! lub brakami są pomijane. **Limit wysokości i strefa odpływu:** w scenariuszu modelowym poziom nie może przekraczać dopuszczalnego maksimum (`MAX_POZIOM_SPIETRZANIA_BY_LAKE`). Strefa odpływu (od której woda się przesącza) i miesięczne przesączanie są **obliczane z danych** per jezioro (`get_drainage_params(lake_id, df)`): szerokość strefy `odplyw_m` = 5% zakresu poziomów (min–max) z danych, ograniczone do 0,2–1,0 m; miesięczne przesączanie `przesaczanie_m` = średnia ujemna zmiana poziomu w miesiącach, gdy poziom końcowy był w strefie (max − odplyw_m, max]. Domyślne stałe: `ODPLYW_FRAC_RANGE`, `ODPLYW_M_MIN`, `ODPLYW_M_MAX`, `PRZESACZANIE_DEFAULT_M`. `apply_cap_and_drainage(poziom, max_poziom, odplyw_m, przesaczanie_m)` łączy limit z korektą w strefie.
 
@@ -25,16 +25,16 @@ Kolumny: **Data** (pierwszy dzień miesiąca, dd.mm.yyyy), **Poziom** [m], **Zmi
 
 ## Użycie
 
-Trening i zapis modelu (per jezioro):
+Trening i zapis modelu (per jezioro), z katalogu głównego projektu:
 ```bash
-python lake.py budzislawskie
-python lake.py kozieglowskie
-python lake.py niedziegiel
-python lake.py powidzkie
-python lake.py ostrowskie
-python lake.py skulskawies
-python lake.py suszewskie
-python lake.py wilczynskie
+python sources/lake.py budzislawskie
+python sources/lake.py kozieglowskie
+python sources/lake.py niedziegiel
+python sources/lake.py powidzkie
+python sources/lake.py ostrowskie
+python sources/lake.py skulskawies
+python sources/lake.py suszewskie
+python sources/lake.py wilczynskie
 ```
 
 W kodzie:
@@ -43,7 +43,7 @@ W kodzie:
 - `load_data(path=...)` – wczytanie i czyszczenie CSV.
 - `train_model(df=..., path=...)` – trening, zwraca model, listę cech, metryki, lag_months, meteo_lag_months.
 - `predict_change(model, feature_cols, poziom, opad, temperatura, month, last_changes=..., last_poziomy=..., last_opady=..., last_temperatury=..., lag_months=..., meteo_lag_months=...)` – prognoza zmiany na jeden miesiąc (przy meteo_lag > 0 podaj listy ostatnich opadów i temperatur).
-- `save_model(..., lag_months=..., meteo_lag_months=...)` / `load_model(path=...)` – zapis/odczyt modelu (`data/{lake_id}_model.pkl`); load zwraca model, feature_cols, lag_months, meteo_lag_months.
+- `save_model(..., lag_months=..., meteo_lag_months=...)` / `load_model(path=...)` – zapis/odczyt modelu (`data/{lake_id}/model.pkl`); load zwraca model, feature_cols, lag_months, meteo_lag_months.
 
 ## Wyniki (przykładowe)
 
@@ -51,8 +51,8 @@ Na zbiorze testowym (70 ostatnich miesięcy) typowe wartości to rzędu kilku ce
 
 ## Raport ogólny
 
-`python generate_summary_report.py` generuje `docs/raport_ogolny.md`: tabelę zbiorczą (jezioro, okres testowy, liczba miesięcy, MAE, RMSE) oraz linki do raportów szczegółowych per jezioro.
+`python sources/generate_summary_report.py` generuje `docs/raport_ogolny.md`: tabelę zbiorczą (jezioro, okres testowy, liczba miesięcy, MAE, RMSE) oraz linki do raportów szczegółowych per jezioro (`docs/{id}/raport_podsumowujacy.md`, `docs/{id}/podsumowanie_ewaluacji.md`).
 
 ## Eksport do PDF
 
-Raporty z `docs/` (np. `raport_ogolny.md`, `raport_podsumowujacy_niedziegiel.md`, `podsumowanie_ewaluacji_powidzkie.md`) można wyeksportować do PDF: `python md_to_pdf.py` (wszystkie `.md` z `docs/`) lub z podaniem konkretnych plików. Obrazy z katalogów `figures_{jezioro}/` są osadzane w PDF.
+Raporty z `docs/` (np. `raport_ogolny.md`, `docs/niedziegiel/raport_podsumowujacy.md`, `docs/powidzkie/podsumowanie_ewaluacji.md`) można wyeksportować do PDF: `python md_to_pdf.py` (wszystkie `.md` z `docs/`) lub z podaniem konkretnych plików. Obrazy z katalogów `docs/{jezioro}/` i `docs/odbudowa/` są osadzane w PDF.

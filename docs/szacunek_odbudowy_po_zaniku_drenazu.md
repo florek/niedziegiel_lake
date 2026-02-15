@@ -94,35 +94,35 @@ Dwa wzniosy dla porównania (źródło: `data/zanik_drenazu.csv`): wznios bazowy
 
 ### Jezioro Budzisławskie
 
-![Odbudowa budzislawskie](figures_odbudowa/odbudowa_budzislawskie.png)
+![Odbudowa budzislawskie](odbudowa/odbudowa_budzislawskie.png)
 
 ### Jezioro Koziegłowskie
 
-![Odbudowa kozieglowskie](figures_odbudowa/odbudowa_kozieglowskie.png)
+![Odbudowa kozieglowskie](odbudowa/odbudowa_kozieglowskie.png)
 
 ### Jezioro Niedzięgiel
 
-![Odbudowa niedziegiel](figures_odbudowa/odbudowa_niedziegiel.png)
+![Odbudowa niedziegiel](odbudowa/odbudowa_niedziegiel.png)
 
 ### Jezioro Ostrowskie
 
-![Odbudowa ostrowskie](figures_odbudowa/odbudowa_ostrowskie.png)
+![Odbudowa ostrowskie](odbudowa/odbudowa_ostrowskie.png)
 
 ### Jezioro Powidzkie
 
-![Odbudowa powidzkie](figures_odbudowa/odbudowa_powidzkie.png)
+![Odbudowa powidzkie](odbudowa/odbudowa_powidzkie.png)
 
 ### Jezioro Skulska Wieś
 
-![Odbudowa skulskawies](figures_odbudowa/odbudowa_skulskawies.png)
+![Odbudowa skulskawies](odbudowa/odbudowa_skulskawies.png)
 
 ### Jezioro Suszewskie
 
-![Odbudowa suszewskie](figures_odbudowa/odbudowa_suszewskie.png)
+![Odbudowa suszewskie](odbudowa/odbudowa_suszewskie.png)
 
 ### Jezioro Wilczyńskie
 
-![Odbudowa wilczynskie](figures_odbudowa/odbudowa_wilczynskie.png)
+![Odbudowa wilczynskie](odbudowa/odbudowa_wilczynskie.png)
 
 ---
 

@@ -70,103 +70,103 @@ Okres testowy 1993-02 – 2023-11, 370 miesięcy. MAE 0,0359 m, RMSE 0,0461 m. �
 
 ## 5. Wykresy
 
-Poniżej zestawienie wszystkich wykresów: dla każdego jeziora cztery wykresy ewaluacji (wysokość rzeczywista vs model, rozbieżność w czasie, zmiana faktyczna vs prognoza, błąd miesięczny) oraz wykres projekcji odbudowy. Pliki w katalogach docs/figures_{jezioro} oraz docs/figures_odbudowa.
+Poniżej zestawienie wszystkich wykresów: dla każdego jeziora cztery wykresy ewaluacji (wysokość rzeczywista vs model, rozbieżność w czasie, zmiana faktyczna vs prognoza, błąd miesięczny) oraz wykres projekcji odbudowy. Pliki w katalogach docs/{jezioro} oraz docs/odbudowa.
 
 ### Jezioro Budzisławskie
 
-![Wysokość rzeczywista vs model](figures_budzislawskie/wysokosc_rzeczywista_vs_model.png)
+![Wysokość rzeczywista vs model](budzislawskie/wysokosc_rzeczywista_vs_model.png)
 
-![Rozbieżność w czasie](figures_budzislawskie/rozbieznosc_w_czasie.png)
+![Rozbieżność w czasie](budzislawskie/rozbieznosc_w_czasie.png)
 
-![Zmiana faktyczna vs prognoza](figures_budzislawskie/zmiana_fakt_vs_prognoza.png)
+![Zmiana faktyczna vs prognoza](budzislawskie/zmiana_fakt_vs_prognoza.png)
 
-![Błąd miesięczny](figures_budzislawskie/blad_miesieczny.png)
+![Błąd miesięczny](budzislawskie/blad_miesieczny.png)
 
-![Odbudowa](figures_odbudowa/odbudowa_budzislawskie.png)
+![Odbudowa](odbudowa/odbudowa_budzislawskie.png)
 
 ### Jezioro Koziegłowskie
 
-![Wysokość rzeczywista vs model](figures_kozieglowskie/wysokosc_rzeczywista_vs_model.png)
+![Wysokość rzeczywista vs model](kozieglowskie/wysokosc_rzeczywista_vs_model.png)
 
-![Rozbieżność w czasie](figures_kozieglowskie/rozbieznosc_w_czasie.png)
+![Rozbieżność w czasie](kozieglowskie/rozbieznosc_w_czasie.png)
 
-![Zmiana faktyczna vs prognoza](figures_kozieglowskie/zmiana_fakt_vs_prognoza.png)
+![Zmiana faktyczna vs prognoza](kozieglowskie/zmiana_fakt_vs_prognoza.png)
 
-![Błąd miesięczny](figures_kozieglowskie/blad_miesieczny.png)
+![Błąd miesięczny](kozieglowskie/blad_miesieczny.png)
 
-![Odbudowa](figures_odbudowa/odbudowa_kozieglowskie.png)
+![Odbudowa](odbudowa/odbudowa_kozieglowskie.png)
 
 ### Jezioro Niedzięgiel
 
-![Wysokość rzeczywista vs model](figures_niedziegiel/wysokosc_rzeczywista_vs_model.png)
+![Wysokość rzeczywista vs model](niedziegiel/wysokosc_rzeczywista_vs_model.png)
 
-![Rozbieżność w czasie](figures_niedziegiel/rozbieznosc_w_czasie.png)
+![Rozbieżność w czasie](niedziegiel/rozbieznosc_w_czasie.png)
 
-![Zmiana faktyczna vs prognoza](figures_niedziegiel/zmiana_fakt_vs_prognoza.png)
+![Zmiana faktyczna vs prognoza](niedziegiel/zmiana_fakt_vs_prognoza.png)
 
-![Błąd miesięczny](figures_niedziegiel/blad_miesieczny.png)
+![Błąd miesięczny](niedziegiel/blad_miesieczny.png)
 
-![Odbudowa](figures_odbudowa/odbudowa_niedziegiel.png)
+![Odbudowa](odbudowa/odbudowa_niedziegiel.png)
 
 ### Jezioro Ostrowskie
 
-![Wysokość rzeczywista vs model](figures_ostrowskie/wysokosc_rzeczywista_vs_model.png)
+![Wysokość rzeczywista vs model](ostrowskie/wysokosc_rzeczywista_vs_model.png)
 
-![Rozbieżność w czasie](figures_ostrowskie/rozbieznosc_w_czasie.png)
+![Rozbieżność w czasie](ostrowskie/rozbieznosc_w_czasie.png)
 
-![Zmiana faktyczna vs prognoza](figures_ostrowskie/zmiana_fakt_vs_prognoza.png)
+![Zmiana faktyczna vs prognoza](ostrowskie/zmiana_fakt_vs_prognoza.png)
 
-![Błąd miesięczny](figures_ostrowskie/blad_miesieczny.png)
+![Błąd miesięczny](ostrowskie/blad_miesieczny.png)
 
-![Odbudowa](figures_odbudowa/odbudowa_ostrowskie.png)
+![Odbudowa](odbudowa/odbudowa_ostrowskie.png)
 
 ### Jezioro Powidzkie
 
-![Wysokość rzeczywista vs model](figures_powidzkie/wysokosc_rzeczywista_vs_model.png)
+![Wysokość rzeczywista vs model](powidzkie/wysokosc_rzeczywista_vs_model.png)
 
-![Rozbieżność w czasie](figures_powidzkie/rozbieznosc_w_czasie.png)
+![Rozbieżność w czasie](powidzkie/rozbieznosc_w_czasie.png)
 
-![Zmiana faktyczna vs prognoza](figures_powidzkie/zmiana_fakt_vs_prognoza.png)
+![Zmiana faktyczna vs prognoza](powidzkie/zmiana_fakt_vs_prognoza.png)
 
-![Błąd miesięczny](figures_powidzkie/blad_miesieczny.png)
+![Błąd miesięczny](powidzkie/blad_miesieczny.png)
 
-![Odbudowa](figures_odbudowa/odbudowa_powidzkie.png)
+![Odbudowa](odbudowa/odbudowa_powidzkie.png)
 
 ### Jezioro Skulska Wieś
 
-![Wysokość rzeczywista vs model](figures_skulskawies/wysokosc_rzeczywista_vs_model.png)
+![Wysokość rzeczywista vs model](skulskawies/wysokosc_rzeczywista_vs_model.png)
 
-![Rozbieżność w czasie](figures_skulskawies/rozbieznosc_w_czasie.png)
+![Rozbieżność w czasie](skulskawies/rozbieznosc_w_czasie.png)
 
-![Zmiana faktyczna vs prognoza](figures_skulskawies/zmiana_fakt_vs_prognoza.png)
+![Zmiana faktyczna vs prognoza](skulskawies/zmiana_fakt_vs_prognoza.png)
 
-![Błąd miesięczny](figures_skulskawies/blad_miesieczny.png)
+![Błąd miesięczny](skulskawies/blad_miesieczny.png)
 
-![Odbudowa](figures_odbudowa/odbudowa_skulskawies.png)
+![Odbudowa](odbudowa/odbudowa_skulskawies.png)
 
 ### Jezioro Suszewskie
 
-![Wysokość rzeczywista vs model](figures_suszewskie/wysokosc_rzeczywista_vs_model.png)
+![Wysokość rzeczywista vs model](suszewskie/wysokosc_rzeczywista_vs_model.png)
 
-![Rozbieżność w czasie](figures_suszewskie/rozbieznosc_w_czasie.png)
+![Rozbieżność w czasie](suszewskie/rozbieznosc_w_czasie.png)
 
-![Zmiana faktyczna vs prognoza](figures_suszewskie/zmiana_fakt_vs_prognoza.png)
+![Zmiana faktyczna vs prognoza](suszewskie/zmiana_fakt_vs_prognoza.png)
 
-![Błąd miesięczny](figures_suszewskie/blad_miesieczny.png)
+![Błąd miesięczny](suszewskie/blad_miesieczny.png)
 
-![Odbudowa](figures_odbudowa/odbudowa_suszewskie.png)
+![Odbudowa](odbudowa/odbudowa_suszewskie.png)
 
 ### Jezioro Wilczyńskie
 
-![Wysokość rzeczywista vs model](figures_wilczynskie/wysokosc_rzeczywista_vs_model.png)
+![Wysokość rzeczywista vs model](wilczynskie/wysokosc_rzeczywista_vs_model.png)
 
-![Rozbieżność w czasie](figures_wilczynskie/rozbieznosc_w_czasie.png)
+![Rozbieżność w czasie](wilczynskie/rozbieznosc_w_czasie.png)
 
-![Zmiana faktyczna vs prognoza](figures_wilczynskie/zmiana_fakt_vs_prognoza.png)
+![Zmiana faktyczna vs prognoza](wilczynskie/zmiana_fakt_vs_prognoza.png)
 
-![Błąd miesięczny](figures_wilczynskie/blad_miesieczny.png)
+![Błąd miesięczny](wilczynskie/blad_miesieczny.png)
 
-![Odbudowa](figures_odbudowa/odbudowa_wilczynskie.png)
+![Odbudowa](odbudowa/odbudowa_wilczynskie.png)
 
 ---
 
