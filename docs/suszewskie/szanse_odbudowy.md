@@ -21,4 +21,4 @@ W zależności od warunków pogodowych w nadchodzącym roku prognozowana zmiana 
 
 Szacunki długoterminowej odbudowy (lata do zamknięcia luki po ewentualnym zaniku drenażu) – patrz [Zanik drenażu](#docs-suszewskie-zanik-drenazu).
 
-*Wygenerowano: 2026-02-15 21:15*
+*Wygenerowano: 2026-02-15 22:11*

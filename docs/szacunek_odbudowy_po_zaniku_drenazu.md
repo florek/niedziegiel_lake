@@ -7,7 +7,7 @@
 - **Scenariusz A (symmetric):** odbudowa z prędkością równą obserwowanemu tempu narastania rozjazdu (trend liniowy rozbieżności w czasie).
 - **Scenariusz B (stałe tempo):** odbudowa z prędkością **5.0 cm/rok**.
 - Wartości oparte na średniej rozbieżności z **ostatnich 12 miesięcy** i trendzie z pełnego szeregu ewaluacji. **Szacunek teoretyczny**, bez modelowania hydrologicznego odbudowy.
-- **Projekcja odbudowy:** scenariusz modelowy przy **średnich warunkach z ostatnich 5 lat (sezonowość)**. Do 2/2026 poziom rzeczywisty – **trend z ostatnich 5 lat** rzeczywistych pomiarów; od 2/2026 **wznios wód gruntowych** (cm/rok z CSV lub 5 cm/rok). Wykres do momentu zrównania z modelem (koniec odbudowy).
+- **Projekcja odbudowy:** scenariusz modelowy przy **meteo z ostatnich 15 lat** (sekwencja miesięczna, bez harmonijki). Do 2/2026 poziom rzeczywisty – **trend z ostatnich 5 lat**; od 2/2026 **wznios wód gruntowych** (cm/rok z CSV lub 5 cm/rok). Wykres: tylko odbudowa do scenariusza naturalnego (bez scenariusza drenażowego).
 
 ---
 
@@ -98,7 +98,7 @@ Dwa wzniosy dla porównania (źródło: `data/zanik_drenazu.csv`): wznios bazowy
 
 ## Wykresy projekcji odbudowy
 
-Dla każdego jeziora dwa warianty odbudowy do porównania: **odbudowa do scenariusza modelu drenażowego** oraz **odbudowa do scenariusza modelu naturalnego** (sprzed drenażu). Średnia 5 lat meteo (sezonowość); projekcja do 2070 lub do zrównania z modelem.
+Dla każdego jeziora: **odbudowa do scenariusza naturalnego** (meteo z ostatnich 15 lat, wznios wód gruntowych). Wykres bez scenariusza drenażowego – kontekst to odbudowa po zaniku drenażu.
 
 ### Jezioro Budzisławskie
 

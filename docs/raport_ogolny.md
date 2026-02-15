@@ -30,4 +30,4 @@ Podsumowanie ewaluacji modeli dla wszystkich jezior. Metryki (MAE, RMSE) i okres
 - **Jezioro Suszewskie:** [raport z wykresami](suszewskie/raport_podsumowujacy.md), [podsumowanie ewaluacji](suszewskie/podsumowanie_ewaluacji.md)
 - **Jezioro Wilczyńskie:** [raport z wykresami](wilczynskie/raport_podsumowujacy.md), [podsumowanie ewaluacji](wilczynskie/podsumowanie_ewaluacji.md)
 
-*Wygenerowano: 2026-02-15 15:38*
+*Wygenerowano: 2026-02-15 22:27*

@@ -175,4 +175,4 @@ W niektórych miesiącach **model naturalny** może dawać prognozę gorszą (np
 
 
 
-*Wygenerowano: 2026-02-15 21:15*
+*Wygenerowano: 2026-02-15 22:27*
