@@ -400,15 +400,18 @@ def _write_report(
                 lines.append(f"| {v['nazwa']} | {v['szansa_pct']} |")
         rok_kon, mies_kon = data_koniec_prognozy
         rok_ref, mies_ref = data_referencyjna
-        poziom_wazony = sum(v["poziom_koniec"] * (v["szansa_pct"] / 100.0) for v in warianty if v.get("szansa_pct") is not None)
         level_ref = level_na_data_referencyjna if level_na_data_referencyjna is not None else warianty[0]["level_start"]
+        if wariant_najbardziej_prawdopodobny:
+            poziom_wazony = wariant_najbardziej_prawdopodobny["poziom_koniec"]
+        else:
+            poziom_wazony = sum(v["poziom_koniec"] * (v["szansa_pct"] / 100.0) for v in warianty if v.get("szansa_pct") is not None)
         roznica = poziom_wazony - level_ref
         roznica_txt = f"przybędzie {_format_zmiana_m_cm(roznica)}" if roznica >= 0 else f"ubędzie {-roznica:.3f} m ({roznica * 100:+.1f} cm)"
         txt_koniec = _format_koniec_miesiaca(rok_kon, mies_kon)
         txt_ref = _format_koniec_miesiaca(rok_ref, mies_ref)
         lines.extend([
             "",
-            f"**Najbardziej prawdopodobny poziom na koniec {txt_koniec}** (średnia ważona według szans realizacji wszystkich wariantów): **{round(poziom_wazony, 3)} m n.p.m.** W stosunku do stanu na koniec {txt_ref} ({level_ref} m n.p.m.): {roznica_txt}.",
+            f"**Najbardziej prawdopodobny poziom na koniec {txt_koniec}** (średnia ważona zmian miesięcznych według szans realizacji wszystkich wariantów): **{round(poziom_wazony, 3)} m n.p.m.** W stosunku do stanu na koniec {txt_ref} ({level_ref} m n.p.m.): {roznica_txt}.",
             "",
             "",
         ])
@@ -433,7 +436,7 @@ def _write_report(
                 f"- **Średnia temperatura roczna (prognoza):** {round(v['srednia_temp_roczna'], 1)} °C",
                 f"- **Suma opadu (prognoza):** {round(v['suma_opadu'], 1)} mm",
                 f"- **Różnica poziomu wody** (koniec symulacji − start): {_format_zmiana_m_cm(v['roznica_poziomu'])}",
-                f"- **Poziom na koniec {_format_koniec_miesiaca(*data_koniec_prognozy)}:** {v['poziom_koniec']} m n.p.m.",
+                f"- **Poziom na koniec {_format_koniec_miesiaca(*data_koniec_prognozy)}:** {round(v['poziom_koniec'], 3)} m n.p.m.",
                 "",
             ])
         lines.append("")
@@ -444,32 +447,32 @@ def _write_report(
 
 def _wariant_najbardziej_prawdopodobny(
     warianty: list[dict],
-    level_na_data_ref: float,
+    level_start_symulacji: float,
+    level_ref_do_porownania: float,
 ) -> dict:
-    level_prev = level_na_data_ref
+    poziom_akt = level_start_symulacji
     wyniki = []
     for i in range(12):
-        poziom_i = sum(v["wyniki"][i]["poziom"] * (v["szansa_pct"] / 100.0) for v in warianty)
+        zmiana_i = sum(v["wyniki"][i]["zmiana_prognoza"] * (v["szansa_pct"] / 100.0) for v in warianty)
         opad_i = sum(v["wyniki"][i]["opad"] * (v["szansa_pct"] / 100.0) for v in warianty)
         temp_i = sum(v["wyniki"][i]["temperatura"] * (v["szansa_pct"] / 100.0) for v in warianty)
-        zmiana_i = poziom_i - level_prev
-        level_prev = poziom_i
+        poziom_akt = poziom_akt + zmiana_i
         wyniki.append({
             "data": warianty[0]["wyniki"][i]["data"],
             "opad": opad_i,
             "temperatura": temp_i,
             "zmiana_prognoza": round(zmiana_i, 4),
-            "poziom": round(poziom_i, 3),
+            "poziom": round(poziom_akt, 3),
         })
-    poziom_koniec = wyniki[-1]["poziom"]
+    poziom_koniec = round(poziom_akt, 3)
     return {
         "nazwa": "najbardziej prawdopodobny",
         "wyniki": wyniki,
         "poziom_koniec": poziom_koniec,
-        "level_start": level_na_data_ref,
+        "level_start": level_ref_do_porownania,
         "srednia_temp_roczna": sum(r["temperatura"] for r in wyniki) / 12,
         "suma_opadu": sum(r["opad"] for r in wyniki),
-        "roznica_poziomu": poziom_koniec - level_na_data_ref,
+        "roznica_poziomu": poziom_koniec - level_ref_do_porownania,
         "szansa_pct": None,
         "czy_srednia_wazona": True,
     }
@@ -498,7 +501,11 @@ def main() -> None:
     if warianty:
         _dodaj_szanse_realizacji(df, warianty)
         level_na_data_ref_plot = level_na_data_ref if level_na_data_ref is not None else warianty[0]["level_start"]
-        wariant_np = _wariant_najbardziej_prawdopodobny(warianty, level_na_data_ref_plot)
+        wariant_np = _wariant_najbardziej_prawdopodobny(
+            warianty,
+            level_start_symulacji=warianty[0]["level_start"],
+            level_ref_do_porownania=level_na_data_ref if level_na_data_ref is not None else warianty[0]["level_start"],
+        )
         for v in [wariant_np] + warianty:
             path_wariant = FIGURES_DIR / f"symulacja_wariant_{_variant_to_filename(v['nazwa'])}.png"
             _plot_wariant_symulacja(
