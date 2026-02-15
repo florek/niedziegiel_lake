@@ -9,12 +9,12 @@ Projekt zawiera modele uczenia maszynowego do **prognozowania miesięcznej zmian
 
 ## Struktura projektu
 
-- **sources/** – kod Pythona (lake.py, evaluate_predictions.py, generate_report.py, merge_*.py itd.).
+- **sources/** – kod Pythona (lake.py, evaluate_predictions.py, generate_report.py, generate_report_12mies.py, poziom_do_stycznia_2026.py, merge_*.py itd.).
 - **data/** – dane per jezioro w podkatalogach:
   - **data/{id}/** – np. `data/niedziegiel/`: pliki `data.csv`, `model.pkl`, opcjonalnie `opad.txt`, `temp.txt`, `realny_pomiar.csv`.
   - **data/meteo.csv**, **data/zanik_drenazu.csv** – pliki współdzielone.
 - **docs/** – raporty i wykresy per jezioro:
-  - **docs/{id}/** – np. `docs/niedziegiel/`: raporty (raport.md, raport_podsumowujacy.md, podsumowanie_ewaluacji.md), wykresy PNG.
+  - **docs/{id}/** – np. `docs/niedziegiel/`: raporty (raport.md z ewaluacją 12 mies., raport_podsumowujacy.md, podsumowanie_ewaluacji.md), wykresy PNG (poziom_rzeczywisty.png, symulacja_wariant_*.png).
   - **docs/odbudowa/** – wykresy projekcji odbudowy.
   - **docs/raport_ogolny.md**, **docs/szacunek_odbudowy_po_zaniku_drenazu.md** – raporty zbiorcze.
 
@@ -86,6 +86,7 @@ Raporty i wykresy powstają po uruchomieniu skryptów z sekcji „Szybki start�
 |------|------|
 | **Raport ogólny** – tabela zbiorcza dla wszystkich jezior z modelami | [docs/raport_ogolny.md](docs/raport_ogolny.md) |
 | **Dokumentacja modelu** – opis modelu i API | [docs/model.md](docs/model.md) |
+| **Raport ewaluacji 12 mies.** – poziom vs model, 9 wariantów pogodowych (każde jezioro: `docs/{id}/raport.md`) | [docs/niedziegiel/raport.md](docs/niedziegiel/raport.md) |
 | **Szacunek odbudowy** – lat do odbudowy poziomu po zaniku dodatkowego drenażu (zbiorczo) | [docs/szacunek_odbudowy_po_zaniku_drenazu.md](docs/szacunek_odbudowy_po_zaniku_drenazu.md) |
 | **Budzisławskie** – raport z wykresami | [docs/budzislawskie/raport_podsumowujacy.md](docs/budzislawskie/raport_podsumowujacy.md) |
 | **Budzisławskie** – podsumowanie ewaluacji | [docs/budzislawskie/podsumowanie_ewaluacji.md](docs/budzislawskie/podsumowanie_ewaluacji.md) |
