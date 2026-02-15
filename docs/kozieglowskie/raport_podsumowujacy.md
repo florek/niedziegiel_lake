@@ -24,7 +24,7 @@ Projekt ma na celu:
 |--------|------|
 | Algorytm | Gradient Boosting (regresja), scikit-learn |
 | Cechy wejściowe | Miesiąc (sin/cos), Opad, Temperatura, 3 opóźnienia zmiany poziomu, 3 opóźnienia poziomu |
-| Trening | Podział czasowy: trening do 2003-02, test od 2003-03 do 2023 |
+| Trening | Podział czasowy: trening do 2002-02, test od 2002-03 do 2003 |
 | Wynik | Prognoza zmiany poziomu na dany miesiąc (cm) |
 
 Model **nie** używa bieżącego poziomu – tylko opad, temperatura, sezon i historia.
@@ -33,8 +33,8 @@ Model **nie** używa bieżącego poziomu – tylko opad, temperatura, sezon i hi
 
 ## 4. Wyniki ewaluacji
 
-- **MAE (średni błąd bezwzględny):** 2.73 cm
-- **RMSE:** 3.56 cm
+- **MAE (średni błąd bezwzględny):** 2.99 cm
+- **RMSE:** 3.68 cm
 - **Liczba miesięcy:** 360
 
 ### 4.1. Wysokość wody: rzeczywista vs scenariusz modelowy
@@ -65,9 +65,9 @@ Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.
 
 ## 5. Podsumowanie
 
-- Model prognozuje miesięczną zmianę poziomu Jezioro Koziegłowskie z MAE ~2.73 cm.
+- Model prognozuje miesięczną zmianę poziomu Jezioro Koziegłowskie z MAE ~2.99 cm.
 - Scenariusz kumulatywny (wysokość z prognozowanej zmiany) jest porównywany z rzeczywistą wysokością; rozbieżność i błąd miesięczny opisują jakość prognoz.
 
 Szczegóły techniczne: [model.md](../model.md), [podsumowanie_ewaluacji.md](podsumowanie_ewaluacji.md).
 
-*Wygenerowano: 2026-02-15 12:16*
+*Wygenerowano: 2026-02-15 13:45*

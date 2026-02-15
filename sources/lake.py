@@ -30,7 +30,7 @@ LAKES = {
 MAX_POZIOM_SPIETRZANIA_BY_LAKE = {
     "budzislawskie": 99.02,
     "kozieglowskie": 101.91,
-    "kownackie": 97.50,
+    "kownackie": 98.48,
     "niedziegiel": 103.80,
     "ostrowskie": 98.66,
     "powidzkie": 98.79,
@@ -85,7 +85,9 @@ def get_data_path(lake_id: str) -> Path:
     return DATA_DIR / lake_id / "data.csv"
 
 
-def get_model_path(lake_id: str) -> Path:
+def get_model_path(lake_id: str, variant: str | None = None) -> Path:
+    if variant == "natural":
+        return DATA_DIR / lake_id / "model_natural.pkl"
     return DATA_DIR / lake_id / "model.pkl"
 
 COL_DATA = "Data"
@@ -184,9 +186,12 @@ def train_test_split_temporal(
     return df.iloc[:split_idx], df.iloc[split_idx:] if split_idx < len(df) else df.iloc[:0]
 
 
-TRAIN_END_YEAR_BY_LAKE = {"budzislawskie": 2003, "kozieglowskie": 2003, "kownackie": 2003, "niedziegiel": 2013, "ostrowskie": 2003, "powidzkie": 2013, "skulskawies": 2015, "suszewskie": 2003, "wilczynskie": 2003}
-TRAIN_END_MONTH_BY_LAKE = {"budzislawskie": 2, "kozieglowskie": 2, "kownackie": 2, "niedziegiel": None, "ostrowskie": 2, "powidzkie": None, "skulskawies": None, "suszewskie": 2, "wilczynskie": 2}
-TEST_END_YEAR_BY_LAKE = {"budzislawskie": 2023, "kozieglowskie": 2023, "kownackie": 2023, "niedziegiel": 2023, "ostrowskie": 2023, "powidzkie": 2023, "skulskawies": 2023, "suszewskie": 2023, "wilczynskie": 2023}
+TRAIN_END_YEAR_BY_LAKE = {"budzislawskie": 2010, "kozieglowskie": 2002, "kownackie": 2012, "niedziegiel": 2012, "ostrowskie": 2012, "powidzkie": 2014, "skulskawies": 2011, "suszewskie": 2012, "wilczynskie": 2015}
+TRAIN_END_MONTH_BY_LAKE = {"budzislawskie": 2, "kozieglowskie": 2, "kownackie": 2, "niedziegiel": 2, "ostrowskie": 2, "powidzkie": 2, "skulskawies": 2, "suszewskie": 2, "wilczynskie": 2}
+TRAIN_END_NATURAL_YEAR_BY_LAKE = {"budzislawskie": 2002, "kozieglowskie": 2002, "kownackie": 2002, "niedziegiel": 2018, "ostrowskie": 2003, "powidzkie": 2017, "skulskawies": 2011, "suszewskie": 2002, "wilczynskie": 2002}
+TRAIN_END_NATURAL_MONTH_BY_LAKE = {"budzislawskie": 12, "kozieglowskie": 12, "kownackie": 12, "niedziegiel": 12, "ostrowskie": 12, "powidzkie": 12, "skulskawies": 12, "suszewskie": 12, "wilczynskie": 12}
+ROK_ZMIANY_REZIMU_BY_LAKE = {"budzislawskie": 2003, "kozieglowskie": 2003, "kownackie": 2003, "niedziegiel": 2019, "ostrowskie": 2004, "powidzkie": 2018, "skulskawies": 2012, "suszewskie": 2003, "wilczynskie": 2003}
+TEST_END_YEAR_BY_LAKE = {"budzislawskie": 2023, "kozieglowskie": 2003, "kownackie": 2023, "niedziegiel": 2023, "ostrowskie": 2023, "powidzkie": 2023, "skulskawies": 2012, "suszewskie": 2023, "wilczynskie": 2023}
 
 
 def _get_candidate_models():
@@ -264,7 +269,13 @@ def _get_candidate_models():
     ]
 
 
-def train_model(df=None, path=None, lake_id=None):
+def train_model(
+    df=None,
+    path=None,
+    lake_id=None,
+    train_end_year_override: int | None = None,
+    train_end_month_override: int | None = None,
+):
     if path is None:
         path = get_data_path("niedziegiel")
     if lake_id is None:
@@ -276,8 +287,8 @@ def train_model(df=None, path=None, lake_id=None):
     if df is None:
         df = load_data(path)
     lag_months = LAG_MONTHS_BY_LAKE.get(lake_id, LAG_MONTHS)
-    train_end_year = TRAIN_END_YEAR_BY_LAKE.get(lake_id)
-    train_end_month = TRAIN_END_MONTH_BY_LAKE.get(lake_id)
+    train_end_year = train_end_year_override if train_end_year_override is not None else TRAIN_END_YEAR_BY_LAKE.get(lake_id)
+    train_end_month = train_end_month_override if train_end_month_override is not None else TRAIN_END_MONTH_BY_LAKE.get(lake_id)
     test_end_year = TEST_END_YEAR_BY_LAKE.get(lake_id)
     meteo_candidates = METEO_LAG_CANDIDATES_BY_LAKE.get(lake_id, [0])
     best_mae_global = np.inf
@@ -438,9 +449,16 @@ def load_model(path=None):
     return data["model"], data["feature_cols"], lag_months, meteo_lag_months
 
 
-def run_training_and_save(lake_id: str = "niedziegiel"):
+def run_training_and_save(lake_id: str = "niedziegiel", variant: str | None = None):
     data_path = get_data_path(lake_id)
-    model_path = get_model_path(lake_id)
+    if variant == "natural":
+        model_path = get_model_path(lake_id, variant="natural")
+        train_end_year = TRAIN_END_NATURAL_YEAR_BY_LAKE.get(lake_id)
+        train_end_month = TRAIN_END_NATURAL_MONTH_BY_LAKE.get(lake_id)
+    else:
+        model_path = get_model_path(lake_id)
+        train_end_year = None
+        train_end_month = None
     if not data_path.exists():
         raise FileNotFoundError(f"Brak pliku danych: {data_path}")
     df = load_data(data_path)
@@ -448,6 +466,8 @@ def run_training_and_save(lake_id: str = "niedziegiel"):
         df=df,
         path=data_path,
         lake_id=lake_id,
+        train_end_year_override=train_end_year,
+        train_end_month_override=train_end_month,
     )
     save_model(
         model,
@@ -459,8 +479,9 @@ def run_training_and_save(lake_id: str = "niedziegiel"):
     name = LAKES.get(lake_id, lake_id)
     best = metrics.get("best_model", "—")
     meteo_lag = metrics.get("meteo_lag_months", meteo_lag_months)
+    suf = " (naturalny)" if variant == "natural" else ""
     print(
-        f"Model wytrenowany ({name}). Wybór: {best}. Opóźnienie meteo: {meteo_lag} mies. "
+        f"Model wytrenowany ({name}){suf}. Wybór: {best}. Opóźnienie meteo: {meteo_lag} mies. "
         f"Test MAE: {metrics.get('test_mae', 'N/A'):.4f}, RMSE: {metrics.get('test_rmse', 'N/A'):.4f}"
     )
     return model, feature_cols
@@ -468,7 +489,8 @@ def run_training_and_save(lake_id: str = "niedziegiel"):
 
 if __name__ == "__main__":
     lake_id = sys.argv[1] if len(sys.argv) > 1 else "niedziegiel"
+    variant = "natural" if len(sys.argv) > 2 and sys.argv[2].lower() == "natural" else None
     if lake_id not in LAKES:
         print(f"Dostępne jeziora: {', '.join(LAKES)}")
         sys.exit(1)
-    run_training_and_save(lake_id)
+    run_training_and_save(lake_id, variant=variant)

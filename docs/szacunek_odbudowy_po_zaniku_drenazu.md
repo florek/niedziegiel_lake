@@ -33,66 +33,66 @@ Dwa wzniosy dla porównania (źródło: `data/zanik_drenazu.csv`): wznios bazowy
 
 ### Jezioro Budzisławskie
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -200.2 cm
-- **Trend rozbieżności:** -6.86 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 29.2 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 40.0 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** -82.7 cm
+- **Trend rozbieżności:** -2.63 cm/rok
+- **Szacunek odbudowy (scenariusz A, symmetric):** 31.5 lat
+- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 16.5 lat
 
 ### Jezioro Koziegłowskie
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -73.9 cm
-- **Trend rozbieżności:** -4.20 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 17.6 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 14.8 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** -75.5 cm
+- **Trend rozbieżności:** -3.87 cm/rok
+- **Szacunek odbudowy (scenariusz A, symmetric):** 19.5 lat
+- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 15.1 lat
 
 ### Jezioro Kownackie
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -318.4 cm
-- **Trend rozbieżności:** -11.10 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 28.7 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 63.7 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** -224.7 cm
+- **Trend rozbieżności:** -7.23 cm/rok
+- **Szacunek odbudowy (scenariusz A, symmetric):** 31.1 lat
+- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 44.9 lat
 
 ### Jezioro Niedzięgiel
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -96.7 cm
-- **Trend rozbieżności:** -1.17 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 82.6 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 19.3 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** -81.8 cm
+- **Trend rozbieżności:** -0.82 cm/rok
+- **Szacunek odbudowy (scenariusz A, symmetric):** 99.4 lat
+- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 16.4 lat
 
 ### Jezioro Ostrowskie
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -342.1 cm
-- **Trend rozbieżności:** -11.34 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 30.2 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 68.4 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** -114.3 cm
+- **Trend rozbieżności:** -4.04 cm/rok
+- **Szacunek odbudowy (scenariusz A, symmetric):** 28.3 lat
+- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 22.9 lat
 
 ### Jezioro Powidzkie
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -32.0 cm
-- **Trend rozbieżności:** -0.74 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 43.3 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 6.4 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** -48.1 cm
+- **Trend rozbieżności:** -1.07 cm/rok
+- **Szacunek odbudowy (scenariusz A, symmetric):** 44.9 lat
+- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 9.6 lat
 
 ### Jezioro Skulska Wieś
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** 2.1 cm
-- **Trend rozbieżności:** 0.55 cm/rok
-- **Szacunek odbudowy (scenariusz A):** —
-- **Szacunek odbudowy (scenariusz B):** —
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** -18.5 cm
+- **Trend rozbieżności:** -0.35 cm/rok
+- **Szacunek odbudowy (scenariusz A, symmetric):** 53.2 lat
+- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 3.7 lat
 
 ### Jezioro Suszewskie
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -442.6 cm
-- **Trend rozbieżności:** -15.93 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 27.8 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 88.5 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** -274.2 cm
+- **Trend rozbieżności:** -9.25 cm/rok
+- **Szacunek odbudowy (scenariusz A, symmetric):** 29.7 lat
+- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 54.8 lat
 
 ### Jezioro Wilczyńskie
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -495.9 cm
-- **Trend rozbieżności:** -19.29 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 25.7 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 99.2 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 20.4 cm
+- **Trend rozbieżności:** -0.44 cm/rok
+- **Szacunek odbudowy (scenariusz A, symmetric):** 46.3 lat
+- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 4.1 lat
 
 ---
 

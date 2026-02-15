@@ -9,8 +9,8 @@ Projekt zawiera modele uczenia maszynowego do **prognozowania miesięcznej zmian
 
 ## Struktura projektu
 
-- **index.html** – strona dokumentacji z nawigacją drzewkową (README + wszystkie raporty z docs/).
-- **sources/** – kod Pythona (lake.py, evaluate_predictions.py, generate_report.py, generate_report_12mies.py, poziom_do_stycznia_2026.py, merge_*.py itd.).
+- **index.html** – statyczna strona dokumentacji (drzewko nawigacji + wbudowana treść z README i docs/). Generowana przez `sources/build_static_site.py`.
+- **sources/** – kod Pythona (lake.py, evaluate_predictions.py, generate_report.py, generate_report_12mies.py, poziom_do_stycznia_2026.py, scan_train_end.py, merge_*.py itd.).
 - **data/** – dane per jezioro w podkatalogach:
   - **data/{id}/** – np. `data/niedziegiel/`: pliki `data.csv`, `model.pkl`, opcjonalnie `opad.txt`, `temp.txt`, `realny_pomiar.csv`.
   - **data/meteo.csv**, **data/zanik_drenazu.csv** – pliki współdzielone.
@@ -38,7 +38,7 @@ Uruchamiaj skrypty z **katalogu głównego projektu** (gdzie są katalogi `data/
    python sources/lake.py suszewskie
    python sources/lake.py wilczynskie
    ```
-   Modele zapisują się w `data/{jezioro}/model.pkl`.
+   Modele zapisują się w `data/{jezioro}/model.pkl`. Model **naturalny** (trening do końca roku przed drenażem): `python sources/lake.py {jezioro} natural` → `data/{jezioro}/model_natural.pkl`. Na wykresach: pomiar + model po reżimie + model naturalny.
 3. Ewaluacja (jedno jezioro lub wszystkie):
    ```bash
    python sources/evaluate_predictions.py
@@ -82,13 +82,13 @@ Szczegóły modelu i API: [docs/model.md](docs/model.md).
 
 ## Strona dokumentacji (index.html)
 
-W katalogu głównym znajduje się plik **index.html** – strona z nawigacją drzewkową po lewej stronie, łącząca README i wszystkie raporty z `docs/` (model, raport ogólny, podsumowanie zbiorcze, szacunek odbudowy oraz per jezioro: prognoza, raport podsumowujący, podsumowanie ewaluacji, zanik drenażu). Markdown jest renderowany w przeglądarce, obrazy z raportów ładują się względem katalogu danego jeziora. Aby ładowanie plików działało (fetch), otwórz stronę przez serwer HTTP:
+W katalogu głównym znajduje się plik **index.html** – w pełni statyczna strona z nawigacją drzewkową po lewej: README i wszystkie raporty z `docs/` (model, raport ogólny, podsumowanie zbiorcze, szacunek odbudowy oraz per jezioro: prognoza, raport podsumowujący, podsumowanie ewaluacji, zanik drenażu) są wbudowane w jeden plik. Działa po otwarciu pliku w przeglądarce (np. `index.html`) lub przez serwer; obrazy ładują się względem katalogu projektu.
+
+Aby odświeżyć stronę po zmianie plików `.md` lub dodaniu raportów:
 
 ```bash
-python -m http.server 8000
+python sources/build_static_site.py
 ```
-
-Następnie wejdź na: [http://localhost:8000](http://localhost:8000) (w katalogu projektu musi być plik `index.html`).
 
 ## Wygenerowane raporty (linki)
 

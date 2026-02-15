@@ -8,15 +8,15 @@ Podsumowanie ewaluacji modeli dla wszystkich jezior. Metryki (MAE, RMSE) i okres
 
 | Jezioro | Okres testowy | Liczba miesięcy | MAE (cm) | RMSE (cm) | Raport szczegółowy |
 |---------|----------------|-----------------|----------|-----------|--------------------|
-| Jezioro Budzisławskie | 1993-02 – 2026-01 | 396 | 1.55 | 1.92 | [raport](budzislawskie/raport_podsumowujacy.md) |
-| Jezioro Koziegłowskie | 1996-02 – 2026-01 | 360 | 2.73 | 3.56 | [raport](kozieglowskie/raport_podsumowujacy.md) |
-| Jezioro Kownackie | 1993-02 – 2023-11 | 370 | 3.60 | 4.66 | [raport](kownackie/raport_podsumowujacy.md) |
-| Jezioro Niedzięgiel | 1976-06 – 2026-01 | 596 | 1.91 | 2.48 | [raport](niedziegiel/raport_podsumowujacy.md) |
-| Jezioro Ostrowskie | 1993-02 – 2026-01 | 396 | 2.61 | 3.79 | [raport](ostrowskie/raport_podsumowujacy.md) |
-| Jezioro Powidzkie | 1976-06 – 2026-01 | 596 | 1.75 | 2.22 | [raport](powidzkie/raport_podsumowujacy.md) |
-| Jezioro Skulska Wieś | 1993-02 – 2026-01 | 396 | 2.22 | 2.79 | [raport](skulskawies/raport_podsumowujacy.md) |
-| Jezioro Suszewskie | 1994-04 – 2026-01 | 382 | 7.31 | 9.73 | [raport](suszewskie/raport_podsumowujacy.md) |
-| Jezioro Wilczyńskie | 1993-02 – 2026-01 | 396 | 3.58 | 4.60 | [raport](wilczynskie/raport_podsumowujacy.md) |
+| Jezioro Budzisławskie | 1993-02 – 2026-01 | 396 | 1.18 | 1.53 | [raport](budzislawskie/raport_podsumowujacy.md) |
+| Jezioro Koziegłowskie | 1996-02 – 2026-01 | 360 | 2.52 | 3.17 | [raport](kozieglowskie/raport_podsumowujacy.md) |
+| Jezioro Kownackie | 1993-02 – 2026-01 | 396 | 2.64 | 3.66 | [raport](kownackie/raport_podsumowujacy.md) |
+| Jezioro Niedzięgiel | 1976-06 – 2026-01 | 596 | 1.88 | 2.45 | [raport](niedziegiel/raport_podsumowujacy.md) |
+| Jezioro Ostrowskie | 1993-02 – 2026-01 | 396 | 1.76 | 2.25 | [raport](ostrowskie/raport_podsumowujacy.md) |
+| Jezioro Powidzkie | 1976-06 – 2026-01 | 596 | 1.67 | 2.12 | [raport](powidzkie/raport_podsumowujacy.md) |
+| Jezioro Skulska Wieś | 1993-12 – 2026-01 | 386 | 2.14 | 2.79 | [raport](skulskawies/raport_podsumowujacy.md) |
+| Jezioro Suszewskie | 1994-02 – 2026-01 | 384 | 5.51 | 7.31 | [raport](suszewskie/raport_podsumowujacy.md) |
+| Jezioro Wilczyńskie | 1993-02 – 2026-01 | 396 | 2.30 | 2.98 | [raport](wilczynskie/raport_podsumowujacy.md) |
 
 ## Raporty per jezioro
 
@@ -30,4 +30,4 @@ Podsumowanie ewaluacji modeli dla wszystkich jezior. Metryki (MAE, RMSE) i okres
 - **Jezioro Suszewskie:** [raport z wykresami](suszewskie/raport_podsumowujacy.md), [podsumowanie ewaluacji](suszewskie/podsumowanie_ewaluacji.md)
 - **Jezioro Wilczyńskie:** [raport z wykresami](wilczynskie/raport_podsumowujacy.md), [podsumowanie ewaluacji](wilczynskie/podsumowanie_ewaluacji.md)
 
-*Wygenerowano: 2026-02-15 12:19*
+*Wygenerowano: 2026-02-15 13:06*

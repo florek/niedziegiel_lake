@@ -37,29 +37,19 @@ def _test_start_label(lake_id):
     return str(y + 1)
 
 
-def _plot_wysokosci(rows, figs_dir, lake_name):
+def _plot_wysokosci(rows, figs_dir, lake_name, lake_id, rows_natural=None):
     dates = [np.datetime64(r["data"] + "-01") for r in rows]
     rzeczywista = np.array([float(r["wysokosc_rzeczywista"]) for r in rows])
     model = np.array([float(r["wysokosc_model"]) for r in rows])
-    n = len(dates)
     fig, ax = plt.subplots(figsize=(12, 5))
     ax.plot(dates, rzeczywista, label="Wysokość rzeczywista", color="#1f77b4", linewidth=1.2)
-    ax.plot(dates, model, label="Wysokość scenariusz modelowy", color="#ff7f0e", linewidth=1.2, linestyle="--")
-    x = np.arange(n, dtype=float)
-    if n >= 2:
-        r_clean = rzeczywista.copy()
-        r_clean[~np.isfinite(r_clean)] = np.nanmean(rzeczywista) if np.any(np.isfinite(rzeczywista)) else 0.0
-        m_clean = model.copy()
-        m_clean[~np.isfinite(m_clean)] = np.nanmean(model) if np.any(np.isfinite(model)) else 0.0
-        coef_r = np.polyfit(x, r_clean, 1)
-        coef_m = np.polyfit(x, m_clean, 1)
-        trend_r = np.polyval(coef_r, x)
-        trend_m = np.polyval(coef_m, x)
-        ax.plot(dates, trend_r, label="Tendencja spadkowa (rzeczywista)", color="#1f77b4", linewidth=2, linestyle="-", alpha=0.85)
-        ax.plot(dates, trend_m, label="Tendencja spadkowa (model)", color="#ff7f0e", linewidth=2, linestyle="-", alpha=0.85)
+    if rows_natural:
+        dates_nat = [np.datetime64(r["data"] + "-01") for r in rows_natural]
+        natural = np.array([float(r["wysokosc_model"]) for r in rows_natural])
+        ax.plot(dates_nat, natural, label="Model naturalny (przed drenażem)", color="#2ca02c", linewidth=1.2, linestyle=":")
     ax.set_xlabel("Data")
     ax.set_ylabel("Wysokość (m)")
-    ax.set_title(f"{lake_name} – wysokość wody: rzeczywista vs scenariusz modelowy")
+    ax.set_title(f"{lake_name} – wysokość wody: rzeczywista vs scenariusze modelowe")
     ax.legend(loc="best")
     ax.xaxis.set_major_locator(mdates.YearLocator(2))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
@@ -126,10 +116,10 @@ def _plot_blad_miesieczny(rows, figs_dir):
     plt.close()
 
 
-def _write_report(rows, mae, rmse, n, lake_id, lake_name):
+def _write_report(rows, mae, rmse, n, lake_id, lake_name, rows_natural=None):
     figs_dir = _figs_dir(lake_id)
     figs_dir.mkdir(parents=True, exist_ok=True)
-    _plot_wysokosci(rows, figs_dir, lake_name)
+    _plot_wysokosci(rows, figs_dir, lake_name, lake_id, rows_natural=rows_natural)
     _plot_rozbieznosc(rows, figs_dir)
     _plot_zmiana_fakt_vs_prognoza(rows, figs_dir)
     _plot_blad_miesieczny(rows, figs_dir)
@@ -238,8 +228,16 @@ def run(lake_id="niedziegiel"):
     mae, rmse, rows = run_evaluation(lake_id=lake_id)
     if rows is None or len(rows) == 0:
         raise ValueError("Brak danych do raportu.")
+    rows_natural = None
+    natural_path = lake.get_model_path(lake_id, "natural")
+    if natural_path.exists():
+        _, _, rows_natural = run_evaluation(
+            lake_id=lake_id,
+            model_path=natural_path,
+            output_path=_figs_dir(lake_id) / "podsumowanie_ewaluacji_natural.md",
+        )
     lake_name = lake.LAKES.get(lake_id, lake_id)
-    _write_report(rows, mae, rmse, len(rows), lake_id, lake_name)
+    _write_report(rows, mae, rmse, len(rows), lake_id, lake_name, rows_natural=rows_natural)
 
 
 if __name__ == "__main__":

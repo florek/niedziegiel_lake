@@ -322,6 +322,8 @@ def _plot_poziom_rzeczywisty_i_model(
     eval_rows: list | None,
     out_path: Path,
     nazwa_jeziora: str,
+    lake_id: str,
+    eval_rows_natural: list | None = None,
 ) -> None:
     df = df.dropna(subset=[lake.COL_POZIOM])
     if df.empty:
@@ -330,13 +332,13 @@ def _plot_poziom_rzeczywisty_i_model(
     poziom = df[lake.COL_POZIOM].astype(float)
     fig, ax = plt.subplots(figsize=(12, 5))
     ax.plot(dates, poziom, color="#1f77b4", linewidth=1.2, label="Poziom wody (rzeczywisty pomiar)")
-    if eval_rows:
-        dates_model = pd.to_datetime([r["data"] + "-01" for r in eval_rows])
-        model_level = [float(r["wysokosc_model"]) for r in eval_rows]
-        ax.plot(dates_model, model_level, color="#ff7f0e", linewidth=1.2, linestyle="--", label="Wahania według modelu")
+    if eval_rows_natural:
+        dates_nat = pd.to_datetime([r["data"] + "-01" for r in eval_rows_natural])
+        natural_level = [float(r["wysokosc_model"]) for r in eval_rows_natural]
+        ax.plot(dates_nat, natural_level, color="#2ca02c", linewidth=1.2, linestyle=":", label="Model naturalny (przed drenażem)")
     ax.set_xlabel("Data")
     ax.set_ylabel("Wysokość (m n.p.m.)")
-    ax.set_title(f"{nazwa_jeziora} – poziom wody: rzeczywisty pomiar i scenariusz modelowy")
+    ax.set_title(f"{nazwa_jeziora} – poziom wody: rzeczywisty pomiar i scenariusze modelowe")
     ax.legend(loc="best")
     ax.xaxis.set_major_locator(mdates.YearLocator(2))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
@@ -379,7 +381,7 @@ def _write_report(
         "",
         "## Poziom wody: rzeczywisty pomiar i model",
         "",
-        f"Niebieska linia: poziom z pliku `data/{lake_id}/data.csv` (pomiar na pierwszy dzień miesiąca). Przerywana pomarańczowa: wahania poziomu według modelu (scenariusz kumulatywny z prognozy zmiany miesięcznej).",
+        f"Niebieska: poziom z `data/{lake_id}/data.csv`. Pomarańczowa przerywana: model po zmianie reżimu (trening do daty optymalnej po drenażu). Zielona kropkowana: model naturalny (trening do końca roku przed pojawieniem się drenażu).",
         "",
         f"![Poziom wody – pomiar i model]({fig_filename})",
         "",
@@ -494,12 +496,22 @@ def run_report_for_lake(lake_id: str) -> None:
     eval_rows = None
     if lake.get_model_path(lake_id).exists():
         _, _, eval_rows = run_evaluation(lake_id=lake_id)
+    eval_rows_natural = None
+    natural_path = lake.get_model_path(lake_id, "natural")
+    if natural_path.exists():
+        _, _, eval_rows_natural = run_evaluation(
+            lake_id=lake_id,
+            model_path=natural_path,
+            output_path=figures_dir / "podsumowanie_ewaluacji_natural.md",
+        )
     fig_path = figures_dir / "poziom_rzeczywisty.png"
     _plot_poziom_rzeczywisty_i_model(
         df,
         eval_rows,
         fig_path,
         nazwa_jeziora=nazwa_jeziora,
+        lake_id=lake_id,
+        eval_rows_natural=eval_rows_natural,
     )
     print(f"Wykres zapisany: {fig_path}")
     warianty = _symulacje_warianty(df, lake_id)
