@@ -10,7 +10,7 @@ Projekt ma na celu:
 
 ## 2. Dane
 
-- **Źródło:** plik `data/wilczynskie_data.csv`.
+- **Źródło:** plik `data/wilczynskie/data.csv`.
 - **Zakres:** dane miesięczne (pierwszy dzień miesiąca).
 - **Kolumny:** Data, Poziom (m), Zmiana (m), Opad (mm), Temperatura (°C).
 - **Target:** Zmiana – miesięczna zmiana poziomu.
@@ -41,25 +41,25 @@ Model **nie** używa bieżącego poziomu – tylko opad, temperatura, sezon i hi
 
 Scenariusz modelowy: start od poziomu na początek pierwszego miesiąca; w każdym miesiącu dodawana jest **prognozowana** zmiana (kumulatywnie).
 
-![Wysokość rzeczywista vs model](figures_wilczynskie/wysokosc_rzeczywista_vs_model.png)
+![Wysokość rzeczywista vs model](wysokosc_rzeczywista_vs_model.png)
 
 ### 4.2. Rozbieżność w czasie
 
 Rozbieżność = wysokość rzeczywista − wysokość w scenariuszu modelowym. Wartość dodatnia: jezioro wyżej niż przewidywał model; ujemna: niżej.
 
-![Rozbieżność w czasie](figures_wilczynskie/rozbieznosc_w_czasie.png)
+![Rozbieżność w czasie](rozbieznosc_w_czasie.png)
 
 ### 4.3. Zmiana poziomu: faktyczna vs prognoza
 
 Punkty przy linii y = x oznaczają dobrą zgodność miesięcznych zmian.
 
-![Zmiana faktyczna vs prognoza](figures_wilczynskie/zmiana_fakt_vs_prognoza.png)
+![Zmiana faktyczna vs prognoza](zmiana_fakt_vs_prognoza.png)
 
 ### 4.4. Błąd miesięczny
 
 Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.
 
-![Błąd miesięczny](figures_wilczynskie/blad_miesieczny.png)
+![Błąd miesięczny](blad_miesieczny.png)
 
 ---
 
@@ -68,4 +68,4 @@ Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.
 - Model prognozuje miesięczną zmianę poziomu Jezioro Wilczyńskie z MAE ~3.59 cm.
 - Scenariusz kumulatywny (wysokość z prognozowanej zmiany) jest porównywany z rzeczywistą wysokością; rozbieżność i błąd miesięczny opisują jakość prognoz.
 
-Szczegóły techniczne: [model.md](model.md), [podsumowanie_ewaluacji_wilczynskie.md](podsumowanie_ewaluacji_wilczynskie.md).
+Szczegóły techniczne: [model.md](../model.md), [podsumowanie_ewaluacji.md](podsumowanie_ewaluacji.md).

@@ -13,4 +13,4 @@
 
 ## Wykres projekcji odbudowy
 
-![Odbudowa](figures_odbudowa/odbudowa_wilczynskie.png)
+![Odbudowa](../odbudowa/odbudowa_wilczynskie.png)

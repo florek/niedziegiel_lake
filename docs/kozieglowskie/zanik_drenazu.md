@@ -13,4 +13,4 @@
 
 ## Wykres projekcji odbudowy
 
-![Odbudowa](figures_odbudowa/odbudowa_kozieglowskie.png)
+![Odbudowa](../odbudowa/odbudowa_kozieglowskie.png)

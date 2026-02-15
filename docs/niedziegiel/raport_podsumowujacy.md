@@ -10,11 +10,11 @@ Projekt ma na celu:
 
 ## 2. Dane
 
-- **Źródło:** plik `data/niedziegiel_data.csv`.
+- **Źródło:** plik `data/niedziegiel/data.csv`.
 - **Zakres:** dane miesięczne (pierwszy dzień miesiąca).
 - **Kolumny:** Data, Poziom (m), Zmiana (m), Opad (mm), Temperatura (°C).
 - **Target:** Zmiana – miesięczna zmiana poziomu.
-- Wiersze z błędami (#ERROR!) lub brakami są pomijane. Po usunięciu lagów (5 mies.) do analizy wchodzi **570** miesięcy.
+- Wiersze z błędami (#ERROR!) lub brakami są pomijane. Po usunięciu lagów (5 mies.) do analizy wchodzi **596** miesięcy.
 
 ---
 
@@ -33,39 +33,39 @@ Model **nie** używa bieżącego poziomu – tylko opad, temperatura, sezon i hi
 
 ## 4. Wyniki ewaluacji
 
-- **MAE (średni błąd bezwzględny):** 0.0183 m (~1.83 cm)
-- **RMSE:** 0.0227 m
-- **Liczba miesięcy:** 570
+- **MAE (średni błąd bezwzględny):** 0.0191 m (~1.91 cm)
+- **RMSE:** 0.0248 m
+- **Liczba miesięcy:** 596
 
 ### 4.1. Wysokość wody: rzeczywista vs scenariusz modelowy
 
 Scenariusz modelowy: start od poziomu na początek pierwszego miesiąca; w każdym miesiącu dodawana jest **prognozowana** zmiana (kumulatywnie).
 
-![Wysokość rzeczywista vs model](figures_niedziegiel/wysokosc_rzeczywista_vs_model.png)
+![Wysokość rzeczywista vs model](wysokosc_rzeczywista_vs_model.png)
 
 ### 4.2. Rozbieżność w czasie
 
 Rozbieżność = wysokość rzeczywista − wysokość w scenariuszu modelowym. Wartość dodatnia: jezioro wyżej niż przewidywał model; ujemna: niżej.
 
-![Rozbieżność w czasie](figures_niedziegiel/rozbieznosc_w_czasie.png)
+![Rozbieżność w czasie](rozbieznosc_w_czasie.png)
 
 ### 4.3. Zmiana poziomu: faktyczna vs prognoza
 
 Punkty przy linii y = x oznaczają dobrą zgodność miesięcznych zmian.
 
-![Zmiana faktyczna vs prognoza](figures_niedziegiel/zmiana_fakt_vs_prognoza.png)
+![Zmiana faktyczna vs prognoza](zmiana_fakt_vs_prognoza.png)
 
 ### 4.4. Błąd miesięczny
 
 Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.
 
-![Błąd miesięczny](figures_niedziegiel/blad_miesieczny.png)
+![Błąd miesięczny](blad_miesieczny.png)
 
 ---
 
 ## 5. Podsumowanie
 
-- Model prognozuje miesięczną zmianę poziomu Jezioro Niedzięgiel z MAE ~1.83 cm.
+- Model prognozuje miesięczną zmianę poziomu Jezioro Niedzięgiel z MAE ~1.91 cm.
 - Scenariusz kumulatywny (wysokość z prognozowanej zmiany) jest porównywany z rzeczywistą wysokością; rozbieżność i błąd miesięczny opisują jakość prognoz.
 
-Szczegóły techniczne: [model.md](model.md), [podsumowanie_ewaluacji_niedziegiel.md](podsumowanie_ewaluacji_niedziegiel.md).
+Szczegóły techniczne: [model.md](../model.md), [podsumowanie_ewaluacji.md](podsumowanie_ewaluacji.md).
