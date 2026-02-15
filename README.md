@@ -21,7 +21,7 @@ Projekt zawiera modele uczenia maszynowego do **prognozowania miesięcznej zmian
   - **docs/odbudowa/** – wykresy projekcji odbudowy.
   - **docs/raport_ogolny.md**, **docs/szacunek_odbudowy_po_zaniku_drenazu.md** – raporty zbiorcze.
 
-Dane i modele per jezioro: `data/niedziegiel/data.csv`, `data/niedziegiel/model.pkl` itd. Format CSV: nagłówki Data, Poziom, Zmiana, Opad, Temperatura; dziesiętne z przecinkiem. Limit wysokości (max spiętrzenia) w `lake.MAX_POZIOM_SPIETRZANIA_BY_LAKE`.
+Dane i modele per jezioro: `data/niedziegiel/data.csv`, `data/niedziegiel/model.pkl` itd. Format CSV: nagłówki Data, Poziom, Zmiana, Opad, Temperatura; dziesiętne z przecinkiem. Limit wysokości (max spiętrzenia) w `lake.MAX_POZIOM_SPIETRZANIA_BY_LAKE`. **Stany wód (realny odczyt)** w plikach danych są symulowane od listopada 2023 do 2026; dla jeziora Niedzięgiel symulacja od listopada 2025.
 
 ## Szybki start
 
@@ -52,7 +52,7 @@ Uruchamiaj skrypty z **katalogu głównego projektu** (gdzie są katalogi `data/
    python sources/generate_report.py
    python sources/generate_report.py powidzkie
    ```
-   Wynik: `docs/{id}/raport_podsumowujacy.md` oraz wykresy w `docs/{id}/`.
+   Wynik: `docs/{id}/raport_podsumowujacy.md` oraz wykresy w `docs/{id}/`. W sekcji „Model” dla każdego modelu podane jest, na czym był uczony i na czym testowany (drenażowy: uczony do 2023-12, test od 2024; naturalny: uczony do końca roku przed drenażem, stosowany do porównań na pełnym okresie).
 5. Raport ewaluacji na 12 miesięcy: poziom rzeczywisty vs model, 9 wariantów pogodowych, symulacja do końca stycznia 2027, szanse realizacji. Dla jednego jeziora lub wszystkich:
    ```bash
    python sources/generate_report_12mies.py

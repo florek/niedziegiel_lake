@@ -23,6 +23,14 @@ def _report_path(lake_id):
     return DOCS_DIR / lake_id / "raport_podsumowujacy.md"
 
 
+def _train_start_label(lake_id):
+    y = lake.TRAIN_START_YEAR_BY_LAKE.get(lake_id)
+    m = lake.TRAIN_START_MONTH_BY_LAKE.get(lake_id)
+    if y is None:
+        return None
+    return f"{y}-{m:02d}" if m is not None else str(y)
+
+
 def _train_end_label(lake_id):
     y = lake.TRAIN_END_YEAR_BY_LAKE.get(lake_id, 2013)
     m = lake.TRAIN_END_MONTH_BY_LAKE.get(lake_id)
@@ -35,6 +43,35 @@ def _test_start_label(lake_id):
     if m is not None and m < 12:
         return f"{y}-{m + 1:02d}"
     return str(y + 1)
+
+
+def _year_range_from_rows(rows):
+    if not rows:
+        return None, None
+    years = [int(r["data"][:4]) for r in rows]
+    return min(years), max(years)
+
+
+def _train_end_natural_label(lake_id):
+    y = lake.TRAIN_END_NATURAL_YEAR_BY_LAKE.get(lake_id)
+    if y is None:
+        return None
+    m = lake.TRAIN_END_NATURAL_MONTH_BY_LAKE.get(lake_id)
+    return f"{y}-{m:02d}" if m is not None else f"roku {y}"
+
+
+def _train_range_table_cell(lake_id, rows, rows_natural):
+    min_yr, _ = _year_range_from_rows(rows)
+    part = "**Po drenażu:** uczony od {} do {}.".format(
+        _train_start_label(lake_id),
+        _train_end_label(lake_id),
+    )
+    if rows_natural and _train_end_natural_label(lake_id):
+        part += " **Sprzed drenażu:** uczony od {} do {}.".format(
+            min_yr,
+            _train_end_natural_label(lake_id),
+        )
+    return part
 
 
 def _plot_wysokosci(rows, figs_dir, lake_name, lake_id, rows_natural=None):
@@ -59,9 +96,33 @@ def _plot_wysokosci(rows, figs_dir, lake_name, lake_id, rows_natural=None):
     plt.close()
 
 
-def _plot_rozbieznosc(rows, figs_dir):
-    dates = [np.datetime64(r["data"] + "-01") for r in rows]
-    rozb = [r["rozbieznosc"] * 100 for r in rows]
+def _align_natural_by_date(rows, rows_natural):
+    if not rows_natural:
+        return None
+    nat_by_date = {r["data"]: r for r in rows_natural}
+    return nat_by_date
+
+
+def _plot_rozbieznosc(rows, figs_dir, rows_natural=None):
+    nat_by_date = _align_natural_by_date(rows, rows_natural)
+    if nat_by_date is not None:
+        dates = []
+        rozb = []
+        for r in rows:
+            nat = nat_by_date.get(r["data"])
+            if nat is not None:
+                dates.append(np.datetime64(r["data"] + "-01"))
+                rozb.append((r["wysokosc_rzeczywista"] - nat["wysokosc_model"]) * 100)
+        if dates and rozb:
+            title = "Rozbieżność: wysokość rzeczywista − scenariusz modelu naturalnego (sprzed drenażu)"
+        else:
+            dates = [np.datetime64(r["data"] + "-01") for r in rows]
+            rozb = [r["rozbieznosc"] * 100 for r in rows]
+            title = "Rozbieżność: wysokość rzeczywista − scenariusz modelowy (drenażowy)"
+    else:
+        dates = [np.datetime64(r["data"] + "-01") for r in rows]
+        rozb = [r["rozbieznosc"] * 100 for r in rows]
+        title = "Rozbieżność: wysokość rzeczywista − scenariusz modelowy (drenażowy)"
     fig, ax = plt.subplots(figsize=(12, 5))
     ax.fill_between(dates, 0, rozb, where=[x >= 0 for x in rozb], color="#1f77b4", alpha=0.35, label="Rzeczywistość > model")
     ax.fill_between(dates, 0, rozb, where=[x < 0 for x in rozb], color="#ff7f0e", alpha=0.35, label="Rzeczywistość < model")
@@ -72,7 +133,7 @@ def _plot_rozbieznosc(rows, figs_dir):
     ax.set_ylim(y_min - margin, y_max + margin)
     ax.set_xlabel("Data")
     ax.set_ylabel("Rozbieżność (cm)")
-    ax.set_title("Rozbieżność: wysokość rzeczywista − scenariusz modelowy")
+    ax.set_title(title)
     ax.legend(loc="best")
     ax.xaxis.set_major_locator(mdates.YearLocator(2))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
@@ -102,16 +163,33 @@ def _plot_zmiana_fakt_vs_prognoza(rows, figs_dir):
     plt.close()
 
 
-def _plot_blad_miesieczny(rows, figs_dir):
-    dates = [np.datetime64(r["data"] + "-01") for r in rows]
-    blad = [r["błąd"] * 100 for r in rows]
+def _plot_blad_miesieczny(rows, figs_dir, rows_natural=None):
+    nat_by_date = _align_natural_by_date(rows, rows_natural)
+    if nat_by_date is not None:
+        dates = []
+        blad = []
+        for r in rows:
+            nat = nat_by_date.get(r["data"])
+            if nat is not None:
+                dates.append(np.datetime64(r["data"] + "-01"))
+                blad.append((r["zmiana_fakt"] - nat["zmiana_prognoza"]) * 100)
+        if dates and blad:
+            title = "Błąd prognozy zmiany poziomu (zmiana faktyczna − prognoza modelu naturalnego, sprzed drenażu)"
+        else:
+            dates = [np.datetime64(r["data"] + "-01") for r in rows]
+            blad = [r["błąd"] * 100 for r in rows]
+            title = "Błąd prognozy zmiany poziomu w kolejnych miesiącach"
+    else:
+        dates = [np.datetime64(r["data"] + "-01") for r in rows]
+        blad = [r["błąd"] * 100 for r in rows]
+        title = "Błąd prognozy zmiany poziomu w kolejnych miesiącach"
     fig, ax = plt.subplots(figsize=(12, 4))
     colors = ["#d62728" if b >= 0 else "#1f77b4" for b in blad]
     ax.bar(dates, blad, width=20, color=colors, alpha=0.7, edgecolor="none")
     ax.axhline(y=0, color="black", linewidth=0.5)
     ax.set_xlabel("Data")
     ax.set_ylabel("Błąd miesięczny (cm)")
-    ax.set_title("Błąd prognozy zmiany poziomu w kolejnych miesiącach")
+    ax.set_title(title)
     ax.xaxis.set_major_locator(mdates.YearLocator(2))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
     ax.grid(True, alpha=0.3, axis="y")
@@ -124,9 +202,9 @@ def _write_report(rows, mae, rmse, n, lake_id, lake_name, rows_natural=None):
     figs_dir = _figs_dir(lake_id)
     figs_dir.mkdir(parents=True, exist_ok=True)
     _plot_wysokosci(rows, figs_dir, lake_name, lake_id, rows_natural=rows_natural)
-    _plot_rozbieznosc(rows, figs_dir)
+    _plot_rozbieznosc(rows, figs_dir, rows_natural=rows_natural)
     _plot_zmiana_fakt_vs_prognoza(rows, figs_dir)
-    _plot_blad_miesieczny(rows, figs_dir)
+    _plot_blad_miesieczny(rows, figs_dir, rows_natural=rows_natural)
     model_path = lake.get_model_path(lake_id)
     if model_path.exists():
         _, _, lag_m, meteo_m = lake.load_model(model_path)
@@ -169,14 +247,13 @@ def _write_report(rows, mae, rmse, n, lake_id, lake_name, rows_natural=None):
         "|--------|------|",
         "| Algorytm | Gradient Boosting (regresja), scikit-learn |",
         "| Cechy wejściowe | {} |".format(cechy_text),
-        "| Trening | Podział czasowy: trening do {}, test od {} do {} |".format(
-            _train_end_label(lake_id),
-            _test_start_label(lake_id),
-            lake.TEST_END_YEAR_BY_LAKE.get(lake_id, 2023),
-        ),
+        "| Trening (od–do) | {} |".format(_train_range_table_cell(lake_id, rows, rows_natural)),
         "| Wynik | Prognoza zmiany poziomu na dany miesiąc (cm) |",
         "",
         "Model **nie** używa bieżącego poziomu – tylko opad, temperatura, sezon i historia.",
+        "",
+    ]
+    sections += [
         "",
         "---",
         "",
@@ -194,7 +271,8 @@ def _write_report(rows, mae, rmse, n, lake_id, lake_name, rows_natural=None):
         "",
         "### 4.2. Rozbieżność w czasie",
         "",
-        "Rozbieżność = wysokość rzeczywista − wysokość w scenariuszu modelowym. Wartość dodatnia: jezioro wyżej niż przewidywał model; ujemna: niżej.",
+        "Rozbieżność = wysokość rzeczywista − wysokość w scenariuszu "
+        + ("**modelu naturalnego (sprzed drenażu)**. Wartość dodatnia: jezioro wyżej niż przewidywał model naturalny; ujemna: niżej (np. efekt drenażu)." if rows_natural else "modelowym. Wartość dodatnia: jezioro wyżej niż przewidywał model; ujemna: niżej."),
         "",
         "![Rozbieżność w czasie](rozbieznosc_w_czasie.png)",
         "",
@@ -206,7 +284,8 @@ def _write_report(rows, mae, rmse, n, lake_id, lake_name, rows_natural=None):
         "",
         "### 4.4. Błąd miesięczny",
         "",
-        "Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.",
+        "Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu "
+        + ("przez **model naturalny (sprzed drenażu)**." if rows_natural else "."),
         "",
         "![Błąd miesięczny](blad_miesieczny.png)",
         "",

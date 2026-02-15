@@ -81,7 +81,7 @@
 <li><strong>docs/odbudowa/</strong> – wykresy projekcji odbudowy.</li>
 <li><strong>docs/raport_ogolny.md</strong>, <strong>docs/szacunek_odbudowy_po_zaniku_drenazu.md</strong> – raporty zbiorcze.</li>
 </ul>
-<p>Dane i modele per jezioro: <code>data/niedziegiel/data.csv</code>, <code>data/niedziegiel/model.pkl</code> itd. Format CSV: nagłówki Data, Poziom, Zmiana, Opad, Temperatura; dziesiętne z przecinkiem. Limit wysokości (max spiętrzenia) w <code>lake.MAX_POZIOM_SPIETRZANIA_BY_LAKE</code>.</p>
+<p>Dane i modele per jezioro: <code>data/niedziegiel/data.csv</code>, <code>data/niedziegiel/model.pkl</code> itd. Format CSV: nagłówki Data, Poziom, Zmiana, Opad, Temperatura; dziesiętne z przecinkiem. Limit wysokości (max spiętrzenia) w <code>lake.MAX_POZIOM_SPIETRZANIA_BY_LAKE</code>. <strong>Stany wód (realny odczyt)</strong> w plikach danych są symulowane od listopada 2023 do 2026; dla jeziora Niedzięgiel symulacja od listopada 2025.</p>
 <h2>Szybki start</h2>
 <p>Uruchamiaj skrypty z <strong>katalogu głównego projektu</strong> (gdzie są katalogi <code>data/</code>, <code>docs/</code>, <code>sources/</code>).</p>
 <ol>
@@ -107,7 +107,7 @@
    <code>bash
    python sources/generate_report.py
    python sources/generate_report.py powidzkie</code>
-   Wynik: <code>docs/{id}/raport_podsumowujacy.md</code> oraz wykresy w <code>docs/{id}/</code>.</li>
+   Wynik: <code>docs/{id}/raport_podsumowujacy.md</code> oraz wykresy w <code>docs/{id}/</code>. W sekcji „Model” dla każdego modelu podane jest, na czym był uczony i na czym testowany (drenażowy: uczony do 2023-12, test od 2024; naturalny: uczony do końca roku przed drenażem, stosowany do porównań na pełnym okresie).</li>
 <li>Raport ewaluacji na 12 miesięcy: poziom rzeczywisty vs model, 9 wariantów pogodowych, symulacja do końca stycznia 2027, szanse realizacji. Dla jednego jeziora lub wszystkich:
    <code>bash
    python sources/generate_report_12mies.py
@@ -376,12 +376,12 @@ python sources/merge_wilczynskie_data.py
 <p>Obsługiwane jeziora: <strong>Jezioro Budzisławskie</strong> (<code>budzislawskie</code>), <strong>Jezioro Koziegłowskie</strong> (<code>kozieglowskie</code>), <strong>Jezioro Kownackie</strong> (<code>kownackie</code>), <strong>Jezioro Niedzięgiel</strong> (<code>niedziegiel</code>), <strong>Jezioro Ostrowskie</strong> (<code>ostrowskie</code>), <strong>Jezioro Powidzkie</strong> (<code>powidzkie</code>), <strong>Jezioro Skulska Wieś</strong> (<code>skulskawies</code>), <strong>Jezioro Suszewskie</strong> (<code>suszewskie</code>), <strong>Jezioro Wilczyńskie</strong> (<code>wilczynskie</code>). Dla każdego jeziora osobny plik danych i osobny wytrenowany model.</p>
 <h2>Dane wejściowe</h2>
 <p>Dane i modele per jezioro w katalogach <code>data/{id}/</code>: plik <code>data.csv</code>, model <code>model.pkl</code>. Np. <code>data/niedziegiel/data.csv</code>, <code>data/niedziegiel/model.pkl</code>.</p>
-<p>Kolumny: <strong>Data</strong> (pierwszy dzień miesiąca, dd.mm.yyyy), <strong>Poziom</strong> [m], <strong>Zmiana</strong> [m] (target), <strong>Opad</strong> [mm], <strong>Temperatura</strong> [°C]. Wartości dziesiętne z przecinkiem. Wiersze z #ERROR! lub brakami są pomijane. <strong>Limit wysokości i strefa odpływu:</strong> w scenariuszu modelowym poziom nie może przekraczać dopuszczalnego maksimum (<code>MAX_POZIOM_SPIETRZANIA_BY_LAKE</code>). Strefa odpływu (od której woda się przesącza) i miesięczne przesączanie są <strong>obliczane z danych</strong> per jezioro (<code>get_drainage_params(lake_id, df)</code>): szerokość strefy <code>odplyw_m</code> = 5% zakresu poziomów (min–max) z danych, ograniczone do 0,2–1,0 m; miesięczne przesączanie <code>przesaczanie_m</code> = średnia ujemna zmiana poziomu w miesiącach, gdy poziom końcowy był w strefie (max − odplyw_m, max]. Domyślne stałe: <code>ODPLYW_FRAC_RANGE</code>, <code>ODPLYW_M_MIN</code>, <code>ODPLYW_M_MAX</code>, <code>PRZESACZANIE_DEFAULT_M</code>. <code>apply_cap_and_drainage(poziom, max_poziom, odplyw_m, przesaczanie_m)</code> łączy limit z korektą w strefie.</p>
+<p>Kolumny: <strong>Data</strong> (pierwszy dzień miesiąca, dd.mm.yyyy), <strong>Poziom</strong> [m], <strong>Zmiana</strong> [m] (target), <strong>Opad</strong> [mm], <strong>Temperatura</strong> [°C]. Wartości dziesiętne z przecinkiem. Wiersze z #ERROR! lub brakami są pomijane. <strong>Stany wód (realny odczyt)</strong> w <code>data.csv</code> są symulowane od 2023-11 do 2026 (dla jeziora Niedzięgiel od 2025-11). <strong>Limit wysokości i strefa odpływu:</strong> w scenariuszu modelowym poziom nie może przekraczać dopuszczalnego maksimum (<code>MAX_POZIOM_SPIETRZANIA_BY_LAKE</code>). Strefa odpływu (od której woda się przesącza) i miesięczne przesączanie są <strong>obliczane z danych</strong> per jezioro (<code>get_drainage_params(lake_id, df)</code>): szerokość strefy <code>odplyw_m</code> = 5% zakresu poziomów (min–max) z danych, ograniczone do 0,2–1,0 m; miesięczne przesączanie <code>przesaczanie_m</code> = średnia ujemna zmiana poziomu w miesiącach, gdy poziom końcowy był w strefie (max − odplyw_m, max]. Domyślne stałe: <code>ODPLYW_FRAC_RANGE</code>, <code>ODPLYW_M_MIN</code>, <code>ODPLYW_M_MAX</code>, <code>PRZESACZANIE_DEFAULT_M</code>. <code>apply_cap_and_drainage(poziom, max_poziom, odplyw_m, przesaczanie_m)</code> łączy limit z korektą w strefie.</p>
 <h2>Algorytm</h2>
 <ul>
 <li><strong>Wybór modelu:</strong> przed zapisem trenowane są sześć kandydatów (scikit-learn): HistGradientBoosting (early stop, głębszy), GradientBoosting (reg, strong, legacy), Random Forest. Wybierany jest model z <strong>najniższym MAE na zbiorze testowym</strong>; dla każdego jeziora może to być inny typ.</li>
 <li><strong>Cechy:</strong> month_sin, month_cos (cykliczny miesiąc), Opad, Temperatura; <strong>opady i temperatury z opóźnieniem 1–N mies.</strong> – dla każdego jeziora automatycznie testowane N z ciągu Fibonacciego (0, 1, 2, 3, 5, 8, 13 mies.), wybierane N z najlepszym MAE na teście (reakcja zlewni zależy od jeziora); oraz opóźnienia zmiany i poziomu (Niedzięgiel 3, Powidzkie 5 – <code>LAG_MONTHS_BY_LAKE</code>).</li>
-<li><strong>Podział:</strong> temporalny, per jezioro. Dwa warianty modelu: (1) <strong>drenażowy (po zmianie reżimu)</strong> – trening na danych od roku początku drenażu do końca 2023 (<code>TRAIN_START_YEAR_BY_LAKE</code>, <code>TRAIN_END_YEAR_BY_LAKE=2023</code>): Budzisławskie/Koziegłowskie/Kownackie/Ostrowskie/Suszewskie od 2011, Niedzięgiel/Powidzkie od 2018, Skulska Wieś od 2015, Wilczyńskie od 2015; zapis w <code>data/{id}/model.pkl</code>; (2) <strong>naturalny</strong> – trening do końca roku przed pojawieniem się drenażu (<code>TRAIN_END_NATURAL_*</code>), zapis w <code>data/{id}/model_natural.pkl</code>. Rok pojawienia się drenażu (trening naturalny do końca roku poprzedniego): Budzisławskie 2003→2002-12, Koziegłowskie 2003→2002-12 (test do 2003), Kownackie 2003→2002-12, Niedzięgiel 2019→2018-12, Ostrowskie 2004→2003-12, Powidzkie 2018→2017-12, Skulska Wieś 2012→2011-12 (test do 2012), Suszewskie 2003→2002-12, Wilczyńskie 2003→2002-12. Trening naturalny: <code>python sources/lake.py {id} natural</code>. Na wykresach: niebieski = pomiar, pomarańczowy = model po reżimie, zielony = model naturalny.</li>
+<li><strong>Podział:</strong> temporalny, per jezioro. Dwa warianty modelu: (1) <strong>drenażowy (po zmianie reżimu)</strong> – trening na danych od roku początku drenażu do końca 2023 (<code>TRAIN_START_YEAR_BY_LAKE</code>, <code>TRAIN_END_YEAR_BY_LAKE=2023</code>): Budzisławskie/Koziegłowskie/Kownackie/Ostrowskie/Suszewskie od 2011, Niedzięgiel/Powidzkie od 2018, Skulska Wieś od 2015, Wilczyńskie od 2015; test od 2024 do końca danych; zapis w <code>data/{id}/model.pkl</code>; (2) <strong>naturalny</strong> – trening do końca roku przed pojawieniem się drenażu (<code>TRAIN_END_NATURAL_*</code>), zapis w <code>data/{id}/model_natural.pkl</code>. Rok pojawienia się drenażu (trening naturalny do końca roku poprzedniego): Budzisławskie 2003→2002-12, Koziegłowskie 2003→2002-12 (test do 2003), Kownackie 2003→2002-12, Niedzięgiel 2019→2018-12, Ostrowskie 2004→2003-12, Powidzkie 2018→2017-12, Skulska Wieś 2012→2011-12 (test do 2012), Suszewskie 2003→2002-12, Wilczyńskie 2003→2002-12. Trening naturalny: <code>python sources/lake.py {id} natural</code>. W raporcie per jezioro (<code>generate_report.py</code> → <code>docs/{id}/raport_podsumowujacy.md</code>) w sekcji „Model” podany jest dla każdego modelu: <strong>na czym uczony</strong> i <strong>na czym testowany</strong> (drenażowy: trening do 2023-12, test od 2024 do końca danych; naturalny: trening do końca roku przed drenażem, stosowany do porównań na pełnym okresie danych). Na wykresach: niebieski = pomiar, pomarańczowy = model po reżimie, zielony = model naturalny.</li>
 <li><strong>Ewaluacja:</strong> MAE i RMSE na zbiorze testowym (metryki w metrach).</li>
 </ul>
 <h2>Użycie</h2>
@@ -1894,8 +1894,8 @@ python sources/lake.py wilczynskie
 <td>Miesiąc (sin/cos), Opad, Temperatura, 3 opóźnienia zmiany poziomu, 3 opóźnienia poziomu</td>
 </tr>
 <tr>
-<td>Trening</td>
-<td>Podział czasowy: trening do 2023-12, test od 2024 do 2023</td>
+<td>Trening (od–do)</td>
+<td><strong>Po drenażu:</strong> uczony od 2011-01 do 2023-12. <strong>Sprzed drenażu:</strong> uczony od 1993 do 2002-12.</td>
 </tr>
 <tr>
 <td>Wynik</td>
@@ -1915,13 +1915,13 @@ python sources/lake.py wilczynskie
 <p>Scenariusz modelowy: start od poziomu na początek pierwszego miesiąca; w każdym miesiącu dodawana jest <strong>prognozowana</strong> zmiana (kumulatywnie).</p>
 <p><img alt="Wysokość rzeczywista vs model" src="docs/budzislawskie/wysokosc_rzeczywista_vs_model.png" /></p>
 <h3>4.2. Rozbieżność w czasie</h3>
-<p>Rozbieżność = wysokość rzeczywista − wysokość w scenariuszu modelowym. Wartość dodatnia: jezioro wyżej niż przewidywał model; ujemna: niżej.</p>
+<p>Rozbieżność = wysokość rzeczywista − wysokość w scenariuszu <strong>modelu naturalnego (sprzed drenażu)</strong>. Wartość dodatnia: jezioro wyżej niż przewidywał model naturalny; ujemna: niżej (np. efekt drenażu).</p>
 <p><img alt="Rozbieżność w czasie" src="docs/budzislawskie/rozbieznosc_w_czasie.png" /></p>
 <h3>4.3. Zmiana poziomu: faktyczna vs prognoza</h3>
 <p>Punkty przy linii y = x oznaczają dobrą zgodność miesięcznych zmian.</p>
 <p><img alt="Zmiana faktyczna vs prognoza" src="docs/budzislawskie/zmiana_fakt_vs_prognoza.png" /></p>
 <h3>4.4. Błąd miesięczny</h3>
-<p>Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.</p>
+<p>Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu przez <strong>model naturalny (sprzed drenażu)</strong>.</p>
 <p><img alt="Błąd miesięczny" src="docs/budzislawskie/blad_miesieczny.png" /></p>
 <hr />
 <h2>5. Podsumowanie</h2>
@@ -1930,7 +1930,7 @@ python sources/lake.py wilczynskie
 <li>Scenariusz kumulatywny (wysokość z prognozowanej zmiany) jest porównywany z rzeczywistą wysokością; rozbieżność i błąd miesięczny opisują jakość prognoz.</li>
 </ul>
 <p>Szczegóły techniczne: <a href="../model.md">model.md</a>, <a href="podsumowanie_ewaluacji.md">podsumowanie_ewaluacji.md</a>.</p>
-<p><em>Wygenerowano: 2026-02-15 15:54</em></p></div></div>
+<p><em>Wygenerowano: 2026-02-15 16:13</em></p></div></div>
 <div id="docs-budzislawskie-podsumowanie-ewaluacji" class="panel" style="display:none"><div class="content-inner"><h1>Podsumowanie ewaluacji prognozy zmiany poziomu Jezioro Budzisławskie</h1>
 <p>Dla każdego miesiąca model otrzymuje opad i temperaturę (oraz cechy opóźnione z historii), wylicza prognozowaną zmianę poziomu Jezioro Budzisławskie i jest ona porównana z faktyczną zmianą.</p>
 <h2>Metryki</h2>
@@ -6314,7 +6314,7 @@ python sources/lake.py wilczynskie
 </tr>
 </tbody>
 </table>
-<p><em>Wygenerowano: 2026-02-15 15:54</em></p></div></div>
+<p><em>Wygenerowano: 2026-02-15 16:13</em></p></div></div>
 <div id="docs-budzislawskie-drenaz-miesieczny" class="panel" style="display:none"><div class="content-inner"><h1>Drenaż – Jezioro Budzisławskie</h1>
 <p>Drenaż = poziom z modelu naturalnego (bez drenażu) − poziom rzeczywisty. Przyrost = o ile wzrósł drenaż względem poprzedniego miesiąca.</p>
 <p><img alt="Suma przyrostu drenażu wg roku" src="docs/budzislawskie/drenaz_miesieczny.png" /></p>
@@ -7964,8 +7964,8 @@ python sources/lake.py wilczynskie
 <td>Miesiąc (sin/cos), Opad, Temperatura, opad i temperatura z opóźnieniem 1–5 mies., 3 opóźnienia zmiany poziomu, 3 opóźnienia poziomu</td>
 </tr>
 <tr>
-<td>Trening</td>
-<td>Podział czasowy: trening do 2023-12, test od 2024 do 2003</td>
+<td>Trening (od–do)</td>
+<td><strong>Po drenażu:</strong> uczony od 2011-01 do 2023-12. <strong>Sprzed drenażu:</strong> uczony od 1996 do 2002-12.</td>
 </tr>
 <tr>
 <td>Wynik</td>
@@ -7985,13 +7985,13 @@ python sources/lake.py wilczynskie
 <p>Scenariusz modelowy: start od poziomu na początek pierwszego miesiąca; w każdym miesiącu dodawana jest <strong>prognozowana</strong> zmiana (kumulatywnie).</p>
 <p><img alt="Wysokość rzeczywista vs model" src="docs/kozieglowskie/wysokosc_rzeczywista_vs_model.png" /></p>
 <h3>4.2. Rozbieżność w czasie</h3>
-<p>Rozbieżność = wysokość rzeczywista − wysokość w scenariuszu modelowym. Wartość dodatnia: jezioro wyżej niż przewidywał model; ujemna: niżej.</p>
+<p>Rozbieżność = wysokość rzeczywista − wysokość w scenariuszu <strong>modelu naturalnego (sprzed drenażu)</strong>. Wartość dodatnia: jezioro wyżej niż przewidywał model naturalny; ujemna: niżej (np. efekt drenażu).</p>
 <p><img alt="Rozbieżność w czasie" src="docs/kozieglowskie/rozbieznosc_w_czasie.png" /></p>
 <h3>4.3. Zmiana poziomu: faktyczna vs prognoza</h3>
 <p>Punkty przy linii y = x oznaczają dobrą zgodność miesięcznych zmian.</p>
 <p><img alt="Zmiana faktyczna vs prognoza" src="docs/kozieglowskie/zmiana_fakt_vs_prognoza.png" /></p>
 <h3>4.4. Błąd miesięczny</h3>
-<p>Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.</p>
+<p>Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu przez <strong>model naturalny (sprzed drenażu)</strong>.</p>
 <p><img alt="Błąd miesięczny" src="docs/kozieglowskie/blad_miesieczny.png" /></p>
 <hr />
 <h2>5. Podsumowanie</h2>
@@ -8000,7 +8000,7 @@ python sources/lake.py wilczynskie
 <li>Scenariusz kumulatywny (wysokość z prognozowanej zmiany) jest porównywany z rzeczywistą wysokością; rozbieżność i błąd miesięczny opisują jakość prognoz.</li>
 </ul>
 <p>Szczegóły techniczne: <a href="../model.md">model.md</a>, <a href="podsumowanie_ewaluacji.md">podsumowanie_ewaluacji.md</a>.</p>
-<p><em>Wygenerowano: 2026-02-15 15:54</em></p></div></div>
+<p><em>Wygenerowano: 2026-02-15 16:13</em></p></div></div>
 <div id="docs-kozieglowskie-podsumowanie-ewaluacji" class="panel" style="display:none"><div class="content-inner"><h1>Podsumowanie ewaluacji prognozy zmiany poziomu Jezioro Koziegłowskie</h1>
 <p>Dla każdego miesiąca model otrzymuje opad i temperaturę (oraz cechy opóźnione z historii), wylicza prognozowaną zmianę poziomu Jezioro Koziegłowskie i jest ona porównana z faktyczną zmianą.</p>
 <h2>Metryki</h2>
@@ -11966,7 +11966,7 @@ python sources/lake.py wilczynskie
 </tr>
 </tbody>
 </table>
-<p><em>Wygenerowano: 2026-02-15 15:54</em></p></div></div>
+<p><em>Wygenerowano: 2026-02-15 16:13</em></p></div></div>
 <div id="docs-kozieglowskie-drenaz-miesieczny" class="panel" style="display:none"><div class="content-inner"><h1>Drenaż – Jezioro Koziegłowskie</h1>
 <p>Drenaż = poziom z modelu naturalnego (bez drenażu) − poziom rzeczywisty. Przyrost = o ile wzrósł drenaż względem poprzedniego miesiąca.</p>
 <p><img alt="Suma przyrostu drenażu wg roku" src="docs/kozieglowskie/drenaz_miesieczny.png" /></p>
@@ -13604,8 +13604,8 @@ python sources/lake.py wilczynskie
 <td>Miesiąc (sin/cos), Opad, Temperatura, opad i temperatura z opóźnieniem 1–5 mies., 3 opóźnienia zmiany poziomu, 3 opóźnienia poziomu</td>
 </tr>
 <tr>
-<td>Trening</td>
-<td>Podział czasowy: trening do 2023-12, test od 2024 do 2023</td>
+<td>Trening (od–do)</td>
+<td><strong>Po drenażu:</strong> uczony od 2011-01 do 2023-12. <strong>Sprzed drenażu:</strong> uczony od 1993 do 2002-12.</td>
 </tr>
 <tr>
 <td>Wynik</td>
@@ -13625,13 +13625,13 @@ python sources/lake.py wilczynskie
 <p>Scenariusz modelowy: start od poziomu na początek pierwszego miesiąca; w każdym miesiącu dodawana jest <strong>prognozowana</strong> zmiana (kumulatywnie).</p>
 <p><img alt="Wysokość rzeczywista vs model" src="docs/kownackie/wysokosc_rzeczywista_vs_model.png" /></p>
 <h3>4.2. Rozbieżność w czasie</h3>
-<p>Rozbieżność = wysokość rzeczywista − wysokość w scenariuszu modelowym. Wartość dodatnia: jezioro wyżej niż przewidywał model; ujemna: niżej.</p>
+<p>Rozbieżność = wysokość rzeczywista − wysokość w scenariuszu <strong>modelu naturalnego (sprzed drenażu)</strong>. Wartość dodatnia: jezioro wyżej niż przewidywał model naturalny; ujemna: niżej (np. efekt drenażu).</p>
 <p><img alt="Rozbieżność w czasie" src="docs/kownackie/rozbieznosc_w_czasie.png" /></p>
 <h3>4.3. Zmiana poziomu: faktyczna vs prognoza</h3>
 <p>Punkty przy linii y = x oznaczają dobrą zgodność miesięcznych zmian.</p>
 <p><img alt="Zmiana faktyczna vs prognoza" src="docs/kownackie/zmiana_fakt_vs_prognoza.png" /></p>
 <h3>4.4. Błąd miesięczny</h3>
-<p>Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.</p>
+<p>Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu przez <strong>model naturalny (sprzed drenażu)</strong>.</p>
 <p><img alt="Błąd miesięczny" src="docs/kownackie/blad_miesieczny.png" /></p>
 <hr />
 <h2>5. Podsumowanie</h2>
@@ -13640,7 +13640,7 @@ python sources/lake.py wilczynskie
 <li>Scenariusz kumulatywny (wysokość z prognozowanej zmiany) jest porównywany z rzeczywistą wysokością; rozbieżność i błąd miesięczny opisują jakość prognoz.</li>
 </ul>
 <p>Szczegóły techniczne: <a href="../model.md">model.md</a>, <a href="podsumowanie_ewaluacji.md">podsumowanie_ewaluacji.md</a>.</p>
-<p><em>Wygenerowano: 2026-02-15 15:54</em></p></div></div>
+<p><em>Wygenerowano: 2026-02-15 16:13</em></p></div></div>
 <div id="docs-kownackie-podsumowanie-ewaluacji" class="panel" style="display:none"><div class="content-inner"><h1>Podsumowanie ewaluacji prognozy zmiany poziomu Jezioro Kownackie</h1>
 <p>Dla każdego miesiąca model otrzymuje opad i temperaturę (oraz cechy opóźnione z historii), wylicza prognozowaną zmianę poziomu Jezioro Kownackie i jest ona porównana z faktyczną zmianą.</p>
 <h2>Metryki</h2>
@@ -18002,7 +18002,7 @@ python sources/lake.py wilczynskie
 </tr>
 </tbody>
 </table>
-<p><em>Wygenerowano: 2026-02-15 15:54</em></p></div></div>
+<p><em>Wygenerowano: 2026-02-15 16:13</em></p></div></div>
 <div id="docs-kownackie-drenaz-miesieczny" class="panel" style="display:none"><div class="content-inner"><h1>Drenaż – Jezioro Kownackie</h1>
 <p>Drenaż = poziom z modelu naturalnego (bez drenażu) − poziom rzeczywisty. Przyrost = o ile wzrósł drenaż względem poprzedniego miesiąca.</p>
 <p><img alt="Suma przyrostu drenażu wg roku" src="docs/kownackie/drenaz_miesieczny.png" /></p>
@@ -19652,8 +19652,8 @@ python sources/lake.py wilczynskie
 <td>Miesiąc (sin/cos), Opad, Temperatura, 3 opóźnienia zmiany poziomu, 3 opóźnienia poziomu</td>
 </tr>
 <tr>
-<td>Trening</td>
-<td>Podział czasowy: trening do 2023-12, test od 2024 do 2023</td>
+<td>Trening (od–do)</td>
+<td><strong>Po drenażu:</strong> uczony od 2018-01 do 2023-12. <strong>Sprzed drenażu:</strong> uczony od 1976 do 2018-12.</td>
 </tr>
 <tr>
 <td>Wynik</td>
@@ -19673,13 +19673,13 @@ python sources/lake.py wilczynskie
 <p>Scenariusz modelowy: start od poziomu na początek pierwszego miesiąca; w każdym miesiącu dodawana jest <strong>prognozowana</strong> zmiana (kumulatywnie).</p>
 <p><img alt="Wysokość rzeczywista vs model" src="docs/niedziegiel/wysokosc_rzeczywista_vs_model.png" /></p>
 <h3>4.2. Rozbieżność w czasie</h3>
-<p>Rozbieżność = wysokość rzeczywista − wysokość w scenariuszu modelowym. Wartość dodatnia: jezioro wyżej niż przewidywał model; ujemna: niżej.</p>
+<p>Rozbieżność = wysokość rzeczywista − wysokość w scenariuszu <strong>modelu naturalnego (sprzed drenażu)</strong>. Wartość dodatnia: jezioro wyżej niż przewidywał model naturalny; ujemna: niżej (np. efekt drenażu).</p>
 <p><img alt="Rozbieżność w czasie" src="docs/niedziegiel/rozbieznosc_w_czasie.png" /></p>
 <h3>4.3. Zmiana poziomu: faktyczna vs prognoza</h3>
 <p>Punkty przy linii y = x oznaczają dobrą zgodność miesięcznych zmian.</p>
 <p><img alt="Zmiana faktyczna vs prognoza" src="docs/niedziegiel/zmiana_fakt_vs_prognoza.png" /></p>
 <h3>4.4. Błąd miesięczny</h3>
-<p>Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.</p>
+<p>Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu przez <strong>model naturalny (sprzed drenażu)</strong>.</p>
 <p><img alt="Błąd miesięczny" src="docs/niedziegiel/blad_miesieczny.png" /></p>
 <hr />
 <h2>5. Podsumowanie</h2>
@@ -19688,7 +19688,7 @@ python sources/lake.py wilczynskie
 <li>Scenariusz kumulatywny (wysokość z prognozowanej zmiany) jest porównywany z rzeczywistą wysokością; rozbieżność i błąd miesięczny opisują jakość prognoz.</li>
 </ul>
 <p>Szczegóły techniczne: <a href="../model.md">model.md</a>, <a href="podsumowanie_ewaluacji.md">podsumowanie_ewaluacji.md</a>.</p>
-<p><em>Wygenerowano: 2026-02-15 15:54</em></p></div></div>
+<p><em>Wygenerowano: 2026-02-15 16:13</em></p></div></div>
 <div id="docs-niedziegiel-podsumowanie-ewaluacji" class="panel" style="display:none"><div class="content-inner"><h1>Podsumowanie ewaluacji prognozy zmiany poziomu Jezioro Niedzięgiel</h1>
 <p>Dla każdego miesiąca model otrzymuje opad i temperaturę (oraz cechy opóźnione z historii), wylicza prognozowaną zmianę poziomu Jezioro Niedzięgiel i jest ona porównana z faktyczną zmianą.</p>
 <h2>Metryki</h2>
@@ -26294,7 +26294,7 @@ python sources/lake.py wilczynskie
 </tr>
 </tbody>
 </table>
-<p><em>Wygenerowano: 2026-02-15 15:54</em></p></div></div>
+<p><em>Wygenerowano: 2026-02-15 16:13</em></p></div></div>
 <div id="docs-niedziegiel-drenaz-miesieczny" class="panel" style="display:none"><div class="content-inner"><h1>Drenaż – Jezioro Niedzięgiel</h1>
 <p>Drenaż = poziom z modelu naturalnego (bez drenażu) − poziom rzeczywisty. Przyrost = o ile wzrósł drenaż względem poprzedniego miesiąca.</p>
 <p><img alt="Suma przyrostu drenażu wg roku" src="docs/niedziegiel/drenaz_miesieczny.png" /></p>
@@ -28012,8 +28012,8 @@ python sources/lake.py wilczynskie
 <td>Miesiąc (sin/cos), Opad, Temperatura, opad i temperatura z opóźnieniem 1–2 mies., 3 opóźnienia zmiany poziomu, 3 opóźnienia poziomu</td>
 </tr>
 <tr>
-<td>Trening</td>
-<td>Podział czasowy: trening do 2023-12, test od 2024 do 2023</td>
+<td>Trening (od–do)</td>
+<td><strong>Po drenażu:</strong> uczony od 2011-01 do 2023-12. <strong>Sprzed drenażu:</strong> uczony od 1993 do 2003-12.</td>
 </tr>
 <tr>
 <td>Wynik</td>
@@ -28033,13 +28033,13 @@ python sources/lake.py wilczynskie
 <p>Scenariusz modelowy: start od poziomu na początek pierwszego miesiąca; w każdym miesiącu dodawana jest <strong>prognozowana</strong> zmiana (kumulatywnie).</p>
 <p><img alt="Wysokość rzeczywista vs model" src="docs/ostrowskie/wysokosc_rzeczywista_vs_model.png" /></p>
 <h3>4.2. Rozbieżność w czasie</h3>
-<p>Rozbieżność = wysokość rzeczywista − wysokość w scenariuszu modelowym. Wartość dodatnia: jezioro wyżej niż przewidywał model; ujemna: niżej.</p>
+<p>Rozbieżność = wysokość rzeczywista − wysokość w scenariuszu <strong>modelu naturalnego (sprzed drenażu)</strong>. Wartość dodatnia: jezioro wyżej niż przewidywał model naturalny; ujemna: niżej (np. efekt drenażu).</p>
 <p><img alt="Rozbieżność w czasie" src="docs/ostrowskie/rozbieznosc_w_czasie.png" /></p>
 <h3>4.3. Zmiana poziomu: faktyczna vs prognoza</h3>
 <p>Punkty przy linii y = x oznaczają dobrą zgodność miesięcznych zmian.</p>
 <p><img alt="Zmiana faktyczna vs prognoza" src="docs/ostrowskie/zmiana_fakt_vs_prognoza.png" /></p>
 <h3>4.4. Błąd miesięczny</h3>
-<p>Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.</p>
+<p>Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu przez <strong>model naturalny (sprzed drenażu)</strong>.</p>
 <p><img alt="Błąd miesięczny" src="docs/ostrowskie/blad_miesieczny.png" /></p>
 <hr />
 <h2>5. Podsumowanie</h2>
@@ -28048,7 +28048,7 @@ python sources/lake.py wilczynskie
 <li>Scenariusz kumulatywny (wysokość z prognozowanej zmiany) jest porównywany z rzeczywistą wysokością; rozbieżność i błąd miesięczny opisują jakość prognoz.</li>
 </ul>
 <p>Szczegóły techniczne: <a href="../model.md">model.md</a>, <a href="podsumowanie_ewaluacji.md">podsumowanie_ewaluacji.md</a>.</p>
-<p><em>Wygenerowano: 2026-02-15 15:54</em></p></div></div>
+<p><em>Wygenerowano: 2026-02-15 16:13</em></p></div></div>
 <div id="docs-ostrowskie-podsumowanie-ewaluacji" class="panel" style="display:none"><div class="content-inner"><h1>Podsumowanie ewaluacji prognozy zmiany poziomu Jezioro Ostrowskie</h1>
 <p>Dla każdego miesiąca model otrzymuje opad i temperaturę (oraz cechy opóźnione z historii), wylicza prognozowaną zmianę poziomu Jezioro Ostrowskie i jest ona porównana z faktyczną zmianą.</p>
 <h2>Metryki</h2>
@@ -32432,7 +32432,7 @@ python sources/lake.py wilczynskie
 </tr>
 </tbody>
 </table>
-<p><em>Wygenerowano: 2026-02-15 15:54</em></p></div></div>
+<p><em>Wygenerowano: 2026-02-15 16:13</em></p></div></div>
 <div id="docs-ostrowskie-drenaz-miesieczny" class="panel" style="display:none"><div class="content-inner"><h1>Drenaż – Jezioro Ostrowskie</h1>
 <p>Drenaż = poziom z modelu naturalnego (bez drenażu) − poziom rzeczywisty. Przyrost = o ile wzrósł drenaż względem poprzedniego miesiąca.</p>
 <p><img alt="Suma przyrostu drenażu wg roku" src="docs/ostrowskie/drenaz_miesieczny.png" /></p>
@@ -34082,8 +34082,8 @@ python sources/lake.py wilczynskie
 <td>Miesiąc (sin/cos), Opad, Temperatura, 5 opóźnienia zmiany poziomu, 5 opóźnienia poziomu</td>
 </tr>
 <tr>
-<td>Trening</td>
-<td>Podział czasowy: trening do 2023-12, test od 2024 do 2023</td>
+<td>Trening (od–do)</td>
+<td><strong>Po drenażu:</strong> uczony od 2018-01 do 2023-12. <strong>Sprzed drenażu:</strong> uczony od 1976 do 2017-12.</td>
 </tr>
 <tr>
 <td>Wynik</td>
@@ -34103,13 +34103,13 @@ python sources/lake.py wilczynskie
 <p>Scenariusz modelowy: start od poziomu na początek pierwszego miesiąca; w każdym miesiącu dodawana jest <strong>prognozowana</strong> zmiana (kumulatywnie).</p>
 <p><img alt="Wysokość rzeczywista vs model" src="docs/powidzkie/wysokosc_rzeczywista_vs_model.png" /></p>
 <h3>4.2. Rozbieżność w czasie</h3>
-<p>Rozbieżność = wysokość rzeczywista − wysokość w scenariuszu modelowym. Wartość dodatnia: jezioro wyżej niż przewidywał model; ujemna: niżej.</p>
+<p>Rozbieżność = wysokość rzeczywista − wysokość w scenariuszu <strong>modelu naturalnego (sprzed drenażu)</strong>. Wartość dodatnia: jezioro wyżej niż przewidywał model naturalny; ujemna: niżej (np. efekt drenażu).</p>
 <p><img alt="Rozbieżność w czasie" src="docs/powidzkie/rozbieznosc_w_czasie.png" /></p>
 <h3>4.3. Zmiana poziomu: faktyczna vs prognoza</h3>
 <p>Punkty przy linii y = x oznaczają dobrą zgodność miesięcznych zmian.</p>
 <p><img alt="Zmiana faktyczna vs prognoza" src="docs/powidzkie/zmiana_fakt_vs_prognoza.png" /></p>
 <h3>4.4. Błąd miesięczny</h3>
-<p>Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.</p>
+<p>Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu przez <strong>model naturalny (sprzed drenażu)</strong>.</p>
 <p><img alt="Błąd miesięczny" src="docs/powidzkie/blad_miesieczny.png" /></p>
 <hr />
 <h2>5. Podsumowanie</h2>
@@ -34118,7 +34118,7 @@ python sources/lake.py wilczynskie
 <li>Scenariusz kumulatywny (wysokość z prognozowanej zmiany) jest porównywany z rzeczywistą wysokością; rozbieżność i błąd miesięczny opisują jakość prognoz.</li>
 </ul>
 <p>Szczegóły techniczne: <a href="../model.md">model.md</a>, <a href="podsumowanie_ewaluacji.md">podsumowanie_ewaluacji.md</a>.</p>
-<p><em>Wygenerowano: 2026-02-15 15:54</em></p></div></div>
+<p><em>Wygenerowano: 2026-02-15 16:13</em></p></div></div>
 <div id="docs-powidzkie-podsumowanie-ewaluacji" class="panel" style="display:none"><div class="content-inner"><h1>Podsumowanie ewaluacji prognozy zmiany poziomu Jezioro Powidzkie</h1>
 <p>Dla każdego miesiąca model otrzymuje opad i temperaturę (oraz cechy opóźnione z historii), wylicza prognozowaną zmianę poziomu Jezioro Powidzkie i jest ona porównana z faktyczną zmianą.</p>
 <h2>Metryki</h2>
@@ -40702,7 +40702,7 @@ python sources/lake.py wilczynskie
 </tr>
 </tbody>
 </table>
-<p><em>Wygenerowano: 2026-02-15 15:54</em></p></div></div>
+<p><em>Wygenerowano: 2026-02-15 16:13</em></p></div></div>
 <div id="docs-powidzkie-drenaz-miesieczny" class="panel" style="display:none"><div class="content-inner"><h1>Drenaż – Jezioro Powidzkie</h1>
 <p>Drenaż = poziom z modelu naturalnego (bez drenażu) − poziom rzeczywisty. Przyrost = o ile wzrósł drenaż względem poprzedniego miesiąca.</p>
 <p><img alt="Suma przyrostu drenażu wg roku" src="docs/powidzkie/drenaz_miesieczny.png" /></p>
@@ -42416,8 +42416,8 @@ python sources/lake.py wilczynskie
 <td>Miesiąc (sin/cos), Opad, Temperatura, opad i temperatura z opóźnieniem 1–2 mies., 3 opóźnienia zmiany poziomu, 3 opóźnienia poziomu</td>
 </tr>
 <tr>
-<td>Trening</td>
-<td>Podział czasowy: trening do 2023-12, test od 2024 do 2012</td>
+<td>Trening (od–do)</td>
+<td><strong>Po drenażu:</strong> uczony od 2015-01 do 2023-12. <strong>Sprzed drenażu:</strong> uczony od 1993 do 2011-12.</td>
 </tr>
 <tr>
 <td>Wynik</td>
@@ -42437,13 +42437,13 @@ python sources/lake.py wilczynskie
 <p>Scenariusz modelowy: start od poziomu na początek pierwszego miesiąca; w każdym miesiącu dodawana jest <strong>prognozowana</strong> zmiana (kumulatywnie).</p>
 <p><img alt="Wysokość rzeczywista vs model" src="docs/skulskawies/wysokosc_rzeczywista_vs_model.png" /></p>
 <h3>4.2. Rozbieżność w czasie</h3>
-<p>Rozbieżność = wysokość rzeczywista − wysokość w scenariuszu modelowym. Wartość dodatnia: jezioro wyżej niż przewidywał model; ujemna: niżej.</p>
+<p>Rozbieżność = wysokość rzeczywista − wysokość w scenariuszu <strong>modelu naturalnego (sprzed drenażu)</strong>. Wartość dodatnia: jezioro wyżej niż przewidywał model naturalny; ujemna: niżej (np. efekt drenażu).</p>
 <p><img alt="Rozbieżność w czasie" src="docs/skulskawies/rozbieznosc_w_czasie.png" /></p>
 <h3>4.3. Zmiana poziomu: faktyczna vs prognoza</h3>
 <p>Punkty przy linii y = x oznaczają dobrą zgodność miesięcznych zmian.</p>
 <p><img alt="Zmiana faktyczna vs prognoza" src="docs/skulskawies/zmiana_fakt_vs_prognoza.png" /></p>
 <h3>4.4. Błąd miesięczny</h3>
-<p>Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.</p>
+<p>Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu przez <strong>model naturalny (sprzed drenażu)</strong>.</p>
 <p><img alt="Błąd miesięczny" src="docs/skulskawies/blad_miesieczny.png" /></p>
 <hr />
 <h2>5. Podsumowanie</h2>
@@ -42452,7 +42452,7 @@ python sources/lake.py wilczynskie
 <li>Scenariusz kumulatywny (wysokość z prognozowanej zmiany) jest porównywany z rzeczywistą wysokością; rozbieżność i błąd miesięczny opisują jakość prognoz.</li>
 </ul>
 <p>Szczegóły techniczne: <a href="../model.md">model.md</a>, <a href="podsumowanie_ewaluacji.md">podsumowanie_ewaluacji.md</a>.</p>
-<p><em>Wygenerowano: 2026-02-15 15:54</em></p></div></div>
+<p><em>Wygenerowano: 2026-02-15 16:13</em></p></div></div>
 <div id="docs-skulskawies-podsumowanie-ewaluacji" class="panel" style="display:none"><div class="content-inner"><h1>Podsumowanie ewaluacji prognozy zmiany poziomu Jezioro Skulska Wieś</h1>
 <p>Dla każdego miesiąca model otrzymuje opad i temperaturę (oraz cechy opóźnione z historii), wylicza prognozowaną zmianę poziomu Jezioro Skulska Wieś i jest ona porównana z faktyczną zmianą.</p>
 <h2>Metryki</h2>
@@ -46836,7 +46836,7 @@ python sources/lake.py wilczynskie
 </tr>
 </tbody>
 </table>
-<p><em>Wygenerowano: 2026-02-15 15:54</em></p></div></div>
+<p><em>Wygenerowano: 2026-02-15 16:13</em></p></div></div>
 <div id="docs-skulskawies-drenaz-miesieczny" class="panel" style="display:none"><div class="content-inner"><h1>Drenaż – Jezioro Skulska Wieś</h1>
 <p>Drenaż = poziom z modelu naturalnego (bez drenażu) − poziom rzeczywisty. Przyrost = o ile wzrósł drenaż względem poprzedniego miesiąca.</p>
 <p><img alt="Suma przyrostu drenażu wg roku" src="docs/skulskawies/drenaz_miesieczny.png" /></p>
@@ -48486,8 +48486,8 @@ python sources/lake.py wilczynskie
 <td>Miesiąc (sin/cos), Opad, Temperatura, opad i temperatura z opóźnieniem 1–13 mies., 3 opóźnienia zmiany poziomu, 3 opóźnienia poziomu</td>
 </tr>
 <tr>
-<td>Trening</td>
-<td>Podział czasowy: trening do 2023-12, test od 2024 do 2023</td>
+<td>Trening (od–do)</td>
+<td><strong>Po drenażu:</strong> uczony od 2011-01 do 2023-12. <strong>Sprzed drenażu:</strong> uczony od 1994 do 2002-12.</td>
 </tr>
 <tr>
 <td>Wynik</td>
@@ -48507,13 +48507,13 @@ python sources/lake.py wilczynskie
 <p>Scenariusz modelowy: start od poziomu na początek pierwszego miesiąca; w każdym miesiącu dodawana jest <strong>prognozowana</strong> zmiana (kumulatywnie).</p>
 <p><img alt="Wysokość rzeczywista vs model" src="docs/suszewskie/wysokosc_rzeczywista_vs_model.png" /></p>
 <h3>4.2. Rozbieżność w czasie</h3>
-<p>Rozbieżność = wysokość rzeczywista − wysokość w scenariuszu modelowym. Wartość dodatnia: jezioro wyżej niż przewidywał model; ujemna: niżej.</p>
+<p>Rozbieżność = wysokość rzeczywista − wysokość w scenariuszu <strong>modelu naturalnego (sprzed drenażu)</strong>. Wartość dodatnia: jezioro wyżej niż przewidywał model naturalny; ujemna: niżej (np. efekt drenażu).</p>
 <p><img alt="Rozbieżność w czasie" src="docs/suszewskie/rozbieznosc_w_czasie.png" /></p>
 <h3>4.3. Zmiana poziomu: faktyczna vs prognoza</h3>
 <p>Punkty przy linii y = x oznaczają dobrą zgodność miesięcznych zmian.</p>
 <p><img alt="Zmiana faktyczna vs prognoza" src="docs/suszewskie/zmiana_fakt_vs_prognoza.png" /></p>
 <h3>4.4. Błąd miesięczny</h3>
-<p>Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.</p>
+<p>Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu przez <strong>model naturalny (sprzed drenażu)</strong>.</p>
 <p><img alt="Błąd miesięczny" src="docs/suszewskie/blad_miesieczny.png" /></p>
 <hr />
 <h2>5. Podsumowanie</h2>
@@ -48522,7 +48522,7 @@ python sources/lake.py wilczynskie
 <li>Scenariusz kumulatywny (wysokość z prognozowanej zmiany) jest porównywany z rzeczywistą wysokością; rozbieżność i błąd miesięczny opisują jakość prognoz.</li>
 </ul>
 <p>Szczegóły techniczne: <a href="../model.md">model.md</a>, <a href="podsumowanie_ewaluacji.md">podsumowanie_ewaluacji.md</a>.</p>
-<p><em>Wygenerowano: 2026-02-15 15:54</em></p></div></div>
+<p><em>Wygenerowano: 2026-02-15 16:13</em></p></div></div>
 <div id="docs-suszewskie-podsumowanie-ewaluacji" class="panel" style="display:none"><div class="content-inner"><h1>Podsumowanie ewaluacji prognozy zmiany poziomu Jezioro Suszewskie</h1>
 <p>Dla każdego miesiąca model otrzymuje opad i temperaturę (oraz cechy opóźnione z historii), wylicza prognozowaną zmianę poziomu Jezioro Suszewskie i jest ona porównana z faktyczną zmianą.</p>
 <h2>Metryki</h2>
@@ -52664,7 +52664,7 @@ python sources/lake.py wilczynskie
 </tr>
 </tbody>
 </table>
-<p><em>Wygenerowano: 2026-02-15 15:54</em></p></div></div>
+<p><em>Wygenerowano: 2026-02-15 16:13</em></p></div></div>
 <div id="docs-suszewskie-drenaz-miesieczny" class="panel" style="display:none"><div class="content-inner"><h1>Drenaż – Jezioro Suszewskie</h1>
 <p>Drenaż = poziom z modelu naturalnego (bez drenażu) − poziom rzeczywisty. Przyrost = o ile wzrósł drenaż względem poprzedniego miesiąca.</p>
 <p><img alt="Suma przyrostu drenażu wg roku" src="docs/suszewskie/drenaz_miesieczny.png" /></p>
@@ -54306,8 +54306,8 @@ python sources/lake.py wilczynskie
 <td>Miesiąc (sin/cos), Opad, Temperatura, opad i temperatura z opóźnieniem 1–1 mies., 3 opóźnienia zmiany poziomu, 3 opóźnienia poziomu</td>
 </tr>
 <tr>
-<td>Trening</td>
-<td>Podział czasowy: trening do 2023-12, test od 2024 do 2023</td>
+<td>Trening (od–do)</td>
+<td><strong>Po drenażu:</strong> uczony od 2015-01 do 2023-12. <strong>Sprzed drenażu:</strong> uczony od 1993 do 2002-12.</td>
 </tr>
 <tr>
 <td>Wynik</td>
@@ -54327,13 +54327,13 @@ python sources/lake.py wilczynskie
 <p>Scenariusz modelowy: start od poziomu na początek pierwszego miesiąca; w każdym miesiącu dodawana jest <strong>prognozowana</strong> zmiana (kumulatywnie).</p>
 <p><img alt="Wysokość rzeczywista vs model" src="docs/wilczynskie/wysokosc_rzeczywista_vs_model.png" /></p>
 <h3>4.2. Rozbieżność w czasie</h3>
-<p>Rozbieżność = wysokość rzeczywista − wysokość w scenariuszu modelowym. Wartość dodatnia: jezioro wyżej niż przewidywał model; ujemna: niżej.</p>
+<p>Rozbieżność = wysokość rzeczywista − wysokość w scenariuszu <strong>modelu naturalnego (sprzed drenażu)</strong>. Wartość dodatnia: jezioro wyżej niż przewidywał model naturalny; ujemna: niżej (np. efekt drenażu).</p>
 <p><img alt="Rozbieżność w czasie" src="docs/wilczynskie/rozbieznosc_w_czasie.png" /></p>
 <h3>4.3. Zmiana poziomu: faktyczna vs prognoza</h3>
 <p>Punkty przy linii y = x oznaczają dobrą zgodność miesięcznych zmian.</p>
 <p><img alt="Zmiana faktyczna vs prognoza" src="docs/wilczynskie/zmiana_fakt_vs_prognoza.png" /></p>
 <h3>4.4. Błąd miesięczny</h3>
-<p>Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.</p>
+<p>Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu przez <strong>model naturalny (sprzed drenażu)</strong>.</p>
 <p><img alt="Błąd miesięczny" src="docs/wilczynskie/blad_miesieczny.png" /></p>
 <hr />
 <h2>5. Podsumowanie</h2>
@@ -54342,7 +54342,7 @@ python sources/lake.py wilczynskie
 <li>Scenariusz kumulatywny (wysokość z prognozowanej zmiany) jest porównywany z rzeczywistą wysokością; rozbieżność i błąd miesięczny opisują jakość prognoz.</li>
 </ul>
 <p>Szczegóły techniczne: <a href="../model.md">model.md</a>, <a href="podsumowanie_ewaluacji.md">podsumowanie_ewaluacji.md</a>.</p>
-<p><em>Wygenerowano: 2026-02-15 15:54</em></p></div></div>
+<p><em>Wygenerowano: 2026-02-15 16:13</em></p></div></div>
 <div id="docs-wilczynskie-podsumowanie-ewaluacji" class="panel" style="display:none"><div class="content-inner"><h1>Podsumowanie ewaluacji prognozy zmiany poziomu Jezioro Wilczyńskie</h1>
 <p>Dla każdego miesiąca model otrzymuje opad i temperaturę (oraz cechy opóźnione z historii), wylicza prognozowaną zmianę poziomu Jezioro Wilczyńskie i jest ona porównana z faktyczną zmianą.</p>
 <h2>Metryki</h2>
@@ -58726,7 +58726,7 @@ python sources/lake.py wilczynskie
 </tr>
 </tbody>
 </table>
-<p><em>Wygenerowano: 2026-02-15 15:54</em></p></div></div>
+<p><em>Wygenerowano: 2026-02-15 16:13</em></p></div></div>
 <div id="docs-wilczynskie-drenaz-miesieczny" class="panel" style="display:none"><div class="content-inner"><h1>Drenaż – Jezioro Wilczyńskie</h1>
 <p>Drenaż = poziom z modelu naturalnego (bez drenażu) − poziom rzeczywisty. Przyrost = o ile wzrósł drenaż względem poprzedniego miesiąca.</p>
 <p><img alt="Suma przyrostu drenażu wg roku" src="docs/wilczynskie/drenaz_miesieczny.png" /></p>

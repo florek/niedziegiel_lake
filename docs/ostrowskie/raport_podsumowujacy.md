@@ -24,10 +24,11 @@ Projekt ma na celu:
 |--------|------|
 | Algorytm | Gradient Boosting (regresja), scikit-learn |
 | Cechy wejściowe | Miesiąc (sin/cos), Opad, Temperatura, opad i temperatura z opóźnieniem 1–2 mies., 3 opóźnienia zmiany poziomu, 3 opóźnienia poziomu |
-| Trening | Podział czasowy: trening do 2023-12, test od 2024 do 2023 |
+| Trening (od–do) | **Po drenażu:** uczony od 2011-01 do 2023-12. **Sprzed drenażu:** uczony od 1993 do 2003-12. |
 | Wynik | Prognoza zmiany poziomu na dany miesiąc (cm) |
 
 Model **nie** używa bieżącego poziomu – tylko opad, temperatura, sezon i historia.
+
 
 ---
 
@@ -45,7 +46,7 @@ Scenariusz modelowy: start od poziomu na początek pierwszego miesiąca; w każd
 
 ### 4.2. Rozbieżność w czasie
 
-Rozbieżność = wysokość rzeczywista − wysokość w scenariuszu modelowym. Wartość dodatnia: jezioro wyżej niż przewidywał model; ujemna: niżej.
+Rozbieżność = wysokość rzeczywista − wysokość w scenariuszu **modelu naturalnego (sprzed drenażu)**. Wartość dodatnia: jezioro wyżej niż przewidywał model naturalny; ujemna: niżej (np. efekt drenażu).
 
 ![Rozbieżność w czasie](rozbieznosc_w_czasie.png)
 
@@ -57,7 +58,7 @@ Punkty przy linii y = x oznaczają dobrą zgodność miesięcznych zmian.
 
 ### 4.4. Błąd miesięczny
 
-Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.
+Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu przez **model naturalny (sprzed drenażu)**.
 
 ![Błąd miesięczny](blad_miesieczny.png)
 
@@ -70,4 +71,4 @@ Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.
 
 Szczegóły techniczne: [model.md](../model.md), [podsumowanie_ewaluacji.md](podsumowanie_ewaluacji.md).
 
-*Wygenerowano: 2026-02-15 15:54*
+*Wygenerowano: 2026-02-15 16:13*
