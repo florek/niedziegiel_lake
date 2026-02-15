@@ -62,10 +62,14 @@ def _plot_wysokosci(rows, figs_dir, lake_name, lake_id, rows_natural=None):
 def _plot_rozbieznosc(rows, figs_dir):
     dates = [np.datetime64(r["data"] + "-01") for r in rows]
     rozb = [r["rozbieznosc"] * 100 for r in rows]
-    fig, ax = plt.subplots(figsize=(12, 4))
-    ax.fill_between(dates, 0, rozb, where=[x >= 0 for x in rozb], color="#1f77b4", alpha=0.6, label="Rzeczywistość > model")
-    ax.fill_between(dates, 0, rozb, where=[x < 0 for x in rozb], color="#ff7f0e", alpha=0.6, label="Rzeczywistość < model")
-    ax.axhline(y=0, color="black", linewidth=0.5)
+    fig, ax = plt.subplots(figsize=(12, 5))
+    ax.fill_between(dates, 0, rozb, where=[x >= 0 for x in rozb], color="#1f77b4", alpha=0.35, label="Rzeczywistość > model")
+    ax.fill_between(dates, 0, rozb, where=[x < 0 for x in rozb], color="#ff7f0e", alpha=0.35, label="Rzeczywistość < model")
+    ax.plot(dates, rozb, color="#1a1a1a", linewidth=1.2, zorder=2)
+    ax.axhline(y=0, color="gray", linewidth=1, linestyle="-", zorder=1)
+    y_min, y_max = min(rozb), max(rozb)
+    margin = max(10, (y_max - y_min) * 0.05) if y_max > y_min else 10
+    ax.set_ylim(y_min - margin, y_max + margin)
     ax.set_xlabel("Data")
     ax.set_ylabel("Rozbieżność (cm)")
     ax.set_title("Rozbieżność: wysokość rzeczywista − scenariusz modelowy")
