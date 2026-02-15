@@ -88,18 +88,22 @@ def _build_md(rows, mae, rmse, n_test, n_all, lake_name="Jezioro"):
         "",
         "## Metryki",
         "",
-        f"- **MAE (średni błąd bezwzględny):** {mae:.4f} m",
-        f"- **RMSE (pierwiastek błędu średniokwadratowego):** {rmse:.4f} m",
+        f"- **MAE (średni błąd bezwzględny):** {mae * 100:.2f} cm",
+        f"- **RMSE (pierwiastek błędu średniokwadratowego):** {rmse * 100:.2f} cm",
         f"- **Liczba miesięcy (zbior testowy):** {n_test}",
         f"- **Liczba miesięcy (tabela / wykres):** {n_all}",
         "",
         "## Porównanie miesięczne",
         "",
-        "| Data | Opad (mm) | Temperatura (°C) | Zmiana faktyczna (m) | Zmiana prognoza (m) | Błąd (m) | Wysokość rzeczywista (m) | Wysokość scenariusz modelowy (m) | Rozbieżność (m) |",
-        "|------|-----------|------------------|----------------------|---------------------|----------|---------------------------|-----------------------------------|-----------------|",
+        "| Data | Opad (mm) | Temperatura (°C) | Zmiana faktyczna (cm) | Zmiana prognoza (cm) | Błąd (cm) | Wysokość rzeczywista (m) | Wysokość scenariusz modelowy (m) | Rozbieżność (cm) |",
+        "|------|-----------|------------------|-----------------------|----------------------|-----------|---------------------------|-----------------------------------|------------------|",
     ]
     for r in rows:
-        lines.append(f"| {r['data']} | {r['opad']} | {r['temperatura']} | {r['zmiana_fakt']} | {r['zmiana_prognoza']} | {r['błąd']} | {r['wysokosc_rzeczywista']} | {r['wysokosc_model']} | {r['rozbieznosc']} |")
+        z_f = r["zmiana_fakt"] * 100
+        z_p = r["zmiana_prognoza"] * 100
+        blad_cm = r["błąd"] * 100
+        rozb_cm = r["rozbieznosc"] * 100
+        lines.append(f"| {r['data']} | {r['opad']} | {r['temperatura']} | {z_f:+.1f} | {z_p:+.1f} | {blad_cm:+.1f} | {r['wysokosc_rzeczywista']} | {r['wysokosc_model']} | {rozb_cm:+.1f} |")
     lines.append("")
     lines.append(f"*Wygenerowano: {datetime.now().strftime('%Y-%m-%d %H:%M')}*")
     return "\n".join(lines)

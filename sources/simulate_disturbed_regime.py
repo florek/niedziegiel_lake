@@ -180,12 +180,13 @@ def _write_report(results: list[dict], scenario_start: str, scenario_end: str, d
     lines.extend([
         "## Wyniki symulacji",
         "",
-        "| Data | Opad (mm) | Temperatura (°C) | Zmiana prognoza (m) | Wysokość symulowana (m) |",
+        "| Data | Opad (mm) | Temperatura (°C) | Zmiana prognoza (cm) | Wysokość symulowana (m) |",
         "|------|-----------|------------------|----------------------|--------------------------|",
     ])
     for r in results:
+        zm_cm = r["zmiana_prognoza"] * 100
         lines.append(
-            f"| {r['data']} | {r['opad']} | {r['temperatura']} | {r['zmiana_prognoza']} | {r['wysokosc_symulowana']} |"
+            f"| {r['data']} | {r['opad']} | {r['temperatura']} | {zm_cm:+.1f} | {r['wysokosc_symulowana']} |"
         )
     lines.extend([
         "",

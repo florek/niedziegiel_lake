@@ -288,7 +288,7 @@ def build_report(results: list[dict], wznios_by_lake: dict[str, dict]) -> str:
         ys_5 = r.get("recovery_years_at_5cm")
         lines.append(f"### {name}")
         lines.append("")
-        lines.append(f"- **Średnia rozbieżność (ostatnie 12 miesięcy):** {mean_m:.3f} m")
+        lines.append(f"- **Średnia rozbieżność (ostatnie 12 miesięcy):** {mean_m * 100:.1f} cm")
         lines.append(f"- **Trend rozbieżności:** {trend:.2f} cm/rok" if trend is not None else "- **Trend rozbieżności:** —")
         lines.append(f"- **Szacunek odbudowy (scenariusz A, symmetric):** {ys_sym} lat" if ys_sym is not None else "- **Szacunek odbudowy (scenariusz A):** —")
         lines.append(f"- **Szacunek odbudowy (scenariusz B, {RECOVERY_RATE_FIXED_CM_PER_YEAR} cm/rok):** {ys_5} lat" if ys_5 is not None else "- **Szacunek odbudowy (scenariusz B):** —")
@@ -341,7 +341,7 @@ def _build_single_lake_report(r: dict, wznios_row: dict | None = None) -> str:
     lines.extend([
         "## Wyniki",
         "",
-        f"- **Średnia rozbieżność (ostatnie 12 miesięcy):** {mean_m:.3f} m",
+        f"- **Średnia rozbieżność (ostatnie 12 miesięcy):** {mean_m * 100:.1f} cm",
         f"- **Trend rozbieżności:** {trend:.2f} cm/rok" if trend is not None else "- **Trend rozbieżności:** —",
         f"- **Szacunek odbudowy (scenariusz A, symmetric):** {ys_sym} lat" if ys_sym is not None else "- **Szacunek odbudowy (scenariusz A):** —",
         f"- **Szacunek odbudowy (scenariusz B, {RECOVERY_RATE_FIXED_CM_PER_YEAR} cm/rok):** {ys_5} lat" if ys_5 is not None else "- **Szacunek odbudowy (scenariusz B):** —",

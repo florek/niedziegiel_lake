@@ -353,6 +353,15 @@ def _format_koniec_miesiaca(rok: int, miesiac: int) -> str:
     return f"{MIESIACE_DOPELNIENIA[miesiac - 1]} {rok}"
 
 
+def _format_zmiana_m_cm(roznica_m: float) -> str:
+    cm = roznica_m * 100
+    return f"{roznica_m:+.3f} m ({cm:+.1f} cm)"
+
+
+def _format_zmiana_cm(zmiana_m: float) -> str:
+    return f"{zmiana_m * 100:+.1f} cm"
+
+
 def _write_report(
     fig_filename: str,
     warianty: list[dict] | None = None,
@@ -394,7 +403,7 @@ def _write_report(
         poziom_wazony = sum(v["poziom_koniec"] * (v["szansa_pct"] / 100.0) for v in warianty if v.get("szansa_pct") is not None)
         level_ref = level_na_data_referencyjna if level_na_data_referencyjna is not None else warianty[0]["level_start"]
         roznica = poziom_wazony - level_ref
-        roznica_txt = f"przybędzie {roznica:+.3f} m" if roznica >= 0 else f"ubędzie {-roznica:.3f} m"
+        roznica_txt = f"przybędzie {_format_zmiana_m_cm(roznica)}" if roznica >= 0 else f"ubędzie {-roznica:.3f} m ({roznica * 100:+.1f} cm)"
         txt_koniec = _format_koniec_miesiaca(rok_kon, mies_kon)
         txt_ref = _format_koniec_miesiaca(rok_ref, mies_ref)
         lines.extend([
@@ -412,18 +421,18 @@ def _write_report(
                 "",
                 f"![Symulacja {nazwa}]({fname})",
                 "",
-                "| Data | Opad (mm) | Temperatura (°C) | Zmiana prognoza (m) | Poziom (m n.p.m.) |",
+                "| Data | Opad (mm) | Temperatura (°C) | Zmiana prognoza (cm) | Poziom (m n.p.m.) |",
                 "|------|-----------|------------------|----------------------|-------------------|",
             ])
             for r in v["wyniki"]:
-                lines.append(f"| {r['data']} | {round(r['opad'], 1)} | {round(r['temperatura'], 1)} | {r['zmiana_prognoza']} | {r['poziom']} |")
+                lines.append(f"| {r['data']} | {round(r['opad'], 1)} | {round(r['temperatura'], 1)} | {_format_zmiana_cm(r['zmiana_prognoza'])} | {r['poziom']} |")
             szansa_line = "- **Średnia ważona wszystkich wariantów (bez własnej szansy realizacji).**" if v.get("czy_srednia_wazona") else f"- **Szansa realizacji:** {v['szansa_pct']} %"
             lines.extend([
                 "",
                 szansa_line,
                 f"- **Średnia temperatura roczna (prognoza):** {round(v['srednia_temp_roczna'], 1)} °C",
                 f"- **Suma opadu (prognoza):** {round(v['suma_opadu'], 1)} mm",
-                f"- **Różnica poziomu wody** (koniec symulacji − start): {v['roznica_poziomu']:+.3f} m",
+                f"- **Różnica poziomu wody** (koniec symulacji − start): {_format_zmiana_m_cm(v['roznica_poziomu'])}",
                 f"- **Poziom na koniec {_format_koniec_miesiaca(*data_koniec_prognozy)}:** {v['poziom_koniec']} m n.p.m.",
                 "",
             ])
