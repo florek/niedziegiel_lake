@@ -1,5 +1,7 @@
 # Prognoza zmiany poziomu jezior (Budzisławskie, Koziegłowskie, Kownackie, Niedzięgiel, Ostrowskie, Powidzkie, Skulska Wieś, Suszewskie, Wilczyńskie)
 
+[https://florek.github.io/niedziegiel_lake](https://florek.github.io/niedziegiel_lake)
+
 Projekt zawiera modele uczenia maszynowego do **prognozowania miesięcznej zmiany poziomu** wybranego jeziora na podstawie danych z pliku CSV (daty, poziom, opad, temperatura). Obsługiwane jeziora: **Jezioro Budzisławskie**, **Jezioro Koziegłowskie**, **Jezioro Kownackie**, **Jezioro Niedzięgiel**, **Jezioro Ostrowskie**, **Jezioro Powidzkie**, **Jezioro Skulska Wieś**, **Jezioro Suszewskie**, **Jezioro Wilczyńskie**.
 
 ## Wymagania

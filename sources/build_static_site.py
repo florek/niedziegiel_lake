@@ -18,10 +18,6 @@ LAKES = [
 ]
 DOCS_ROOT = [
     ("docs/model.md", "Model"),
-    ("docs/raport_ogolny.md", "Raport ogólny"),
-    ("docs/podsumowanie_zbiorcze.md", "Podsumowanie zbiorcze"),
-    ("docs/drenaz_miesieczny.md", "Drenaż miesięczny"),
-    ("docs/szacunek_odbudowy_po_zaniku_drenazu.md", "Szacunek odbudowy po zaniku drenażu"),
 ]
 LAKE_DOCS = [
     ("prognoza.md", "Prognoza 12 mies."),
