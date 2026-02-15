@@ -14,7 +14,7 @@ Projekt ma na celu:
 - **Zakres:** dane miesięczne (pierwszy dzień miesiąca).
 - **Kolumny:** Data, Poziom (m), Zmiana (m), Opad (mm), Temperatura (°C).
 - **Target:** Zmiana – miesięczna zmiana poziomu.
-- Wiersze z błędami (#ERROR!) lub brakami są pomijane. Po usunięciu lagów (3 mies.) do analizy wchodzi **370** miesięcy.
+- Wiersze z błędami (#ERROR!) lub brakami są pomijane. Po usunięciu lagów (3 mies.) do analizy wchodzi **396** miesięcy.
 
 ---
 
@@ -33,9 +33,9 @@ Model **nie** używa bieżącego poziomu – tylko opad, temperatura, sezon i hi
 
 ## 4. Wyniki ewaluacji
 
-- **MAE (średni błąd bezwzględny):** 3.60 cm
-- **RMSE:** 4.66 cm
-- **Liczba miesięcy:** 370
+- **MAE (średni błąd bezwzględny):** 3.58 cm
+- **RMSE:** 4.65 cm
+- **Liczba miesięcy:** 396
 
 ### 4.1. Wysokość wody: rzeczywista vs scenariusz modelowy
 
@@ -65,9 +65,9 @@ Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu.
 
 ## 5. Podsumowanie
 
-- Model prognozuje miesięczną zmianę poziomu Jezioro Kownackie z MAE ~3.60 cm.
+- Model prognozuje miesięczną zmianę poziomu Jezioro Kownackie z MAE ~3.58 cm.
 - Scenariusz kumulatywny (wysokość z prognozowanej zmiany) jest porównywany z rzeczywistą wysokością; rozbieżność i błąd miesięczny opisują jakość prognoz.
 
 Szczegóły techniczne: [model.md](../model.md), [podsumowanie_ewaluacji.md](podsumowanie_ewaluacji.md).
 
-*Wygenerowano: 2026-02-15 12:19*
+*Wygenerowano: 2026-02-15 12:22*
