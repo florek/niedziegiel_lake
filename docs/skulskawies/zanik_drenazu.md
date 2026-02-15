@@ -6,8 +6,8 @@
 
 ## Wyniki
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** 0.094 m
-- **Trend rozbieżności:** 0.71 cm/rok
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 2.1 cm
+- **Trend rozbieżności:** 0.55 cm/rok
 - **Szacunek odbudowy (scenariusz A):** —
 - **Szacunek odbudowy (scenariusz B):** —
 

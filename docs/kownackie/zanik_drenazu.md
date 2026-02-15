@@ -1,4 +1,4 @@
-# Zanik drenażu — Jezioro Wilczyńskie
+# Zanik drenażu — Jezioro Kownackie
 
 - **Rozbieżność** = wysokość rzeczywista − wysokość w scenariuszu modelowym. Ujemna = jezioro poniżej scenariusza.
 - Przy zaniku dodatkowego drenażu szacuje się lata do zamknięcia luki (szacunek teoretyczny).
@@ -6,11 +6,11 @@
 
 ## Wyniki
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -495.9 cm
-- **Trend rozbieżności:** -19.29 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 25.7 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 99.2 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** -318.4 cm
+- **Trend rozbieżności:** -11.10 cm/rok
+- **Szacunek odbudowy (scenariusz A, symmetric):** 28.7 lat
+- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 63.7 lat
 
 ## Wykres projekcji odbudowy
 
-![Odbudowa](../odbudowa/odbudowa_wilczynskie.png)
+![Odbudowa](../odbudowa/odbudowa_kownackie.png)

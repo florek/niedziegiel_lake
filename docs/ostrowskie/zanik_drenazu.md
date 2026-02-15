@@ -6,10 +6,10 @@
 
 ## Wyniki
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -3.334 m
-- **Trend rozbieżności:** -10.66 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 31.3 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 66.7 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** -342.1 cm
+- **Trend rozbieżności:** -11.34 cm/rok
+- **Szacunek odbudowy (scenariusz A, symmetric):** 30.2 lat
+- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 68.4 lat
 
 ## Wykres projekcji odbudowy
 

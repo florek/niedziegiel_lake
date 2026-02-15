@@ -19,6 +19,7 @@ Dwa wzniosy dla porównania (źródło: `data/zanik_drenazu.csv`): wznios bazowy
 |---------|-----------------|-------------------------------------|
 | Jezioro Budzisławskie | — | — |
 | Jezioro Koziegłowskie | — | — |
+| Jezioro Kownackie | — | — |
 | Jezioro Niedzięgiel | — | — |
 | Jezioro Ostrowskie | — | — |
 | Jezioro Powidzkie | — | — |
@@ -32,59 +33,66 @@ Dwa wzniosy dla porównania (źródło: `data/zanik_drenazu.csv`): wznios bazowy
 
 ### Jezioro Budzisławskie
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -1.865 m
-- **Trend rozbieżności:** -6.60 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 28.2 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 37.3 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** -200.2 cm
+- **Trend rozbieżności:** -6.86 cm/rok
+- **Szacunek odbudowy (scenariusz A, symmetric):** 29.2 lat
+- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 40.0 lat
 
 ### Jezioro Koziegłowskie
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -0.940 m
-- **Trend rozbieżności:** -4.41 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 21.3 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 18.8 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** -73.9 cm
+- **Trend rozbieżności:** -4.20 cm/rok
+- **Szacunek odbudowy (scenariusz A, symmetric):** 17.6 lat
+- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 14.8 lat
+
+### Jezioro Kownackie
+
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** -318.4 cm
+- **Trend rozbieżności:** -11.10 cm/rok
+- **Szacunek odbudowy (scenariusz A, symmetric):** 28.7 lat
+- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 63.7 lat
 
 ### Jezioro Niedzięgiel
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -0.729 m
-- **Trend rozbieżności:** -0.84 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 86.7 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 14.6 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** -96.7 cm
+- **Trend rozbieżności:** -1.17 cm/rok
+- **Szacunek odbudowy (scenariusz A, symmetric):** 82.6 lat
+- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 19.3 lat
 
 ### Jezioro Ostrowskie
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -3.334 m
-- **Trend rozbieżności:** -10.66 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 31.3 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 66.7 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** -342.1 cm
+- **Trend rozbieżności:** -11.34 cm/rok
+- **Szacunek odbudowy (scenariusz A, symmetric):** 30.2 lat
+- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 68.4 lat
 
 ### Jezioro Powidzkie
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -0.376 m
-- **Trend rozbieżności:** -0.67 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 56.2 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 7.5 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** -32.0 cm
+- **Trend rozbieżności:** -0.74 cm/rok
+- **Szacunek odbudowy (scenariusz A, symmetric):** 43.3 lat
+- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 6.4 lat
 
 ### Jezioro Skulska Wieś
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** 0.094 m
-- **Trend rozbieżności:** 0.71 cm/rok
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 2.1 cm
+- **Trend rozbieżności:** 0.55 cm/rok
 - **Szacunek odbudowy (scenariusz A):** —
 - **Szacunek odbudowy (scenariusz B):** —
 
 ### Jezioro Suszewskie
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -4.394 m
-- **Trend rozbieżności:** -15.64 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 28.1 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 87.9 lat
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** -442.6 cm
+- **Trend rozbieżności:** -15.93 cm/rok
+- **Szacunek odbudowy (scenariusz A, symmetric):** 27.8 lat
+- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 88.5 lat
 
 ### Jezioro Wilczyńskie
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** -5.170 m
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** -495.9 cm
 - **Trend rozbieżności:** -19.29 cm/rok
-- **Szacunek odbudowy (scenariusz A, symmetric):** 26.8 lat
-- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 103.4 lat
+- **Szacunek odbudowy (scenariusz A, symmetric):** 25.7 lat
+- **Szacunek odbudowy (scenariusz B, 5.0 cm/rok):** 99.2 lat
 
 ---
 
@@ -99,6 +107,10 @@ Dwa wzniosy dla porównania (źródło: `data/zanik_drenazu.csv`): wznios bazowy
 ### Jezioro Koziegłowskie
 
 ![Odbudowa kozieglowskie](odbudowa/odbudowa_kozieglowskie.png)
+
+### Jezioro Kownackie
+
+![Odbudowa kownackie](odbudowa/odbudowa_kownackie.png)
 
 ### Jezioro Niedzięgiel
 
