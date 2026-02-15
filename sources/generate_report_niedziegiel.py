@@ -299,8 +299,10 @@ def _plot_wariant_symulacja(
     hist = df_poziom[df_poziom[lake.COL_DATA] >= cutoff]
     hist_dates = pd.to_datetime(hist[lake.COL_DATA])
     hist_levels = hist[lake.COL_POZIOM].astype(float)
-    sim_dates = [start_ym + "-01"] + [r["data"] + "-01" for r in wyniki]
-    sim_levels = [level_start] + [float(r["poziom"]) for r in wyniki]
+    jan_2026 = df_poziom[(df_poziom[lake.COL_DATA].dt.year == 2026) & (df_poziom[lake.COL_DATA].dt.month == 1)]
+    level_jan_2026 = float(jan_2026.iloc[0][lake.COL_POZIOM]) if len(jan_2026) else level_start
+    sim_dates = ["2026-01-01"] + [r["data"] + "-01" for r in wyniki]
+    sim_levels = [level_jan_2026] + [float(r["poziom"]) for r in wyniki]
     fig, ax = plt.subplots(figsize=(14, 5))
     ax.plot(hist_dates, hist_levels, color="#1f77b4", linewidth=1.2, label=f"Historia ({OKNO_HISTORII_LAT} lat)")
     ax.plot(pd.to_datetime(sim_dates), sim_levels, color="#d62728", linewidth=1.5, marker="o", markersize=4, label="Symulacja (12 mies.)")
