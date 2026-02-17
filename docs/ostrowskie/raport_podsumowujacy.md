@@ -23,7 +23,7 @@ Projekt ma na celu:
 | Element | Opis |
 |--------|------|
 | Algorytm | Gradient Boosting (regresja), scikit-learn |
-| Cechy wejściowe | Miesiąc (sin/cos), Opad, Temperatura, opad i temperatura z opóźnieniem 1–2 mies., 3 opóźnienia zmiany poziomu, 3 opóźnienia poziomu |
+| Cechy wejściowe | Miesiąc (sin/cos), Opad, Temperatura, opad i temperatura z opóźnieniem 1–1 mies., 3 opóźnienia zmiany poziomu, 3 opóźnienia poziomu |
 | Trening (od–do) | **Po drenażu:** uczony od 2011-01 do 2023-12. **Sprzed drenażu:** uczony od 1993 do 2003-12. |
 | Wynik | Prognoza zmiany poziomu na dany miesiąc (cm) |
 
@@ -40,8 +40,8 @@ Model **nie** używa bieżącego poziomu – tylko opad, temperatura, sezon i hi
 
 ## 4. Wyniki ewaluacji
 
-- **MAE (średni błąd bezwzględny):** nan cm
-- **RMSE:** nan cm
+- **MAE (średni błąd bezwzględny):** 2.11 cm
+- **RMSE:** 4.34 cm
 - **Liczba miesięcy:** 396
 
 ### 4.1. Wysokość wody: rzeczywista vs scenariusz modelowy
@@ -54,11 +54,13 @@ Scenariusz modelowy: start od poziomu na początek pierwszego miesiąca; w każd
 
 Rozbieżność = wysokość rzeczywista − wysokość w scenariuszu **modelu naturalnego (sprzed drenażu)**. Wartość dodatnia: jezioro wyżej niż przewidywał model naturalny; ujemna: niżej (np. efekt drenażu).
 
+W **okresie treningowym** modelu naturalnego (na lewo od pionowej linii): średnia bezwzględna rozbieżność = **3.3 cm** (129 miesięcy). Linia pionowa = koniec treningu; po prawej = prognoza poza danymi treningowymi.
+
 ![Rozbieżność w czasie](rozbieznosc_w_czasie.png)
 
-### 4.3. Zmiana poziomu: faktyczna vs prognoza
+### 4.3. Zmiana poziomu: faktyczna vs prognoza (zbiór testowy)
 
-Punkty przy linii y = x oznaczają dobrą zgodność miesięcznych zmian.
+Wykres obejmuje **tylko zbiór testowy** (dane, na których model nie był uczony). Punkty przy linii y = x oznaczają dobrą zgodność miesięcznych zmian.
 
 ![Zmiana faktyczna vs prognoza](zmiana_fakt_vs_prognoza.png)
 
@@ -72,9 +74,9 @@ Błąd = zmiana faktyczna − zmiana prognozowana w każdym miesiącu przez **mo
 
 ## 5. Podsumowanie
 
-- Model prognozuje miesięczną zmianę poziomu Jezioro Ostrowskie z MAE ~nan cm.
+- Model prognozuje miesięczną zmianę poziomu Jezioro Ostrowskie z MAE ~2.11 cm.
 - Scenariusz kumulatywny (wysokość z prognozowanej zmiany) jest porównywany z rzeczywistą wysokością; rozbieżność i błąd miesięczny opisują jakość prognoz.
 
 Szczegóły techniczne: [model.md](../model.md), [podsumowanie_ewaluacji.md](podsumowanie_ewaluacji.md).
 
-*Wygenerowano: 2026-02-15 22:27*
+*Wygenerowano: 2026-02-17 19:21*

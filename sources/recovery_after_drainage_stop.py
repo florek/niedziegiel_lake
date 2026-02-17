@@ -273,7 +273,7 @@ def _get_lake_result_and_data(lake_id: str):
     tmp_dir = DOCS_DIR / ".eval_tmp"
     tmp_dir.mkdir(parents=True, exist_ok=True)
     out = tmp_dir / f"{lake_id}_eval.md"
-    _, _, rows = run_evaluation(
+    _, _, rows, _ = run_evaluation(
         lake_id=lake_id,
         output_path=out,
     )
@@ -288,7 +288,7 @@ def _get_lake_result_and_data(lake_id: str):
     rows_nat, model_nat, feature_cols_nat, lag_months_nat, meteo_lag_months_nat = None, None, None, None, None
     if natural_path.exists():
         out_nat = tmp_dir / f"{lake_id}_eval_nat.md"
-        _, _, rows_nat = run_evaluation(
+        _, _, rows_nat, _ = run_evaluation(
             lake_id=lake_id,
             model_path=natural_path,
             output_path=out_nat,

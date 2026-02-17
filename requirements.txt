@@ -19,3 +19,4 @@ traitlets==5.14.3
 wcwidth==0.2.13
 fpdf2>=2.8.0
 markdown>=3.5.0
+openpyxl>=3.1.0

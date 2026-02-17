@@ -18,19 +18,19 @@ W niektórych miesiącach **model naturalny** może dawać prognozę gorszą (np
 
 | Wariant | Szansa (%) | Poziom koniec – drenaż (m) | Poziom koniec – natural (m) |
 |---------|------------|-----------------------------|------------------------------|
-| zimny, suchy | 10.9 | 97.716 | 97.798 |
-| zimny, normalny | 17.0 | 97.71 | 97.831 |
-| zimny, wilgotny | 6.9 | 97.686 | 97.879 |
-| normalny, suchy | 10.8 | 97.714 | 97.786 |
-| normalny, normalny | 16.4 | 97.709 | 97.816 |
-| normalny, wilgotny | 6.8 | 97.667 | 97.842 |
-| ciepły, suchy | 10.2 | 97.682 | 97.794 |
-| ciepły, normalny | 14.4 | 97.679 | 97.816 |
-| ciepły, wilgotny | 6.6 | 97.657 | 97.844 |
+| zimny, suchy | 3.9 | 97.381 | 97.135 |
+| zimny, normalny | 8.2 | 97.504 | 97.304 |
+| zimny, wilgotny | 11.7 | 97.656 | 97.497 |
+| normalny, suchy | 4.9 | 97.348 | 97.094 |
+| normalny, normalny | 11.0 | 97.481 | 97.256 |
+| normalny, wilgotny | 16.7 | 97.635 | 97.461 |
+| ciepły, suchy | 5.9 | 97.324 | 96.986 |
+| ciepły, normalny | 14.3 | 97.46 | 97.144 |
+| ciepły, wilgotny | 23.4 | 97.633 | 97.362 |
 
-**Najbardziej prawdopodobny poziom na koniec stycznia 2027** (średnia ważona zmian miesięcznych według szans realizacji wszystkich wariantów). W stosunku do stanu na koniec stycznia 2026 (97.7681 m n.p.m.):
-- **Model drenażowy:** 97.695 m n.p.m. – ubędzie 0.073 m (-7.3 cm)
-- **Model naturalny (sprzed drenażu):** 97.819 m n.p.m. – przybędzie +0.051 m (+5.1 cm)
+**Najbardziej prawdopodobny poziom na koniec stycznia 2027** (średnia ważona zmian miesięcznych według szans realizacji wszystkich wariantów). W stosunku do stanu na koniec stycznia 2026 (97.39 m n.p.m.):
+- **Model drenażowy:** 97.542 m n.p.m. – przybędzie +0.152 m (+15.2 cm)
+- **Model naturalny (sprzed drenażu):** 97.302 m n.p.m. – ubędzie 0.088 m (-8.8 cm)
 
 
 ### najbardziej prawdopodobny
@@ -39,12 +39,12 @@ W niektórych miesiącach **model naturalny** może dawać prognozę gorszą (np
 
 
 - **Średnia ważona wszystkich wariantów (bez własnej szansy realizacji).**
-- **Średnia temperatura roczna (prognoza):** 9.1 °C
-- **Suma opadu (prognoza):** 474.0 mm
-- **Różnica poziomu wody (drenaż)** (koniec − start): -0.073 m (-7.3 cm)
-- **Poziom na koniec stycznia 2027 (drenaż):** 97.695 m n.p.m.
-- **Różnica poziomu wody (natural)** (koniec − start): +0.051 m (+5.1 cm)
-- **Poziom na koniec stycznia 2027 (natural):** 97.819 m n.p.m.
+- **Średnia temperatura roczna (prognoza):** 9.4 °C
+- **Suma opadu (prognoza):** 565.2 mm
+- **Różnica poziomu wody (drenaż)** (koniec − start): +0.152 m (+15.2 cm)
+- **Poziom na koniec stycznia 2027 (drenaż):** 97.542 m n.p.m.
+- **Różnica poziomu wody (natural)** (koniec − start): -0.088 m (-8.8 cm)
+- **Poziom na koniec stycznia 2027 (natural):** 97.302 m n.p.m.
 
 
 ### zimny, suchy
@@ -52,13 +52,13 @@ W niektórych miesiącach **model naturalny** może dawać prognozę gorszą (np
 ![Symulacja zimny, suchy](symulacja_wariant_zimny_suchy.png)
 
 
-- **Szansa realizacji:** 10.9 %
+- **Szansa realizacji:** 3.9 %
 - **Średnia temperatura roczna (prognoza):** 7.7 °C
-- **Suma opadu (prognoza):** 322.2 mm
-- **Różnica poziomu wody (drenaż)** (koniec − start): -0.052 m (-5.2 cm)
-- **Poziom na koniec stycznia 2027 (drenaż):** 97.716 m n.p.m.
-- **Różnica poziomu wody (natural)** (koniec − start): +0.030 m (+3.0 cm)
-- **Poziom na koniec stycznia 2027 (natural):** 97.798 m n.p.m.
+- **Suma opadu (prognoza):** 324.9 mm
+- **Różnica poziomu wody (drenaż)** (koniec − start): -0.009 m (-0.9 cm)
+- **Poziom na koniec stycznia 2027 (drenaż):** 97.381 m n.p.m.
+- **Różnica poziomu wody (natural)** (koniec − start): -0.255 m (-25.5 cm)
+- **Poziom na koniec stycznia 2027 (natural):** 97.135 m n.p.m.
 
 
 ### zimny, normalny
@@ -66,13 +66,13 @@ W niektórych miesiącach **model naturalny** może dawać prognozę gorszą (np
 ![Symulacja zimny, normalny](symulacja_wariant_zimny_normalny.png)
 
 
-- **Szansa realizacji:** 17.0 %
+- **Szansa realizacji:** 8.2 %
 - **Średnia temperatura roczna (prognoza):** 7.7 °C
 - **Suma opadu (prognoza):** 486.1 mm
-- **Różnica poziomu wody (drenaż)** (koniec − start): -0.058 m (-5.8 cm)
-- **Poziom na koniec stycznia 2027 (drenaż):** 97.71 m n.p.m.
-- **Różnica poziomu wody (natural)** (koniec − start): +0.063 m (+6.3 cm)
-- **Poziom na koniec stycznia 2027 (natural):** 97.831 m n.p.m.
+- **Różnica poziomu wody (drenaż)** (koniec − start): +0.114 m (+11.4 cm)
+- **Poziom na koniec stycznia 2027 (drenaż):** 97.504 m n.p.m.
+- **Różnica poziomu wody (natural)** (koniec − start): -0.086 m (-8.6 cm)
+- **Poziom na koniec stycznia 2027 (natural):** 97.304 m n.p.m.
 
 
 ### zimny, wilgotny
@@ -80,13 +80,13 @@ W niektórych miesiącach **model naturalny** może dawać prognozę gorszą (np
 ![Symulacja zimny, wilgotny](symulacja_wariant_zimny_wilgotny.png)
 
 
-- **Szansa realizacji:** 6.9 %
+- **Szansa realizacji:** 11.7 %
 - **Średnia temperatura roczna (prognoza):** 7.7 °C
-- **Suma opadu (prognoza):** 683.9 mm
-- **Różnica poziomu wody (drenaż)** (koniec − start): -0.082 m (-8.2 cm)
-- **Poziom na koniec stycznia 2027 (drenaż):** 97.686 m n.p.m.
-- **Różnica poziomu wody (natural)** (koniec − start): +0.111 m (+11.1 cm)
-- **Poziom na koniec stycznia 2027 (natural):** 97.879 m n.p.m.
+- **Suma opadu (prognoza):** 684.6 mm
+- **Różnica poziomu wody (drenaż)** (koniec − start): +0.266 m (+26.6 cm)
+- **Poziom na koniec stycznia 2027 (drenaż):** 97.656 m n.p.m.
+- **Różnica poziomu wody (natural)** (koniec − start): +0.107 m (+10.7 cm)
+- **Poziom na koniec stycznia 2027 (natural):** 97.497 m n.p.m.
 
 
 ### normalny, suchy
@@ -94,13 +94,13 @@ W niektórych miesiącach **model naturalny** może dawać prognozę gorszą (np
 ![Symulacja normalny, suchy](symulacja_wariant_normalny_suchy.png)
 
 
-- **Szansa realizacji:** 10.8 %
+- **Szansa realizacji:** 4.9 %
 - **Średnia temperatura roczna (prognoza):** 9.1 °C
-- **Suma opadu (prognoza):** 322.2 mm
-- **Różnica poziomu wody (drenaż)** (koniec − start): -0.054 m (-5.4 cm)
-- **Poziom na koniec stycznia 2027 (drenaż):** 97.714 m n.p.m.
-- **Różnica poziomu wody (natural)** (koniec − start): +0.018 m (+1.8 cm)
-- **Poziom na koniec stycznia 2027 (natural):** 97.786 m n.p.m.
+- **Suma opadu (prognoza):** 324.9 mm
+- **Różnica poziomu wody (drenaż)** (koniec − start): -0.042 m (-4.2 cm)
+- **Poziom na koniec stycznia 2027 (drenaż):** 97.348 m n.p.m.
+- **Różnica poziomu wody (natural)** (koniec − start): -0.296 m (-29.6 cm)
+- **Poziom na koniec stycznia 2027 (natural):** 97.094 m n.p.m.
 
 
 ### normalny, normalny
@@ -108,13 +108,13 @@ W niektórych miesiącach **model naturalny** może dawać prognozę gorszą (np
 ![Symulacja normalny, normalny](symulacja_wariant_normalny_normalny.png)
 
 
-- **Szansa realizacji:** 16.4 %
+- **Szansa realizacji:** 11.0 %
 - **Średnia temperatura roczna (prognoza):** 9.1 °C
 - **Suma opadu (prognoza):** 486.1 mm
-- **Różnica poziomu wody (drenaż)** (koniec − start): -0.059 m (-5.9 cm)
-- **Poziom na koniec stycznia 2027 (drenaż):** 97.709 m n.p.m.
-- **Różnica poziomu wody (natural)** (koniec − start): +0.048 m (+4.8 cm)
-- **Poziom na koniec stycznia 2027 (natural):** 97.816 m n.p.m.
+- **Różnica poziomu wody (drenaż)** (koniec − start): +0.091 m (+9.1 cm)
+- **Poziom na koniec stycznia 2027 (drenaż):** 97.481 m n.p.m.
+- **Różnica poziomu wody (natural)** (koniec − start): -0.134 m (-13.4 cm)
+- **Poziom na koniec stycznia 2027 (natural):** 97.256 m n.p.m.
 
 
 ### normalny, wilgotny
@@ -122,13 +122,13 @@ W niektórych miesiącach **model naturalny** może dawać prognozę gorszą (np
 ![Symulacja normalny, wilgotny](symulacja_wariant_normalny_wilgotny.png)
 
 
-- **Szansa realizacji:** 6.8 %
+- **Szansa realizacji:** 16.7 %
 - **Średnia temperatura roczna (prognoza):** 9.1 °C
-- **Suma opadu (prognoza):** 683.9 mm
-- **Różnica poziomu wody (drenaż)** (koniec − start): -0.101 m (-10.1 cm)
-- **Poziom na koniec stycznia 2027 (drenaż):** 97.667 m n.p.m.
-- **Różnica poziomu wody (natural)** (koniec − start): +0.074 m (+7.4 cm)
-- **Poziom na koniec stycznia 2027 (natural):** 97.842 m n.p.m.
+- **Suma opadu (prognoza):** 684.6 mm
+- **Różnica poziomu wody (drenaż)** (koniec − start): +0.245 m (+24.5 cm)
+- **Poziom na koniec stycznia 2027 (drenaż):** 97.635 m n.p.m.
+- **Różnica poziomu wody (natural)** (koniec − start): +0.071 m (+7.1 cm)
+- **Poziom na koniec stycznia 2027 (natural):** 97.461 m n.p.m.
 
 
 ### ciepły, suchy
@@ -136,13 +136,13 @@ W niektórych miesiącach **model naturalny** może dawać prognozę gorszą (np
 ![Symulacja ciepły, suchy](symulacja_wariant_cieply_suchy.png)
 
 
-- **Szansa realizacji:** 10.2 %
+- **Szansa realizacji:** 5.9 %
 - **Średnia temperatura roczna (prognoza):** 10.5 °C
-- **Suma opadu (prognoza):** 322.2 mm
-- **Różnica poziomu wody (drenaż)** (koniec − start): -0.086 m (-8.6 cm)
-- **Poziom na koniec stycznia 2027 (drenaż):** 97.682 m n.p.m.
-- **Różnica poziomu wody (natural)** (koniec − start): +0.026 m (+2.6 cm)
-- **Poziom na koniec stycznia 2027 (natural):** 97.794 m n.p.m.
+- **Suma opadu (prognoza):** 324.9 mm
+- **Różnica poziomu wody (drenaż)** (koniec − start): -0.066 m (-6.6 cm)
+- **Poziom na koniec stycznia 2027 (drenaż):** 97.324 m n.p.m.
+- **Różnica poziomu wody (natural)** (koniec − start): -0.404 m (-40.4 cm)
+- **Poziom na koniec stycznia 2027 (natural):** 96.986 m n.p.m.
 
 
 ### ciepły, normalny
@@ -150,13 +150,13 @@ W niektórych miesiącach **model naturalny** może dawać prognozę gorszą (np
 ![Symulacja ciepły, normalny](symulacja_wariant_cieply_normalny.png)
 
 
-- **Szansa realizacji:** 14.4 %
+- **Szansa realizacji:** 14.3 %
 - **Średnia temperatura roczna (prognoza):** 10.5 °C
 - **Suma opadu (prognoza):** 486.1 mm
-- **Różnica poziomu wody (drenaż)** (koniec − start): -0.089 m (-8.9 cm)
-- **Poziom na koniec stycznia 2027 (drenaż):** 97.679 m n.p.m.
-- **Różnica poziomu wody (natural)** (koniec − start): +0.048 m (+4.8 cm)
-- **Poziom na koniec stycznia 2027 (natural):** 97.816 m n.p.m.
+- **Różnica poziomu wody (drenaż)** (koniec − start): +0.070 m (+7.0 cm)
+- **Poziom na koniec stycznia 2027 (drenaż):** 97.46 m n.p.m.
+- **Różnica poziomu wody (natural)** (koniec − start): -0.246 m (-24.6 cm)
+- **Poziom na koniec stycznia 2027 (natural):** 97.144 m n.p.m.
 
 
 ### ciepły, wilgotny
@@ -164,15 +164,15 @@ W niektórych miesiącach **model naturalny** może dawać prognozę gorszą (np
 ![Symulacja ciepły, wilgotny](symulacja_wariant_cieply_wilgotny.png)
 
 
-- **Szansa realizacji:** 6.6 %
+- **Szansa realizacji:** 23.4 %
 - **Średnia temperatura roczna (prognoza):** 10.5 °C
-- **Suma opadu (prognoza):** 683.9 mm
-- **Różnica poziomu wody (drenaż)** (koniec − start): -0.111 m (-11.1 cm)
-- **Poziom na koniec stycznia 2027 (drenaż):** 97.657 m n.p.m.
-- **Różnica poziomu wody (natural)** (koniec − start): +0.076 m (+7.6 cm)
-- **Poziom na koniec stycznia 2027 (natural):** 97.844 m n.p.m.
+- **Suma opadu (prognoza):** 684.6 mm
+- **Różnica poziomu wody (drenaż)** (koniec − start): +0.243 m (+24.3 cm)
+- **Poziom na koniec stycznia 2027 (drenaż):** 97.633 m n.p.m.
+- **Różnica poziomu wody (natural)** (koniec − start): -0.028 m (-2.8 cm)
+- **Poziom na koniec stycznia 2027 (natural):** 97.362 m n.p.m.
 
 
 
 
-*Wygenerowano: 2026-02-15 22:11*
+*Wygenerowano: 2026-02-17 19:21*

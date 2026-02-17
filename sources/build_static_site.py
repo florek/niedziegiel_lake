@@ -4,17 +4,12 @@ from pathlib import Path
 
 import markdown
 
+import lake
+
 ROOT = Path(__file__).resolve().parent.parent
 LAKES = [
-    ("budzislawskie", "Budzisławskie"),
-    ("kozieglowskie", "Koziegłowskie"),
-    ("kownackie", "Kownackie"),
-    ("niedziegiel", "Niedzięgiel"),
-    ("ostrowskie", "Ostrowskie"),
-    ("powidzkie", "Powidzkie"),
-    ("skulskawies", "Skulska Wieś"),
-    ("suszewskie", "Suszewskie"),
-    ("wilczynskie", "Wilczyńskie"),
+    (lid, name.replace("Jezioro ", "", 1))
+    for lid, name in sorted(lake.LAKES.items())
 ]
 DOCS_ROOT = [
     ("docs/model.md", "Model"),

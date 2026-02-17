@@ -81,6 +81,7 @@ def _plot_drenaz(drenaz_rows, lake_id, lake_name):
     if not drenaz_rows:
         return
     figs_dir = _figs_dir(lake_id)
+    figs_dir.mkdir(parents=True, exist_ok=True)
     yearly = _yearly_sums(drenaz_rows)
     if not yearly:
         return
@@ -95,9 +96,10 @@ def _plot_drenaz(drenaz_rows, lake_id, lake_name):
     ax.axhline(y=0, color="black", linewidth=0.5)
     ax.grid(True, alpha=0.3)
     fig.tight_layout()
-    fig.savefig(figs_dir / "drenaz_miesieczny.png", dpi=150)
+    out_path = figs_dir / "drenaz_miesieczny.png"
+    fig.savefig(str(out_path), dpi=150)
     plt.close()
-    print(f"Wykres zapisany: {figs_dir / 'drenaz_miesieczny.png'}")
+    print(f"Wykres zapisany: {out_path}")
 
 
 def run_lake(lake_id):
@@ -105,8 +107,8 @@ def run_lake(lake_id):
     if not natural_path.exists():
         print(f"Pomijam {lake_id}: brak modelu naturalnego.")
         return
-    mae, rmse, rows = run_evaluation(lake_id=lake_id)
-    _, _, rows_natural = run_evaluation(
+    mae, rmse, rows, _ = run_evaluation(lake_id=lake_id)
+    _, _, rows_natural, _ = run_evaluation(
         lake_id=lake_id,
         model_path=natural_path,
         output_path=_figs_dir(lake_id) / "podsumowanie_ewaluacji_natural.md",

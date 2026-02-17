@@ -2,6 +2,8 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+import numpy as np
+
 import lake
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -23,6 +25,9 @@ def run_evaluation(lake_id="niedziegiel", data_path=None, model_path=None, outpu
     df = df.dropna()
     if len(df) == 0:
         raise ValueError("Brak wierszy z pełnymi cechami.")
+    for col in feature_cols:
+        if col not in df.columns:
+            df[col] = 0.0
     train_end_year = lake.TRAIN_END_YEAR_BY_LAKE.get(lake_id)
     train_end_month = lake.TRAIN_END_MONTH_BY_LAKE.get(lake_id)
     test_mask = None
@@ -38,17 +43,25 @@ def run_evaluation(lake_id="niedziegiel", data_path=None, model_path=None, outpu
             test_mask = test_mask & (df[lake.COL_DATA].dt.year <= test_end_year)
     X = df[feature_cols]
     y_true = df[lake.COL_ZMIANA]
-    y_pred = model.predict(X)
+    models = model if isinstance(model, list) else [model]
+    preds = np.array([m.predict(X) for m in models])
+    y_pred = np.mean(preds, axis=0)
     errors = y_true.values - y_pred
     if test_mask is not None:
-        mae = (abs(errors[test_mask])).mean()
-        rmse = (errors[test_mask] ** 2).mean() ** 0.5
-        n_test = test_mask.sum()
+        test_errors = errors[test_mask]
+        if len(test_errors) > 0:
+            mae = (abs(test_errors)).mean()
+            rmse = (test_errors ** 2).mean() ** 0.5
+            n_test = test_mask.sum()
+        else:
+            mae = (abs(errors)).mean()
+            rmse = (errors ** 2).mean() ** 0.5
+            n_test = len(df)
     else:
         mae = (abs(errors)).mean()
         rmse = (errors ** 2).mean() ** 0.5
         n_test = len(df)
-    poziom_rzeczywisty_koniec = (df[lake.COL_POZIOM] + df[lake.COL_ZMIANA]).values
+    poziom_rzeczywisty_koniec = df[lake.COL_POZIOM].values
     poziom_model_koniec = []
     poziom_prev = float(df.iloc[0][lake.COL_POZIOM])
     max_poziom, odplyw_m, przesaczanie_m = lake.get_drainage_params(lake_id, df)
@@ -71,13 +84,19 @@ def run_evaluation(lake_id="niedziegiel", data_path=None, model_path=None, outpu
         })
     for i in range(len(rows)):
         rows[i]["rozbieznosc"] = round(rows[i]["wysokosc_rzeczywista"] - rows[i]["wysokosc_model"], 3)
+    if test_mask is not None:
+        rows_test = [rows[i] for i in range(len(rows)) if test_mask.iloc[i]]
+        if not rows_test:
+            rows_test = list(rows)
+    else:
+        rows_test = list(rows)
     lake_name = lake.LAKES.get(lake_id, lake_id)
     content = _build_md(rows, mae, rmse, n_test, len(rows), lake_name)
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(content, encoding="utf-8")
     print(f"Podsumowanie zapisane: {output_path}")
-    return mae, rmse, rows
+    return mae, rmse, rows, rows_test
 
 
 def _build_md(rows, mae, rmse, n_test, n_all, lake_name="Jezioro"):

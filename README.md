@@ -20,6 +20,7 @@ Projekt zawiera modele uczenia maszynowego do **prognozowania miesięcznej zmian
   - **docs/{id}/** – np. `docs/niedziegiel/`: raporty (prognoza.md z ewaluacją 12 mies., szanse_odbudowy.md, raport_podsumowujacy.md, podsumowanie_ewaluacji.md, drenaz_miesieczny.md), wykresy PNG (poziom_rzeczywisty.png, symulacja_wariant_*.png, drenaz_miesieczny.png).
   - **docs/odbudowa/** – wykresy projekcji odbudowy.
   - **docs/raport_ogolny.md**, **docs/szacunek_odbudowy_po_zaniku_drenazu.md** – raporty zbiorcze.
+- **config/lakes/** – konfiguracja per jezioro: jeden plik `.py` na jezioro (np. `config/lakes/niedziegiel.py`) z dictem `CONFIG` (nazwa, max_poziom_spietrzania, lag_months, daty treningu/testu itd.). Moduł `lake` ładuje te pliki przy starcie.
 
 Dane i modele per jezioro: `data/niedziegiel/data.csv`, `data/niedziegiel/model.pkl` itd. Format CSV: nagłówki Data, Poziom, Zmiana, Opad, Temperatura; dziesiętne z przecinkiem. Limit wysokości (max spiętrzenia) w `lake.MAX_POZIOM_SPIETRZANIA_BY_LAKE`. **Stany wód (realny odczyt)** w plikach danych są symulowane od listopada 2023 do 2026; dla jeziora Niedzięgiel symulacja od listopada 2025.
 
@@ -87,6 +88,31 @@ Uruchamiaj skrypty z **katalogu głównego projektu** (gdzie są katalogi `data/
    Wynik: `docs/szacunek_odbudowy_po_zaniku_drenazu.md`, `docs/{id}/zanik_drenazu.md`, wykresy w `docs/odbudowa/`.
 
 Szczegóły modelu i API: [docs/model.md](docs/model.md).
+
+## CLI do odświeżania modeli, raportów i strony
+
+Zamiast uruchamiać poszczególne skrypty osobno, możesz użyć prostego CLI:
+
+```bash
+python sources/cli.py refresh-models
+python sources/cli.py refresh-reports
+python sources/cli.py refresh-www
+python sources/cli.py refresh-all
+```
+
+Opcjonalnie możesz wskazać konkretne jezioro (id z `lake.LAKES`), np. tylko Niedzięgiel:
+
+```bash
+python sources/cli.py refresh-models niedziegiel
+python sources/cli.py refresh-reports niedziegiel
+python sources/cli.py refresh-all niedziegiel
+```
+
+Znaczenie poleceń:
+- `refresh-models` – trenuje i zapisuje modele (`model.pkl` i `model_natural.pkl`) dla wszystkich jezior (lub jednego wskazanego).
+- `refresh-reports` – generuje wszystkie raporty i wykresy (odpowiednio: `generate_report.py`, `generate_report_12mies.py`, `drenaz_miesieczny.py`, `generate_summary_report.py`, `recovery_after_drainage_stop.py`).
+- `refresh-www` – buduje statyczną stronę `index.html` na podstawie `README.md` i `docs/` (wywołuje `build_static_site.py`).
+- `refresh-all` – kolejno `refresh-models`, `refresh-reports`, `refresh-www`.
 
 ## Strona dokumentacji (index.html)
 

@@ -629,14 +629,14 @@ def run_report_for_lake(lake_id: str) -> None:
     df = lake.load_data(lake.get_data_path(lake_id))
     eval_rows = None
     if lake.get_model_path(lake_id).exists():
-        _, _, eval_rows = run_evaluation(lake_id=lake_id)
+        _, _, eval_rows, _ = run_evaluation(lake_id=lake_id)
     eval_rows_natural = None
     natural_path = lake.get_model_path(lake_id, "natural")
     if not natural_path.exists() and lake.get_model_path(lake_id).exists():
         print(f"Brak modelu naturalnego dla {lake_id}, trening...")
         lake.run_training_and_save(lake_id, variant="natural")
     if natural_path.exists():
-        _, _, eval_rows_natural = run_evaluation(
+        _, _, eval_rows_natural, _ = run_evaluation(
             lake_id=lake_id,
             model_path=natural_path,
             output_path=figures_dir / "podsumowanie_ewaluacji_natural.md",

@@ -15,7 +15,7 @@ def _collect_metrics():
         if not lake.get_model_path(lid).exists():
             continue
         try:
-            mae, rmse, rows = run_evaluation(lake_id=lid)
+            mae, rmse, rows, _ = run_evaluation(lake_id=lid)
         except Exception as e:
             print(f"Pomijam {lid}: {e}")
             continue

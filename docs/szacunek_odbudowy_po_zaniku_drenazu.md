@@ -18,8 +18,8 @@ Dwa wzniosy dla porównania (źródło: `data/zanik_drenazu.csv`): wznios bazowy
 | Jezioro | Wznios (cm/rok) | Wznios po zalaniu kopalni (cm/rok) |
 |---------|-----------------|-------------------------------------|
 | Jezioro Budzisławskie | — | — |
-| Jezioro Koziegłowskie | — | — |
 | Jezioro Kownackie | — | — |
+| Jezioro Koziegłowskie | — | — |
 | Jezioro Niedzięgiel | — | — |
 | Jezioro Ostrowskie | — | — |
 | Jezioro Powidzkie | — | — |
@@ -33,64 +33,64 @@ Dwa wzniosy dla porównania (źródło: `data/zanik_drenazu.csv`): wznios bazowy
 
 ### Jezioro Budzisławskie
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** 109.0 cm
-- **Trend rozbieżności:** 2.53 cm/rok
-- **Szacunek odbudowy (scenariusz A):** —
-- **Szacunek odbudowy (scenariusz B):** —
-
-### Jezioro Koziegłowskie
-
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** 75.0 cm
-- **Trend rozbieżności:** 2.98 cm/rok
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 218.8 cm
+- **Trend rozbieżności:** 5.40 cm/rok
 - **Szacunek odbudowy (scenariusz A):** —
 - **Szacunek odbudowy (scenariusz B):** —
 
 ### Jezioro Kownackie
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** 241.0 cm
-- **Trend rozbieżności:** 5.97 cm/rok
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 707.0 cm
+- **Trend rozbieżności:** 22.12 cm/rok
+- **Szacunek odbudowy (scenariusz A):** —
+- **Szacunek odbudowy (scenariusz B):** —
+
+### Jezioro Koziegłowskie
+
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 294.5 cm
+- **Trend rozbieżności:** 9.87 cm/rok
 - **Szacunek odbudowy (scenariusz A):** —
 - **Szacunek odbudowy (scenariusz B):** —
 
 ### Jezioro Niedzięgiel
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** 846.3 cm
-- **Trend rozbieżności:** 18.32 cm/rok
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 535.1 cm
+- **Trend rozbieżności:** 12.79 cm/rok
 - **Szacunek odbudowy (scenariusz A):** —
 - **Szacunek odbudowy (scenariusz B):** —
 
 ### Jezioro Ostrowskie
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** 184.4 cm
-- **Trend rozbieżności:** 5.17 cm/rok
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 352.1 cm
+- **Trend rozbieżności:** 10.43 cm/rok
 - **Szacunek odbudowy (scenariusz A):** —
 - **Szacunek odbudowy (scenariusz B):** —
 
 ### Jezioro Powidzkie
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** 395.9 cm
-- **Trend rozbieżności:** 8.23 cm/rok
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 451.3 cm
+- **Trend rozbieżności:** 9.70 cm/rok
 - **Szacunek odbudowy (scenariusz A):** —
 - **Szacunek odbudowy (scenariusz B):** —
 
 ### Jezioro Skulska Wieś
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** 51.6 cm
-- **Trend rozbieżności:** 1.66 cm/rok
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 73.2 cm
+- **Trend rozbieżności:** 2.41 cm/rok
 - **Szacunek odbudowy (scenariusz A):** —
 - **Szacunek odbudowy (scenariusz B):** —
 
 ### Jezioro Suszewskie
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** 407.1 cm
-- **Trend rozbieżności:** 12.39 cm/rok
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 1262.7 cm
+- **Trend rozbieżności:** 39.81 cm/rok
 - **Szacunek odbudowy (scenariusz A):** —
 - **Szacunek odbudowy (scenariusz B):** —
 
 ### Jezioro Wilczyńskie
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** 362.9 cm
-- **Trend rozbieżności:** 8.39 cm/rok
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 342.6 cm
+- **Trend rozbieżności:** 8.35 cm/rok
 - **Szacunek odbudowy (scenariusz A):** —
 - **Szacunek odbudowy (scenariusz B):** —
 
@@ -104,13 +104,13 @@ Dla każdego jeziora: **odbudowa do scenariusza naturalnego** (meteo z ostatnich
 
 ![Odbudowa budzislawskie](odbudowa/odbudowa_budzislawskie.png)
 
-### Jezioro Koziegłowskie
-
-![Odbudowa kozieglowskie](odbudowa/odbudowa_kozieglowskie.png)
-
 ### Jezioro Kownackie
 
 ![Odbudowa kownackie](odbudowa/odbudowa_kownackie.png)
+
+### Jezioro Koziegłowskie
+
+![Odbudowa kozieglowskie](odbudowa/odbudowa_kozieglowskie.png)
 
 ### Jezioro Niedzięgiel
 

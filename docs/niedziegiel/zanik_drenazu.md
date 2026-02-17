@@ -2,16 +2,16 @@
 
 - **Rozbieżność** = wysokość rzeczywista − wysokość w scenariuszu modelowym. Ujemna = jezioro poniżej scenariusza.
 - Przy zaniku dodatkowego drenażu szacuje się lata do zamknięcia luki (szacunek teoretyczny).
-- Projekcja: wznios wód gruntowych (cm/rok), start odbudowy od 2/2026. Wykres do uzyskania stanu (zrównania z modelem), maks. do 2070.
+- Projekcja: wznios wód gruntowych (cm/rok), start odbudowy od 2/2026. Wykres do uzyskania stanu (zrównania z modelem), maks. do 2060.
 
 ## Wyniki
 
-- **Średnia rozbieżność (ostatnie 12 miesięcy):** 846.3 cm
-- **Trend rozbieżności:** 18.32 cm/rok
+- **Średnia rozbieżność (ostatnie 12 miesięcy):** 535.1 cm
+- **Trend rozbieżności:** 12.79 cm/rok
 - **Szacunek odbudowy (scenariusz A):** —
 - **Szacunek odbudowy (scenariusz B):** —
 
-- **Odbudowa (zrównanie z modelem naturalnym)** nastąpi w **luty 2041** przy wzniosie wód gruntowych **5.0 cm/rok** i meteo z ostatnich 15 lat.
+- **Odbudowa (zrównanie z modelem naturalnym)** nastąpi w **maj 2047** przy wzniosie wód gruntowych **5.0 cm/rok** i meteo z ostatnich 15 lat.
 
 ## Wykres projekcji odbudowy
 

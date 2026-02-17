@@ -103,7 +103,44 @@ def _align_natural_by_date(rows, rows_natural):
     return nat_by_date
 
 
-def _plot_rozbieznosc(rows, figs_dir, rows_natural=None):
+def _train_end_natural_date(lake_id):
+    y = lake.TRAIN_END_NATURAL_YEAR_BY_LAKE.get(lake_id)
+    m = lake.TRAIN_END_NATURAL_MONTH_BY_LAKE.get(lake_id)
+    if y is None or m is None:
+        return None
+    return np.datetime64(f"{y}-{m:02d}-01")
+
+
+def _train_end_natural_str(lake_id):
+    y = lake.TRAIN_END_NATURAL_YEAR_BY_LAKE.get(lake_id)
+    m = lake.TRAIN_END_NATURAL_MONTH_BY_LAKE.get(lake_id)
+    if y is None or m is None:
+        return None
+    return f"{y}-{m:02d}"
+
+
+def _mean_abs_rozbieznosc_trening(rows, rows_natural, lake_id):
+    if not rows_natural or not rows:
+        return None, 0
+    train_end = _train_end_natural_str(lake_id)
+    if not train_end:
+        return None, 0
+    nat_by_date = _align_natural_by_date(rows, rows_natural)
+    if nat_by_date is None:
+        return None, 0
+    rozb_cm = []
+    for r in rows:
+        if r["data"] > train_end:
+            break
+        nat = nat_by_date.get(r["data"])
+        if nat is not None:
+            rozb_cm.append(abs((r["wysokosc_rzeczywista"] - nat["wysokosc_model"]) * 100))
+    if not rozb_cm:
+        return None, 0
+    return float(np.mean(rozb_cm)), len(rozb_cm)
+
+
+def _plot_rozbieznosc(rows, figs_dir, rows_natural=None, lake_id=None):
     nat_by_date = _align_natural_by_date(rows, rows_natural)
     if nat_by_date is not None:
         dates = []
@@ -128,6 +165,9 @@ def _plot_rozbieznosc(rows, figs_dir, rows_natural=None):
     ax.fill_between(dates, 0, rozb, where=[x < 0 for x in rozb], color="#ff7f0e", alpha=0.35, label="Rzeczywistość < model")
     ax.plot(dates, rozb, color="#1a1a1a", linewidth=1.2, zorder=2)
     ax.axhline(y=0, color="gray", linewidth=1, linestyle="-", zorder=1)
+    train_end_date = _train_end_natural_date(lake_id) if lake_id and nat_by_date else None
+    if train_end_date is not None:
+        ax.axvline(x=train_end_date, color="#2ca02c", linewidth=1.5, linestyle="--", zorder=2, label="Koniec treningu (model naturalny)")
     y_min, y_max = min(rozb), max(rozb)
     margin = max(10, (y_max - y_min) * 0.05) if y_max > y_min else 10
     ax.set_ylim(y_min - margin, y_max + margin)
@@ -198,12 +238,15 @@ def _plot_blad_miesieczny(rows, figs_dir, rows_natural=None):
     plt.close()
 
 
-def _write_report(rows, mae, rmse, n, lake_id, lake_name, rows_natural=None):
+def _write_report(rows, mae, rmse, n, lake_id, lake_name, rows_natural=None, rows_test=None):
     figs_dir = _figs_dir(lake_id)
     figs_dir.mkdir(parents=True, exist_ok=True)
+    ma_rozb_train, n_train = _mean_abs_rozbieznosc_trening(rows, rows_natural, lake_id)
     _plot_wysokosci(rows, figs_dir, lake_name, lake_id, rows_natural=rows_natural)
-    _plot_rozbieznosc(rows, figs_dir, rows_natural=rows_natural)
-    _plot_zmiana_fakt_vs_prognoza(rows, figs_dir)
+    _plot_rozbieznosc(rows, figs_dir, rows_natural=rows_natural, lake_id=lake_id)
+    rows_zmiana = rows_test if (rows_test and len(rows_test) > 0) else rows
+    if rows_zmiana:
+        _plot_zmiana_fakt_vs_prognoza(rows_zmiana, figs_dir)
     _plot_blad_miesieczny(rows, figs_dir, rows_natural=rows_natural)
     model_path = lake.get_model_path(lake_id)
     if model_path.exists():
@@ -292,11 +335,16 @@ def _write_report(rows, mae, rmse, n, lake_id, lake_name, rows_natural=None):
         "Rozbieżność = wysokość rzeczywista − wysokość w scenariuszu "
         + ("**modelu naturalnego (sprzed drenażu)**. Wartość dodatnia: jezioro wyżej niż przewidywał model naturalny; ujemna: niżej (np. efekt drenażu)." if rows_natural else "modelowym. Wartość dodatnia: jezioro wyżej niż przewidywał model; ujemna: niżej."),
         "",
+    ]
+    if rows_natural and ma_rozb_train is not None:
+        sections.append("W **okresie treningowym** modelu naturalnego (na lewo od pionowej linii): średnia bezwzględna rozbieżność = **{:.1f} cm** ({} miesięcy). Linia pionowa = koniec treningu; po prawej = prognoza poza danymi treningowymi.".format(ma_rozb_train, n_train))
+        sections.append("")
+    sections += [
         "![Rozbieżność w czasie](rozbieznosc_w_czasie.png)",
         "",
-        "### 4.3. Zmiana poziomu: faktyczna vs prognoza",
+        "### 4.3. Zmiana poziomu: faktyczna vs prognoza (zbiór testowy)",
         "",
-        "Punkty przy linii y = x oznaczają dobrą zgodność miesięcznych zmian.",
+        "Wykres obejmuje **tylko zbiór testowy** (dane, na których model nie był uczony). Punkty przy linii y = x oznaczają dobrą zgodność miesięcznych zmian.",
         "",
         "![Zmiana faktyczna vs prognoza](zmiana_fakt_vs_prognoza.png)",
         "",
@@ -326,19 +374,28 @@ def _write_report(rows, mae, rmse, n, lake_id, lake_name, rows_natural=None):
 
 
 def run(lake_id="niedziegiel"):
-    mae, rmse, rows = run_evaluation(lake_id=lake_id)
+    mae, rmse, rows, rows_test = run_evaluation(lake_id=lake_id)
     if rows is None or len(rows) == 0:
         raise ValueError("Brak danych do raportu.")
     rows_natural = None
     natural_path = lake.get_model_path(lake_id, "natural")
     if natural_path.exists():
-        _, _, rows_natural = run_evaluation(
+        _, _, rows_natural, _ = run_evaluation(
             lake_id=lake_id,
             model_path=natural_path,
             output_path=_figs_dir(lake_id) / "podsumowanie_ewaluacji_natural.md",
         )
     lake_name = lake.LAKES.get(lake_id, lake_id)
-    _write_report(rows, mae, rmse, len(rows), lake_id, lake_name, rows_natural=rows_natural)
+    _write_report(
+        rows,
+        mae,
+        rmse,
+        len(rows),
+        lake_id,
+        lake_name,
+        rows_natural=rows_natural,
+        rows_test=rows_test,
+    )
 
 
 if __name__ == "__main__":

@@ -8,7 +8,7 @@ Model uczenia maszynowego służy do **prognozowania zmiany poziomu wybranego je
 - temperatury (Temperatura),
 - ostatnich zmian poziomu i poziomów (cechy opóźnione).
 
-Obsługiwane jeziora: **Jezioro Budzisławskie** (`budzislawskie`), **Jezioro Koziegłowskie** (`kozieglowskie`), **Jezioro Kownackie** (`kownackie`), **Jezioro Niedzięgiel** (`niedziegiel`), **Jezioro Ostrowskie** (`ostrowskie`), **Jezioro Powidzkie** (`powidzkie`), **Jezioro Skulska Wieś** (`skulskawies`), **Jezioro Suszewskie** (`suszewskie`), **Jezioro Wilczyńskie** (`wilczynskie`). Dla każdego jeziora osobny plik danych i osobny wytrenowany model.
+Obsługiwane jeziora: **Jezioro Budzisławskie** (`budzislawskie`), **Jezioro Koziegłowskie** (`kozieglowskie`), **Jezioro Kownackie** (`kownackie`), **Jezioro Niedzięgiel** (`niedziegiel`), **Jezioro Ostrowskie** (`ostrowskie`), **Jezioro Powidzkie** (`powidzkie`), **Jezioro Skulska Wieś** (`skulskawies`), **Jezioro Suszewskie** (`suszewskie`), **Jezioro Wilczyńskie** (`wilczynskie`). Dla każdego jeziora osobny plik danych i osobny wytrenowany model. **Konfiguracja parametrów per jezioro** (nazwa, max spiętrzenia, lagi, daty treningu/testu) znajduje się w plikach w katalogu `config/lakes/` (jeden plik `.py` na jezioro z dictem `CONFIG`).
 
 ## Dane wejściowe
 

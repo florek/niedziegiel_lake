@@ -1,43 +1,25 @@
+import importlib.util
 import pickle
 import sys
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from sklearn.base import clone
 from sklearn.ensemble import (
     GradientBoostingRegressor,
     HistGradientBoostingRegressor,
     RandomForestRegressor,
 )
 from sklearn.metrics import mean_absolute_error, mean_squared_error
+from sklearn.model_selection import TimeSeriesSplit
 
 _LAKE_DIR = Path(__file__).resolve().parent
 ROOT = _LAKE_DIR.parent if not (_LAKE_DIR / "data").exists() else _LAKE_DIR
 DATA_DIR = ROOT / "data"
-LAKES = {
-    "budzislawskie": "Jezioro Budzisławskie",
-    "kozieglowskie": "Jezioro Koziegłowskie",
-    "kownackie": "Jezioro Kownackie",
-    "niedziegiel": "Jezioro Niedzięgiel",
-    "ostrowskie": "Jezioro Ostrowskie",
-    "powidzkie": "Jezioro Powidzkie",
-    "skulskawies": "Jezioro Skulska Wieś",
-    "suszewskie": "Jezioro Suszewskie",
-    "wilczynskie": "Jezioro Wilczyńskie",
-}
-
-
-MAX_POZIOM_SPIETRZANIA_BY_LAKE = {
-    "budzislawskie": 99.02,
-    "kozieglowskie": 101.91,
-    "kownackie": 98.48,
-    "niedziegiel": 103.80,
-    "ostrowskie": 98.66,
-    "powidzkie": 98.79,
-    "skulskawies": 86.49,
-    "suszewskie": 98.94,
-    "wilczynskie": 99.15,
-}
+CONFIG_LAKES_DIR = ROOT / "config" / "lakes"
+LAKES = {}
+MAX_POZIOM_SPIETRZANIA_BY_LAKE = {}
 
 ODPLYW_M_MIN = 0.2
 ODPLYW_M_MAX = 1.0
@@ -97,19 +79,9 @@ COL_TEMPERATURA = "Temperatura"
 COL_ZMIANA = "Zmiana"
 
 LAG_MONTHS = 3
-LAG_MONTHS_BY_LAKE = {"budzislawskie": 3, "kozieglowskie": 3, "kownackie": 3, "niedziegiel": 3, "ostrowskie": 3, "powidzkie": 5, "skulskawies": 3, "suszewskie": 3, "wilczynskie": 3}
+LAG_MONTHS_BY_LAKE = {}
 METEO_LAG_FIBONACCI = [0, 1, 2, 3, 5, 8, 13]
-METEO_LAG_CANDIDATES_BY_LAKE = {
-    "budzislawskie": METEO_LAG_FIBONACCI,
-    "kozieglowskie": METEO_LAG_FIBONACCI,
-    "kownackie": METEO_LAG_FIBONACCI,
-    "niedziegiel": METEO_LAG_FIBONACCI,
-    "ostrowskie": METEO_LAG_FIBONACCI,
-    "powidzkie": METEO_LAG_FIBONACCI,
-    "skulskawies": METEO_LAG_FIBONACCI,
-    "suszewskie": METEO_LAG_FIBONACCI,
-    "wilczynskie": METEO_LAG_FIBONACCI,
-}
+METEO_LAG_CANDIDATES_BY_LAKE = {}
 
 
 def load_data(path=None):
@@ -194,14 +166,46 @@ def train_test_split_temporal(
     return df.iloc[:split_idx], df.iloc[split_idx:] if split_idx < len(df) else df.iloc[:0]
 
 
-TRAIN_START_YEAR_BY_LAKE = {"budzislawskie": 2011, "kozieglowskie": 2011, "kownackie": 2011, "niedziegiel": 2018, "ostrowskie": 2011, "powidzkie": 2018, "skulskawies": 2015, "suszewskie": 2011, "wilczynskie": 2015}
-TRAIN_START_MONTH_BY_LAKE = {"budzislawskie": 1, "kozieglowskie": 1, "kownackie": 1, "niedziegiel": 1, "ostrowskie": 1, "powidzkie": 1, "skulskawies": 1, "suszewskie": 1, "wilczynskie": 1}
-TRAIN_END_YEAR_BY_LAKE = {"budzislawskie": 2023, "kozieglowskie": 2023, "kownackie": 2023, "niedziegiel": 2023, "ostrowskie": 2023, "powidzkie": 2023, "skulskawies": 2023, "suszewskie": 2023, "wilczynskie": 2023}
-TRAIN_END_MONTH_BY_LAKE = {"budzislawskie": 12, "kozieglowskie": 12, "kownackie": 12, "niedziegiel": 12, "ostrowskie": 12, "powidzkie": 12, "skulskawies": 12, "suszewskie": 12, "wilczynskie": 12}
-TRAIN_END_NATURAL_YEAR_BY_LAKE = {"budzislawskie": 2002, "kozieglowskie": 2002, "kownackie": 2002, "niedziegiel": 2018, "ostrowskie": 2003, "powidzkie": 2017, "skulskawies": 2011, "suszewskie": 2002, "wilczynskie": 2002}
-TRAIN_END_NATURAL_MONTH_BY_LAKE = {"budzislawskie": 12, "kozieglowskie": 12, "kownackie": 12, "niedziegiel": 12, "ostrowskie": 12, "powidzkie": 12, "skulskawies": 12, "suszewskie": 12, "wilczynskie": 12}
-ROK_ZMIANY_REZIMU_BY_LAKE = {"budzislawskie": 2003, "kozieglowskie": 2003, "kownackie": 2003, "niedziegiel": 2019, "ostrowskie": 2004, "powidzkie": 2018, "skulskawies": 2012, "suszewskie": 2003, "wilczynskie": 2003}
-TEST_END_YEAR_BY_LAKE = {"budzislawskie": 2023, "kozieglowskie": 2003, "kownackie": 2023, "niedziegiel": 2023, "ostrowskie": 2023, "powidzkie": 2023, "skulskawies": 2012, "suszewskie": 2023, "wilczynskie": 2023}
+TRAIN_START_YEAR_BY_LAKE = {}
+TRAIN_START_MONTH_BY_LAKE = {}
+TRAIN_END_YEAR_BY_LAKE = {}
+TRAIN_END_MONTH_BY_LAKE = {}
+TRAIN_END_NATURAL_YEAR_BY_LAKE = {}
+TRAIN_END_NATURAL_MONTH_BY_LAKE = {}
+ROK_ZMIANY_REZIMU_BY_LAKE = {}
+TEST_END_YEAR_BY_LAKE = {}
+
+
+def _load_lake_configs() -> None:
+    for path in sorted(CONFIG_LAKES_DIR.glob("*.py")):
+        if path.stem == "__init__":
+            continue
+        lake_id = path.stem
+        spec = importlib.util.spec_from_file_location(
+            f"lake_config_{lake_id}",
+            path,
+        )
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        cfg = mod.CONFIG
+        LAKES[lake_id] = cfg["name"]
+        MAX_POZIOM_SPIETRZANIA_BY_LAKE[lake_id] = cfg.get("max_poziom_spietrzania")
+        LAG_MONTHS_BY_LAKE[lake_id] = cfg.get("lag_months", LAG_MONTHS)
+        METEO_LAG_CANDIDATES_BY_LAKE[lake_id] = cfg.get(
+            "meteo_lag_candidates",
+            METEO_LAG_FIBONACCI,
+        )
+        TRAIN_START_YEAR_BY_LAKE[lake_id] = cfg["train_start_year"]
+        TRAIN_START_MONTH_BY_LAKE[lake_id] = cfg["train_start_month"]
+        TRAIN_END_YEAR_BY_LAKE[lake_id] = cfg["train_end_year"]
+        TRAIN_END_MONTH_BY_LAKE[lake_id] = cfg["train_end_month"]
+        TRAIN_END_NATURAL_YEAR_BY_LAKE[lake_id] = cfg["train_end_natural_year"]
+        TRAIN_END_NATURAL_MONTH_BY_LAKE[lake_id] = cfg["train_end_natural_month"]
+        ROK_ZMIANY_REZIMU_BY_LAKE[lake_id] = cfg["rok_zmiany_rezimu"]
+        TEST_END_YEAR_BY_LAKE[lake_id] = cfg["test_end_year"]
+
+
+_load_lake_configs()
 
 
 def _get_candidate_models():
@@ -209,24 +213,39 @@ def _get_candidate_models():
         (
             "HistGradientBoosting_early_stop",
             HistGradientBoostingRegressor(
-                max_iter=200,
-                max_depth=5,
-                learning_rate=0.05,
-                min_samples_leaf=10,
-                l2_regularization=0.2,
+                max_iter=600,
+                max_depth=7,
+                learning_rate=0.03,
+                min_samples_leaf=5,
+                l2_regularization=0.12,
                 early_stopping=True,
                 validation_fraction=0.15,
-                n_iter_no_change=12,
+                n_iter_no_change=18,
+                random_state=42,
+            ),
+        ),
+        (
+            "HistGradientBoosting_MAE",
+            HistGradientBoostingRegressor(
+                max_iter=600,
+                max_depth=7,
+                learning_rate=0.03,
+                min_samples_leaf=5,
+                l2_regularization=0.12,
+                loss="absolute_error",
+                early_stopping=True,
+                validation_fraction=0.15,
+                n_iter_no_change=18,
                 random_state=42,
             ),
         ),
         (
             "GradientBoosting_reg",
             GradientBoostingRegressor(
-                n_estimators=80,
-                max_depth=3,
-                learning_rate=0.06,
-                min_samples_leaf=8,
+                n_estimators=150,
+                max_depth=5,
+                learning_rate=0.04,
+                min_samples_leaf=4,
                 subsample=0.85,
                 random_state=42,
             ),
@@ -234,9 +253,9 @@ def _get_candidate_models():
         (
             "RandomForest",
             RandomForestRegressor(
-                n_estimators=120,
-                max_depth=6,
-                min_samples_leaf=5,
+                n_estimators=200,
+                max_depth=8,
+                min_samples_leaf=3,
                 max_features="sqrt",
                 random_state=42,
             ),
@@ -244,9 +263,9 @@ def _get_candidate_models():
         (
             "GradientBoosting_legacy",
             GradientBoostingRegressor(
-                n_estimators=100,
-                max_depth=4,
-                learning_rate=0.08,
+                n_estimators=150,
+                max_depth=5,
+                learning_rate=0.05,
                 min_samples_leaf=3,
                 random_state=42,
             ),
@@ -254,24 +273,24 @@ def _get_candidate_models():
         (
             "HistGradientBoosting_deeper",
             HistGradientBoostingRegressor(
-                max_iter=300,
-                max_depth=6,
-                learning_rate=0.04,
-                min_samples_leaf=6,
-                l2_regularization=0.15,
+                max_iter=700,
+                max_depth=8,
+                learning_rate=0.025,
+                min_samples_leaf=4,
+                l2_regularization=0.08,
                 early_stopping=True,
                 validation_fraction=0.15,
-                n_iter_no_change=15,
+                n_iter_no_change=20,
                 random_state=42,
             ),
         ),
         (
             "GradientBoosting_strong",
             GradientBoostingRegressor(
-                n_estimators=150,
-                max_depth=5,
-                learning_rate=0.05,
-                min_samples_leaf=6,
+                n_estimators=220,
+                max_depth=6,
+                learning_rate=0.035,
+                min_samples_leaf=4,
                 subsample=0.8,
                 random_state=42,
             ),
@@ -303,57 +322,74 @@ def train_model(
     train_start_month = None if train_end_year_override is not None else TRAIN_START_MONTH_BY_LAKE.get(lake_id)
     test_end_year = TEST_END_YEAR_BY_LAKE.get(lake_id)
     meteo_candidates = METEO_LAG_CANDIDATES_BY_LAKE.get(lake_id, [0])
+    lag_months_candidates = sorted(set([lag_months, min(7, lag_months + 2)]))
     best_mae_global = np.inf
     best_model = None
     best_feature_cols = None
     best_name = None
     best_meteo_lag = 0
-    for meteo_lag_months in meteo_candidates:
-        df_f = build_features(df.copy(), lag_months=lag_months, meteo_lag_months=meteo_lag_months)
-        df_f = df_f.dropna()
-        feature_cols = get_feature_columns(lag_months=lag_months, meteo_lag_months=meteo_lag_months)
-        train_df, test_df = train_test_split_temporal(
-            df_f,
-            train_end_year=train_end_year,
-            train_end_month=train_end_month,
-            train_start_year=train_start_year,
-            train_start_month=train_start_month,
-            test_end_year=test_end_year,
-        )
-        if len(train_df) < 10:
-            continue
-        X_train = train_df[feature_cols]
-        y_train = train_df[COL_ZMIANA]
-        X_test = test_df[feature_cols] if len(test_df) > 0 else None
-        y_test = test_df[COL_ZMIANA].values if len(test_df) > 0 else None
-        best_mae = np.inf
-        best_cand = None
-        best_cand_name = None
-        for name, candidate in _get_candidate_models():
-            candidate.fit(X_train, y_train)
-            if X_test is not None and y_test is not None:
-                pred = candidate.predict(X_test)
-                mae = mean_absolute_error(y_test, pred)
-                if mae < best_mae:
-                    best_mae = mae
-                    best_cand = candidate
-                    best_cand_name = name
-        if best_cand is not None and best_mae < best_mae_global:
-            best_mae_global = best_mae
-            best_model = best_cand
-            best_feature_cols = feature_cols
-            best_name = best_cand_name
-            best_meteo_lag = meteo_lag_months
+    best_lag_months = lag_months
+    for lag_m in lag_months_candidates:
+        for meteo_lag_months in meteo_candidates:
+            df_f = build_features(df.copy(), lag_months=lag_m, meteo_lag_months=meteo_lag_months)
+            df_f = df_f.dropna()
+            feature_cols = get_feature_columns(lag_months=lag_m, meteo_lag_months=meteo_lag_months)
+            train_df, test_df = train_test_split_temporal(
+                df_f,
+                train_end_year=train_end_year,
+                train_end_month=train_end_month,
+                train_start_year=train_start_year,
+                train_start_month=train_start_month,
+                test_end_year=test_end_year,
+            )
+            if len(train_df) < 15:
+                continue
+            X_train = train_df[feature_cols]
+            y_train = train_df[COL_ZMIANA]
+            X_test = test_df[feature_cols] if len(test_df) > 0 else None
+            y_test = test_df[COL_ZMIANA].values if len(test_df) > 0 else None
+            n_splits = min(5, max(2, (len(train_df) - 12) // 24))
+            if n_splits < 2:
+                n_splits = 2
+            tscv = TimeSeriesSplit(n_splits=n_splits)
+            ranked = []
+            for name, candidate in _get_candidate_models():
+                maes = []
+                for train_idx, val_idx in tscv.split(X_train):
+                    c = clone(candidate)
+                    c.fit(X_train.iloc[train_idx], y_train.iloc[train_idx])
+                    pred = c.predict(X_train.iloc[val_idx])
+                    maes.append(mean_absolute_error(y_train.iloc[val_idx].values, pred))
+                mean_mae = float(np.mean(maes))
+                ranked.append((mean_mae, name, candidate))
+            ranked.sort(key=lambda x: x[0])
+            best_mae = ranked[0][0]
+            best_cand = ranked[0][2]
+            best_cand_name = ranked[0][1]
+            second_cand = ranked[1][2] if len(ranked) > 1 else None
+            if best_mae < best_mae_global:
+                best_mae_global = best_mae
+                best_models = [clone(best_cand)]
+                if second_cand is not None:
+                    best_models.append(clone(second_cand))
+                for m in best_models:
+                    m.fit(X_train, y_train)
+                best_model = best_models
+                best_feature_cols = feature_cols
+                best_name = best_cand_name + ("+ensemble" if len(best_models) > 1 else "")
+                best_meteo_lag = meteo_lag_months
+                best_lag_months = lag_m
     if best_model is None:
         best_meteo_lag = meteo_candidates[0]
+        best_lag_months = lag_months
         df_f = build_features(
             df.copy(),
-            lag_months=lag_months,
+            lag_months=best_lag_months,
             meteo_lag_months=best_meteo_lag,
         )
         df_f = df_f.dropna()
         best_feature_cols = get_feature_columns(
-            lag_months=lag_months,
+            lag_months=best_lag_months,
             meteo_lag_months=best_meteo_lag,
         )
         train_df, test_df = train_test_split_temporal(
@@ -366,11 +402,11 @@ def train_model(
         )
         if len(train_df) < 10:
             raise ValueError("Za mało danych do treningu po podziale czasowym.")
-        best_model = _get_candidate_models()[0][1]
-        best_model.fit(train_df[best_feature_cols], train_df[COL_ZMIANA])
+        best_model = [clone(_get_candidate_models()[0][1])]
+        best_model[0].fit(train_df[best_feature_cols], train_df[COL_ZMIANA])
         best_name = _get_candidate_models()[0][0]
     metrics = {}
-    df_final = build_features(df.copy(), lag_months=lag_months, meteo_lag_months=best_meteo_lag)
+    df_final = build_features(df.copy(), lag_months=best_lag_months, meteo_lag_months=best_meteo_lag)
     df_final = df_final.dropna()
     train_df, test_df = train_test_split_temporal(
         df_final,
@@ -383,18 +419,21 @@ def train_model(
     X_test = test_df[best_feature_cols] if len(test_df) > 0 else None
     y_test = test_df[COL_ZMIANA].values if len(test_df) > 0 else None
     if X_test is not None and y_test is not None:
-        y_pred = best_model.predict(X_test)
+        preds = np.array([m.predict(X_test) for m in best_model])
+        y_pred = np.mean(preds, axis=0)
         metrics["test_mae"] = mean_absolute_error(y_test, y_pred)
         metrics["test_rmse"] = np.sqrt(mean_squared_error(y_test, y_pred))
         metrics["best_model"] = best_name
         metrics["meteo_lag_months"] = best_meteo_lag
-    return best_model, best_feature_cols, metrics, lag_months, best_meteo_lag
+    return best_model, best_feature_cols, metrics, best_lag_months, best_meteo_lag
 
 
 def evaluate_model(model, df, feature_cols):
     X = df[feature_cols]
     y = df[COL_ZMIANA]
-    y_pred = model.predict(X)
+    models = model if isinstance(model, list) else [model]
+    preds = np.array([m.predict(X) for m in models])
+    y_pred = np.mean(preds, axis=0)
     return {
         "mae": mean_absolute_error(y, y_pred),
         "rmse": np.sqrt(mean_squared_error(y, y_pred)),
@@ -436,8 +475,12 @@ def predict_change(
     for lag in range(1, lag_months + 1):
         row[f"zmiana_lag{lag}"] = (last_changes[-(lag)] if last_changes and len(last_changes) >= lag else 0.0)
         row[f"poziom_lag{lag}"] = (last_poziomy[-(lag)] if last_poziomy and len(last_poziomy) >= lag else poziom)
+    for col in feature_cols:
+        if col not in row:
+            row[col] = 0.0
     X = pd.DataFrame([row])[feature_cols]
-    return float(model.predict(X)[0])
+    models = model if isinstance(model, list) else [model]
+    return float(np.mean([m.predict(X)[0] for m in models]))
 
 
 def save_model(model, feature_cols, path=None, lag_months=None, meteo_lag_months=None):
