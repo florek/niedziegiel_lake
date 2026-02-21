@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Optional
 
 import joblib
+import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -394,7 +395,7 @@ class LakeRegressionModel:
         out["y_next_poziom"] = np.nan
         return out
 
-    def _save_full_history_chart(self) -> None:
+    def _save_full_history_chart(self, save_path: Optional[Path] = None) -> None:
         if self._df_prepared is None:
             if self._df_raw is None:
                 self.load_data()
@@ -454,14 +455,16 @@ class LakeRegressionModel:
         ax.plot(dates_valid, y_plot, label="Rzeczywisty", color="tab:blue", alpha=0.9)
         ax.plot(dates_valid, pred, label="Model", color="tab:orange", alpha=0.9)
         ax.axvline(x=train_end_dt, color="gray", linestyle="--", linewidth=1.5, label="Koniec treningu")
+        ax.xaxis.set_major_locator(mdates.YearLocator(5))
+        ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
         ax.set_xlabel("Data")
         ax.set_ylabel("Poziom [m]")
         ax.set_title(f"{self.config.name}: poziom rzeczywisty vs model (cała oś czasu)")
         ax.legend(loc="best")
         ax.grid(True, alpha=0.3)
         fig.tight_layout()
-        self._reports_dir.mkdir(parents=True, exist_ok=True)
-        path = self._reports_dir / "poziom_rzeczywisty_vs_model.png"
+        path = save_path if save_path is not None else self._reports_dir / "poziom_rzeczywisty_vs_model.png"
+        path.parent.mkdir(parents=True, exist_ok=True)
         fig.savefig(path, dpi=150)
         plt.close(fig)
 
@@ -512,6 +515,8 @@ class LakeRegressionModel:
             if "y_next_poziom" in out.columns:
                 ax.plot(out["y_date"], out["y_next_poziom"], label="Rzeczywisty", color="tab:blue", alpha=0.9)
             ax.plot(out["y_date"], out["pred_next_poziom"], label="Predykcja", color="tab:orange", alpha=0.9)
+            ax.xaxis.set_major_locator(mdates.YearLocator(5))
+            ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
             ax.set_xlabel("Data")
             ax.set_ylabel("Poziom [m]")
             ax.set_title(f"{self.config.name}: poziom rzeczywisty vs predykowany")
