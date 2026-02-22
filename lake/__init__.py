@@ -3,6 +3,7 @@ from lake.config import LakeConstraints, LakeRegressionConfig
 from lake.budzislawskie import Budzislawskie
 from lake.niedziegiel import Niedziegiel
 from lake.powidzkie import Powidzkie
+from lake.skulskie import Skulskie
 
 __all__ = [
     "Budzislawskie",
@@ -11,4 +12,5 @@ __all__ = [
     "LakeRegressionModel",
     "Niedziegiel",
     "Powidzkie",
+    "Skulskie",
 ]

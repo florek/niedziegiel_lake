@@ -376,6 +376,65 @@ class LakeRegressionModel:
             "r2": float(r2_score(y.values, pred)),
         }
 
+    def evaluate_breakdown(self, horizon_months: int = 24) -> dict[str, float]:
+        if self._test_df is None:
+            if self._df_raw is None:
+                self.load_data()
+            self.prepare_dataset()
+            self._train_df, self._test_df = self._split(self._df_prepared)
+        subset = self._test_df.head(horizon_months)
+        if len(subset) == 0:
+            return {
+                "mae": float("nan"),
+                "mae_drops": float("nan"),
+                "mae_rises": float("nan"),
+                "rmse": float("nan"),
+                "r2": float("nan"),
+            }
+        X, y = self._build_feature_matrix(subset)
+        if self._model is None:
+            artifact = joblib.load(self._model_path)
+            self._model = artifact["model"]
+            self._feature_cols = artifact["feature_cols"]
+            self._max_level = artifact.get("max_level")
+        pred = self._model.predict(X)
+        target_col = self.config.target_col
+        level_col = self.config.level_col
+        if self._model_path.exists():
+            art = joblib.load(self._model_path)
+            target_col = art.get("target_col", target_col)
+            level_col = art.get("level_col", level_col)
+        if target_col == level_col and self.config.constraints is not None and self._max_level is not None:
+            pred = np.array(
+                [
+                    _apply_constraints(
+                        p, self._max_level, self.config.constraints
+                    )
+                    for p in pred
+                ],
+                dtype=float,
+            )
+        y_true = y.values.astype(float)
+        y_pred = pred.astype(float)
+        err = np.abs(y_true - y_pred)
+        if target_col == level_col and level_col in subset.columns:
+            level_curr = subset[level_col].values.astype(float)
+            is_drop = y_true < level_curr
+            is_rise = y_true > level_curr
+        else:
+            is_drop = y_true < 0
+            is_rise = y_true > 0
+        mae = float(np.mean(err))
+        mae_drops = float(np.mean(err[is_drop])) if np.any(is_drop) else float("nan")
+        mae_rises = float(np.mean(err[is_rise])) if np.any(is_rise) else float("nan")
+        return {
+            "mae": mae,
+            "mae_drops": mae_drops,
+            "mae_rises": mae_rises,
+            "rmse": float(np.sqrt(mean_squared_error(y_true, y_pred))),
+            "r2": float(r2_score(y_true, y_pred)),
+        }
+
     def get_future_data(self, horizon_months: int = 12) -> pd.DataFrame:
         if self._df_raw is None:
             self.load_data()

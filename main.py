@@ -1,4 +1,4 @@
-from lake import Budzislawskie, Niedziegiel, Powidzkie
+from lake import Budzislawskie, Niedziegiel, Powidzkie, Skulskie
 
 
 def _run_lake(model, label: str) -> None:
@@ -20,3 +20,4 @@ if __name__ == "__main__":
     _run_lake(Niedziegiel(), "Niedzięgiel")
     _run_lake(Powidzkie(), "Powidzkie")
     _run_lake(Budzislawskie(), "Budzisławskie")
+    _run_lake(Skulskie(), "Skulskie")

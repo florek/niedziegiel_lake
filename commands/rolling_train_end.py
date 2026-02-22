@@ -14,15 +14,18 @@ from lake.config import LakeRegressionConfig
 from lake.budzislawskie import BUDZISLAWSKIE_CONFIG
 from lake.niedziegiel import NIEDZIEGIEL_CONFIG
 from lake.powidzkie import POWIDZKIE_CONFIG
+from lake.skulskie import SKULSKIE_CONFIG
 
 TRAIN_END_YEAR_FIRST = 2024
 TRAIN_END_YEAR_LAST = 1990
 BUDZISLAWSKIE_YEAR_LAST = 2002
+SKULSKIE_YEAR_LAST = 2021
 
 LAKES = [
     ("niedziegiel", NIEDZIEGIEL_CONFIG, "Niedzięgiel", TRAIN_END_YEAR_LAST),
     ("powidzkie", POWIDZKIE_CONFIG, "Powidzkie", TRAIN_END_YEAR_LAST),
     ("budzislawskie", BUDZISLAWSKIE_CONFIG, "Budzisławskie", BUDZISLAWSKIE_YEAR_LAST),
+    ("skulskie", SKULSKIE_CONFIG, "Skulskie", SKULSKIE_YEAR_LAST),
 ]
 
 
@@ -44,12 +47,12 @@ def _run_variants_for_config(
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Warianty treningu: koniec treningu 2024→1990 (lub 2002 dla Budzisławskiego).")
+    parser = argparse.ArgumentParser(description="Warianty treningu: koniec treningu 2024→1990 (Budzislawskie: 2002, Skulskie: 2021).")
     parser.add_argument(
         "--lake",
         choices=[lake_id for lake_id, *_ in LAKES],
         default=None,
-        help="Jedno jezioro (niedziegiel, powidzkie, budzislawskie). Bez argumentu: wszystkie.",
+        help="Jedno jezioro (niedziegiel, powidzkie, budzislawskie, skulskie). Bez argumentu: wszystkie.",
     )
     return parser.parse_args()
 
